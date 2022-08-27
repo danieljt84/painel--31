@@ -1,0 +1,11 @@
+<div style="width: 100%; height: 100%;">
+    <ng-multiselect-dropdown
+    [placeholder]="'custom placeholder'"
+    [settings]="dropdownSettings"
+    [data]="dropdownList"
+    [(ngModel)]="selectedItems"
+    (onSelect)="onItemSelect($event)"
+    (onSelectAll)="onSelectAll($event)"
+  >
+  </ng-multiselect-dropdown>
+</div>

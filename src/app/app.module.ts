@@ -1,16 +1,22 @@
+import { AppComponent } from './app.component';
+import { appRotas } from './app.routes';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
+    CommonModule,
+    HttpClientModule,
     BrowserModule,
-    AppRoutingModule
+    BrowserAnimationsModule,
+    RouterModule.forRoot(appRotas),
   ],
   providers: [],
   bootstrap: [AppComponent]
