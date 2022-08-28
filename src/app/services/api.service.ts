@@ -25,8 +25,8 @@ export class ApiService {
     let params = new HttpParams({fromObject:{
       'initialDate':initialDate,
       'finalDate':finalDate,
-      'brandId':""+{brandId}
+      'brandId':String(brandId)
     }});
-   return this.http.get<FilterDatatableDTO>("http://localhost:8080/filter/datatable")
+   return this.http.get<FilterDatatableDTO>("http://localhost:8080/filter/datatable",{params})
   }
 }

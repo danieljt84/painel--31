@@ -25,10 +25,14 @@ export class FormFilterComponent implements OnInit, OnDestroy {
     this.finalDate = new FormControl();
     this.finalDate.setValue(formatDate(new Date(),'yyyy-MM-dd','en'));
     this.initialDate = new FormControl(formatDate(subDays(new Date(),7),'yyyy-MM-dd','en'));
+    this.loadValuesToFilter(this.initialDate.value,this.finalDate.value);
   }
 
-  loadValuesToFilter(){
-    
+  loadValuesToFilter(initialDate:string,finalDate:string){
+    this.apiService.getFilterToDataTable(initialDate,finalDate)
+    .pipe(takeWhile(()=>this.alive)
+    ,finalize(()=>console.log(this.valuesToFilter)))
+    .subscribe(data => this.valuesToFilter = data);
   }
 
   ngOnDestroy(): void {
