@@ -52,6 +52,7 @@ export class DataTableComponent implements OnInit, AfterViewInit {
       this.isLoadingDatas = false;
       this.dataSource.data = this.values;
       this.dataSource.paginator = this.paginator;
+      this.changeTextLabelPaginator();
     }))
     .subscribe((data) => (this.values = data));
   }
@@ -81,6 +82,10 @@ export class DataTableComponent implements OnInit, AfterViewInit {
 
   changeTextLabelPaginator(){
     this.paginator._intl.itemsPerPageLabel="Itens por pagina:";
+  }
+
+  changeMode(){
+    
   }
 
   

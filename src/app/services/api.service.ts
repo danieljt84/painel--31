@@ -1,9 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Data } from '@angular/router';
-import { environment } from 'src/environments/environment';
-import { DataFile } from '../model/data-file';
 import { DataFileDetails } from '../model/detail/datafile-details';
+import { FilterDatatableDTO } from '../model/detail/filter-datatable.dto';
 import { DataFilePhoto } from '../model/gallery/datafile-photo';
 
 @Injectable({
@@ -21,5 +19,14 @@ export class ApiService {
   }
   getFilterPhotos(idBrand:number){
     return this.http.get<DataFilePhoto[]>("http://localhost:8080/datafile/photos/filter/"+0);
+  }
+
+  getFilterToDataTable(initialDate: string, finalDate: string, brandId:number=0 ){
+    let params = new HttpParams({fromObject:{
+      'initialDate':initialDate,
+      'finalDate':finalDate,
+      'brandId':""+{brandId}
+    }});
+   return this.http.get<FilterDatatableDTO>("http://localhost:8080/filter/datatable")
   }
 }

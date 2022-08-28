@@ -1,0 +1,49 @@
+<div style="justify-content: space-between" class="row row-input">
+    <div  class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <label>Periodo: </label>
+        <div class="data-group">
+            <input type="date" class="data-input form-control" [formControl]="initialDate" id="initialDate" />
+            <input type="date" class="data-input form-control"[formControl]="finalDate" id="finalDate" />
+          </div>
+    </div>
+    <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <label>Indústria:</label>
+            <input type="text" class="data-input form-control" id="brand" />
+    </div>
+    <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <label>Projeto:</label>
+            <app-multi-select></app-multi-select>
+    </div>
+</div>
+<div class="row row-input mt-3">
+    <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <label>PDV:</label>
+            <app-multi-select></app-multi-select>
+    </div>
+    <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <label>Tipo de pesquisa:</label>
+            <app-multi-select></app-multi-select>
+    </div>
+    <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <label>Rede:</label>
+            <app-multi-select></app-multi-select>
+    </div>
+    <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <label>Promotor:</label>
+            <app-multi-select></app-multi-select>
+    </div>
+</div>
+<div class="row row-input mt-3">
+    <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <label>Produto:</label>
+            <app-multi-select></app-multi-select>
+    </div>
+    <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <label>Status</label>
+            <app-multi-select></app-multi-select>
+    </div>
+    <button type="button" style="width: 100px;height: 50px;margin-top: auto; margin-left: auto;" class="btn btn-secondary">
+        Filtrar
+      </button>
+</div>
+
