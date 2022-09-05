@@ -1,0 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+nav{
+  padding: 12px 12px 12px 12px;
+  font-family: Montserrat;
+  background: #1f2633;
+}
+.nav-link {
+  color: white;
+}
+.nav-link:hover {
+  color: #ff6047;
+}
+
+.span-brand {
+  color: white;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+  margin-right: 5px;
+}

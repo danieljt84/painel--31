@@ -17,35 +17,31 @@
         </div>
         <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>Projeto:</label>
-                <app-multi-select [values]="valuesToFilter['project']" [type]="'data'" [id]="'project'"></app-multi-select>
+                <app-multi-select [values]="valuesToFilter['project']" [id]="'project'"></app-multi-select>
         </div>
     </div>
     <div class="row row-input mt-3">
         <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>PDV:</label>
-                <app-multi-select [values]="valuesToFilter['shop']" [type]="'data'" [id]="'shop'"></app-multi-select>
-        </div>
-        <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
-            <label>Tipo de pesquisa:</label>
-                <app-multi-select></app-multi-select>
+                <app-multi-select [type]="'gallery'" [values]="valuesToFilter['shop']" [id]="'shop'"></app-multi-select>
         </div>
         <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>Rede:</label>
-                <app-multi-select ></app-multi-select>
+                <app-multi-select [type]="'gallery'" [values]="[]" id="'chain'" ></app-multi-select>
         </div>
         <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>Promotor:</label>
-                <app-multi-select [values]="valuesToFilter['promoter']" [type]="'data'" [id]="'promoter'"></app-multi-select>
+                <app-multi-select [type]="'gallery'" [values]="valuesToFilter['promoter']" [id]="'promoter'"></app-multi-select>
+        </div>
+        <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <label>Produto:</label>
+                <app-multi-select [type]="'gallery'" [values]="valuesToFilter['product']" [id]="'product'"></app-multi-select>
         </div>
     </div>
     <div class="row row-input mt-3">
         <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
-            <label>Produto:</label>
-                <app-multi-select [values]="valuesToFilter['product']" [type]="'data'" [id]="'product'"></app-multi-select>
-        </div>
-        <div class="input-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
-            <label>Status</label>
-                <app-multi-select [values]="valuesToFilter['status']" [type]="'data'" [id]="'status'"></app-multi-select>
+            <label>Secão:</label>
+                <app-multi-select [type]="'gallery'" [values]="valuesToFilter['section']" [id]="'section'"></app-multi-select>
         </div>
         <button type="button" (click)="onFilter()" style="width: 100px;height: 50px;margin-top: auto; margin-left: auto; background: #ff6047;" class="btn btn-secondary">
             Filtrar
@@ -61,6 +57,8 @@
        justify-content: center;
        align-items: center;
        background: white;
+       margin-bottom: auto;
+       margin-top: auto;
      "
    >
      <mat-progress-spinner color="primary" mode="indeterminate">

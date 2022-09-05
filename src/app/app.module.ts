@@ -1,11 +1,17 @@
 import { AppComponent } from './app.component';
 import { appRotas } from './app.routes';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { MultiSelectComponent } from './pages/shared/multi-select/multi-select.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { HttpErrorInterceptor } from './core/interceptors/htttp-error.inteceptor';
+import { TokenInterceptor } from './core/interceptors/token.inteceptor';
+import { JwtModule } from '@auth0/angular-jwt';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +24,14 @@ import { RouterModule } from '@angular/router';
     BrowserAnimationsModule,
     RouterModule.forRoot(appRotas),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
+  ],
+  schemas:[NO_ERRORS_SCHEMA],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -11,7 +11,6 @@ export class DataComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log("oi")
   }
 
 }

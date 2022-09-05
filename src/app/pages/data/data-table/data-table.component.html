@@ -1,21 +1,25 @@
 <div class="top-bar">
   <h2 class="tilte-card">Pesquisa</h2>
   <div class="btn-group" role="group">
-    <button type="button" (click)="changeMode()" class="btn btn-secondary bt-clicked">
+    <button
+      type="button"
+      (click)="changeMode()"
+      class="btn btn-secondary bt-clicked"
+    >
       Agrupado
     </button>
     <button type="button" (click)="changeMode()" class="btn btn-secondary">
       Aberto
     </button>
   </div>
-  <button type="button" class="btn btn-secondary">
+  <button type="button" style="background: #ff6047" class="btn btn-secondary">
     Exportar
   </button>
 </div>
 
 <div class="card">
-  <div class="card-body">
-    <div [hidden]="isLoadingDatas">
+  <div class="card-body" style="min-height: 500px">
+    <div [hidden]="isLoadingDatas == 'ATIVO' || isLoadingDatas == ''">
       <table
         mat-table
         [dataSource]="dataSource"
@@ -90,18 +94,17 @@
       >
       </mat-paginator>
     </div>
-  </div>
-
-  <div
-    [hidden]="!isLoadingDatas"
+    
+    <div  [hidden]="isLoadingDatas == 'INATIVO' || isLoadingDatas == ''"
     style="
+      display: flex;">
+      <mat-progress-spinner style="
       display: flex;
       justify-content: center;
       align-items: center;
       background: white;
-    "
-  >
-    <mat-progress-spinner color="primary" mode="indeterminate">
-    </mat-progress-spinner>
+    " color="primary" mode="indeterminate">
+      </mat-progress-spinner>
+    </div>
   </div>
 </div>
