@@ -35,7 +35,7 @@ export class DataTableComponent implements OnInit, AfterViewInit {
   isLoadingDatas = "" ;
   @ViewChild(MatSort) sort: MatSort;
   dataSource = new MatTableDataSource<any>();
-  columnsToDisplay = ['id', 'shop', 'promoter', 'project'];
+  columnsToDisplay = ['shop', 'promoter', 'project','date'];
   // MatPaginator Inputs
   length = 100;
   pageSize = 10;
@@ -79,14 +79,7 @@ export class DataTableComponent implements OnInit, AfterViewInit {
     element.expanded = !element.expanded;
   }
 
-  nameColumnToDisplay(name: string) {
-    let _return = '';
-    if (name == 'id') _return = 'ID';
-    if (name == 'shop') _return = 'PDV';
-    if (name == 'promoter') _return = 'PROMOTOR';
-    if (name == 'project') _return = 'PROJETO';
-    return _return;
-  }
+
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {
     if (setPageSizeOptionsInput) {
