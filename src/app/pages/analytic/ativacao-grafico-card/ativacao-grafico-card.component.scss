@@ -1,0 +1,16 @@
+.chart{
+    display: block;
+    box-sizing: border-box;
+    height: 539px;
+    width: 638px;
+}
+
+.card{
+    height: 250px;
+  }
+.activition-input{
+    flex-grow: 1;
+    &>*{
+       padding-bottom: 10px;
+    }
+  }

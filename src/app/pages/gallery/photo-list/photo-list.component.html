@@ -15,7 +15,7 @@
   <button type="button" style="background: #ff6047;" class="btn btn-secondary">Exportar</button>
 </div>
 
-<ng-container *ngIf="!isLoading">
+<ng-container *ngIf="isLoadingDatas == 'INATIVO'">
   <div class="row row-photo" *ngFor="let dataPhotoGrids of rows">
     <div
       class="col-photo col-sm-12 col-lg-4"
@@ -27,7 +27,7 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="isLoading">
+<ng-container *ngIf="isLoadingDatas == 'ATIVO'">
   <div
     class="mt-03"
     style="

@@ -27,17 +27,17 @@ export class ApiService {
     );
   }
   getDataPhotos(filter: Filter) {
-    let params = new HttpParams({
-      fromObject: {
-        initialDate: filter.initialDate,
-        finalDate: filter.finalDate,
-        idBrand: filter.idBrand,
-        filter: JSON.stringify(filter.filter),
-      },
-    });
-    return this.http.get<DataFilePhoto[]>(
-      'http://localhost:8080/datafile/photos/' + filter
-    );
+    const headers = { 'content-type': 'application/json'}  
+
+    let params = new HttpParams()
+      .set('initialDate', filter.initialDate)
+      .set('finalDate', filter.finalDate)
+      .set('idBrand', filter.idBrand);
+    const str = this.transformMapInStringArray(filter.filter);
+    
+    return this.http.post<DataFilePhoto[]>(
+      'http://localhost:8080/datafile/photos/',str, {'headers':headers,'params':params}
+      );
   }
 
   getFilterToDataTable(

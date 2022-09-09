@@ -30,24 +30,27 @@ import { EventEmiterService } from 'src/app/services/event-emiter.service';
     ]),
   ],
 })
-export class DataTableComponent implements OnInit, AfterViewInit {
+export class DataTableComponent implements OnInit {
   values: DataFileDetails[] = [];
   isLoadingDatas = "" ;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
   @ViewChild(MatSort) sort: MatSort;
   dataSource = new MatTableDataSource<any>();
   columnsToDisplay = ['shop', 'promoter', 'project','date'];
+
   // MatPaginator Inputs
   length = 100;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  destroy$: Subject<boolean> = new Subject<boolean>();
   pageEvent: PageEvent;
 
+
   constructor(private apiService: ApiService) {}
-  ngAfterViewInit(): void {}
 
   ngOnInit(): void {
+    //Evento acioanado ao apertar o botão "filtrar"
     EventEmiterService.get('on-filter-data')
       .pipe(takeUntil(this.destroy$))
       .subscribe((filter) => {
@@ -79,8 +82,6 @@ export class DataTableComponent implements OnInit, AfterViewInit {
     element.expanded = !element.expanded;
   }
 
-
-
   setPageSizeOptions(setPageSizeOptionsInput: string) {
     if (setPageSizeOptionsInput) {
       this.pageSizeOptions = setPageSizeOptionsInput
@@ -89,6 +90,7 @@ export class DataTableComponent implements OnInit, AfterViewInit {
     }
   }
 
+  //Função que troca a descrição da label do Paginator
   changeTextLabelPaginator() {
     this.paginator._intl.itemsPerPageLabel = 'Itens por pagina:';
   }

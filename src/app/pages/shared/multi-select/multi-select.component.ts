@@ -28,6 +28,7 @@ export class MultiSelectComponent implements OnInit {
     this.transformValuesInDropdownList();
   }
 
+
   transformValuesInDropdownList() {
     if (this.values) {
       let id = 0;
@@ -40,6 +41,8 @@ export class MultiSelectComponent implements OnInit {
     }
   }
 
+  //Evento ligado a troca de elementos selecionados
+  //Emite todos os eventos selecionados usando a Id do Input
   emitEventSetItem(event: any) {
       EventEmiterService.get('set-item').emit({
         type: this.type,
@@ -47,18 +50,5 @@ export class MultiSelectComponent implements OnInit {
         itens: this.selectedItems.map(item => item.item_text),
       });
 
-  }
-
-  onItemSelect(item: any): void {
-    console.log(this.selectedItems);
-    EventEmiterService.get('set-item').emit({
-      type: this.type,
-      id: this.id,
-      item: item.item_text,
-    });
-  }
-
-  onItemSelectAll(items: any) {
-    console.log(this.selectedItems);
   }
 }

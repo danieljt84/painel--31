@@ -4,10 +4,10 @@
         [src]="dataPhotoGrid.url"
         alt="Card image cap">
     <div class="card-body">
-        <p class="card-text">Data: {{dataPhotoGrid.data}}</p>
+        <p class="card-text">Data: {{dataPhotoGrid.data | date: 'dd/MM/yyyy'}}</p>
         <p class="card-text">Local: {{dataPhotoGrid.local}}</p>
         <p class="card-text">Promotor: {{dataPhotoGrid.promotor}}</p>
         <p class="card-text">SEÇÃO: {{dataPhotoGrid.secao}}</p>
-        <span>LINK DA FOTO</span>
+        <a [href]="dataPhotoGrid.url">LINK DA FOTO</a>
     </div>
 </div>

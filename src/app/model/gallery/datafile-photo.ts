@@ -1,11 +1,14 @@
+import { Brand } from "../brand";
+import { Promoter } from "../promoter";
+import { Shop } from "../shop";
 import { Photo } from "./photo";
 
 export interface DataFilePhoto{
-  brand:string
-  data:string;
+  brand:Brand
+  date:string;
   project:string;
   chain:string;
-  shop:string;
-  promoter:string;
+  shop:Shop;
+  promoter:Promoter;
   photos:Photo[];
 }

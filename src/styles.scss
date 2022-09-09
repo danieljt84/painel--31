@@ -34,4 +34,14 @@ $painel4p-theme: mat.define-light-theme((
 // that you are using.
 @include mat.all-component-themes($painel4p-theme);
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;    background-color: rgb(0 0 0 / 12%);  }
+
+
+.container-body {
+    width: 95%;
+    margin: auto;
+}
+
+.card{
+  border-radius: 10px;
+}

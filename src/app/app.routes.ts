@@ -16,5 +16,9 @@ export const appRotas: Routes =[
     {
         path:'login', loadChildren: ()=> import('./pages/login/login.module').then(x =>x.LoginModule),canLoad:[UserNotAutenticatedService]
 
+    },
+    {
+        path:'analise', loadChildren: ()=> import('./pages/analytic/analytic.module').then(x =>x.AnalyticModule),canLoad:[UserAutenticatedService]
+
     }
 ]

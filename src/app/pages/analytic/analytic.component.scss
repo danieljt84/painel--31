@@ -1,0 +1,10 @@
+.card{
+    &>*{
+        margin: 0px 0px;
+    }
+
+    .content-card{
+        display: flex;
+    }
+}
+

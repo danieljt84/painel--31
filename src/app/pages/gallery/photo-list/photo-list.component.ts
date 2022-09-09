@@ -15,36 +15,33 @@ import { EventEmiterService } from 'src/app/services/event-emiter.service';
   styleUrls: ['./photo-list.component.scss'],
 })
 export class PhotoListComponent implements OnInit, OnDestroy {
-  @Input() datas: DataFilePhoto[] = [];
+  datas: DataFilePhoto[] = [];
   datasGrid: DataPhotoGrid[] = [];
   opened: boolean = false;
   filter: FilterGalleryDTO;
   rows: any[] = [];
-  isLoading = true;
+  isLoadingDatas = '';
   isAlive = true;
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private apiService: ApiService) {}
-  ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
-  }
 
   //Recebe a emissão do evento e realiza o carregamento dos dados
   ngOnInit(): void {
     EventEmiterService.get('on-filter-gallery')
       .pipe(takeUntil(this.destroy$))
       .subscribe((filter) => {
-        this.loadData(filter as Filter);
+        this.loadDatas(filter as Filter);
       });
   }
 
-  loadData(filterToLoad: Filter) {
+  loadDatas(filter: Filter) {
+    this.isLoadingDatas = "ATIVO";
     this.apiService
-      .getDataPhotos(filterToLoad)
+      .getDataPhotos(filter)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
+          this.isLoadingDatas = "INATIVO";
           this.transform();
           this.rows = this.groupColumns(this.datasGrid);
         }),
@@ -52,15 +49,16 @@ export class PhotoListComponent implements OnInit, OnDestroy {
       )
       .subscribe((data) => (this.datas = data));
   }
-
+  
+  //Transforma os dados e um modelo possivel para a exibição nas linhas 
   transform() {
     this.datasGrid = [];
     this.datas.forEach((data) => {
       const dataGrid: DataPhotoGrid = new DataPhotoGrid();
-      dataGrid.data = data.data;
-      dataGrid.local = data.shop;
-      dataGrid.empresa = data.brand;
-      dataGrid.promotor = data.promoter;
+      dataGrid.data = data.date;
+      dataGrid.local = data.shop.name;
+      dataGrid.empresa = data.brand.name;
+      dataGrid.promotor = data.promoter.name;
       dataGrid.ramo = data.project;
       data.photos.forEach((photo) => {
         let newdataGrid: DataPhotoGrid;
@@ -82,4 +80,9 @@ export class PhotoListComponent implements OnInit, OnDestroy {
   }
 
   changeMode() {}
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
+  }
 }

@@ -46,31 +46,32 @@ export class FormFilterGalleryComponent implements OnInit {
       .subscribe((data) => (this.valuesToFilter = data));
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
-  }
-
+  //funcao que ouve o evento "set-item"
+  //recebe todos os dados selecionados, classificado pelos ids
   eventListenerSetItem() {
-    EventEmiterService.get('set-item').pipe(takeUntil(this.destroy$)).subscribe((item) => {
-      if ((item.type = 'gallery')) {
-        if (!this.itensSelecteds.has(item.id)) {
-          this.itensSelecteds.set(item.id, []);
+    EventEmiterService.get('set-item')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((item) => {
+        if ((item.type = 'gallery')) {
+          if (item.itens.length == 0) {
+            if (this.itensSelecteds.has(item.id)) {
+              this.itensSelecteds
+                .get(item.id).length = 0;
+                this.itensSelecteds.delete(item.id);
+            }
+          } else {
+            if (this.itensSelecteds.has(item.id)) {
+              this.itensSelecteds
+                .get(item.id).length = 0;
+              this.itensSelecteds.get(item.id).push(...item.itens);
+            } else {
+              this.itensSelecteds.set(item.id, item.itens);
+            }
+          }
         }
-        if (
-          this.itensSelecteds.get(item.id).includes(item.item)
-        ) {
-          let index = this.itensSelecteds.get(item.id).indexOf(item.item);
-          this.itensSelecteds.get(item.id).splice(index, 1);
-          if(this.itensSelecteds.get(item.id).length==0) this.itensSelecteds.delete(item.id)
-        } else {
-          this.itensSelecteds.get(item.id).push(item.item);
-        }
-      }
-      console.log(this.itensSelecteds)
-    });
+        console.log(this.itensSelecteds);
+      });
   }
-
   //Emite um evento que sera capturado pela component Photolist
   onFilter(){
     let filter: Filter ={
@@ -80,5 +81,10 @@ export class FormFilterGalleryComponent implements OnInit {
       filter: this.itensSelecteds
     }
     EventEmiterService.get('on-filter-gallery').emit(filter);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

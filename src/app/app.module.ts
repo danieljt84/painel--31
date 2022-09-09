@@ -11,11 +11,12 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { HttpErrorInterceptor } from './core/interceptors/htttp-error.inteceptor';
 import { TokenInterceptor } from './core/interceptors/token.inteceptor';
 import { JwtModule } from '@auth0/angular-jwt';
+import { AnalyticComponent } from './pages/analytic/analytic.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     CommonModule,

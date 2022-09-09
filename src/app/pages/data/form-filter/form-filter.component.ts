@@ -31,9 +31,8 @@ export class FormFilterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.finalDate = new FormControl();
     this.finalDate.setValue(formatDate(new Date(), 'yyyy-MM-dd', 'en'));
-    this.initialDate = new FormControl(
-      formatDate(subDays(new Date(), 7), 'yyyy-MM-dd', 'en')
-    );
+    this.initialDate = new FormControl(formatDate(subDays(new Date(), 7), 'yyyy-MM-dd', 'en'));
+
     this.loadValuesToFilter(
       this.initialDate.value,
       this.finalDate.value,
@@ -42,18 +41,16 @@ export class FormFilterComponent implements OnInit, OnDestroy {
     this.eventListenerSetItem();
   }
 
-  async loadValuesToFilter(
-    initialDate: string,
-    finalDate: string,
-    idBrand: number
-  ) {
+  //Carrega todos os dados possiveis de filtragem
+  async loadValuesToFilter( initialDate: string,finalDate: string,idBrand: number ) {
     let data = await this.apiService
       .getFilterToDataTable(initialDate, finalDate, idBrand)
       .toPromise();
     this.valuesToFilter = data;
     this.isLoadingValues = false;
   }
-
+  //funcao que ouve o evento "set-item"
+  //recebe todos os dados selecionados, classificado pelos ids
   eventListenerSetItem() {
     EventEmiterService.get('set-item')
       .pipe(takeUntil(this.destroy$))
@@ -78,7 +75,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
         console.log(this.itensSelecteds);
       });
   }
-
+  //Emite um evento para filtrar os dados via api
   onFilter() {
     let filter: Filter = {
       finalDate: this.finalDate.value,
