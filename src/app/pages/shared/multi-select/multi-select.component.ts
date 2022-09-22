@@ -44,11 +44,19 @@ export class MultiSelectComponent implements OnInit {
   //Evento ligado a troca de elementos selecionados
   //Emite todos os eventos selecionados usando a Id do Input
   emitEventSetItem(event: any) {
+
       EventEmiterService.get('set-item').emit({
         type: this.type,
         id: this.id,
         itens: this.selectedItems.map(item => item.item_text),
       });
-
+  }
+  emitEventSetItemAll(event: any){
+    this.selectedItems = event.map((item: { item_text: any; }) => item.item_text);
+    EventEmiterService.get('set-item').emit({
+      type: this.type,
+      id: this.id,
+      itens: this.selectedItems
+    });
   }
 }

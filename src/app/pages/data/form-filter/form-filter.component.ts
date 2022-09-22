@@ -5,7 +5,7 @@ import { format, subDays } from 'date-fns';
 import { finalize, Subject, takeUntil, takeWhile } from 'rxjs';
 import { FilterDatatableDTO } from 'src/app/model/detail/filter-datatable.dto';
 import { Filter } from 'src/app/model/filter';
-import { ApiService } from 'src/app/services/api.service';
+import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -24,7 +24,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
-    private apiService: ApiService,
+    private apiService: ApiPainelService,
     private userService: UserService
   ) {}
 
@@ -47,6 +47,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
       .getFilterToDataTable(initialDate, finalDate, idBrand)
       .toPromise();
     this.valuesToFilter = data;
+    console.log(this.valuesToFilter)
     this.isLoadingValues = false;
   }
   //funcao que ouve o evento "set-item"
@@ -72,7 +73,6 @@ export class FormFilterComponent implements OnInit, OnDestroy {
             }
           }
         }
-        console.log(this.itensSelecteds);
       });
   }
   //Emite um evento para filtrar os dados via api

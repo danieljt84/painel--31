@@ -42,6 +42,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;    backgrou
     margin: auto;
 }
 
+.modal{
+  z-index: 99999;
+}
+
 .card{
   border-radius: 10px;
 }

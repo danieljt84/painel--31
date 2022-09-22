@@ -1,7 +1,7 @@
 export interface Filter{
     initialDate: string;
     finalDate: string;
-    idBrand: number;
+    idBrand: number | string;
     filter: Map<string,string[]>
 
 }

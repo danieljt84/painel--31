@@ -6,7 +6,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 import { FilterDatatableDTO } from 'src/app/model/detail/filter-datatable.dto';
 import { Filter } from 'src/app/model/filter';
 import { FilterGalleryDTO } from 'src/app/model/gallery/filter-gallery.dto';
-import { ApiService } from 'src/app/services/api.service';
+import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -27,7 +27,7 @@ export class FormFilterGalleryComponent implements OnInit {
 
   
 
-  constructor(private apiService: ApiService,private userService:UserService) {}
+  constructor(private apiService: ApiPainelService,private userService:UserService) {}
 
   ngOnInit(): void {
     this.finalDate = new FormControl();

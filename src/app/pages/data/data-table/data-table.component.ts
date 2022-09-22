@@ -12,7 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { finalize, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { DataFileDetails } from 'src/app/model/detail/datafile-details';
 import { Filter } from 'src/app/model/filter';
-import { ApiService } from 'src/app/services/api.service';
+import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 
 @Component({
@@ -47,7 +47,7 @@ export class DataTableComponent implements OnInit {
   pageEvent: PageEvent;
 
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiPainelService) {}
 
   ngOnInit(): void {
     //Evento acioanado ao apertar o botão "filtrar"

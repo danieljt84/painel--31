@@ -13,6 +13,12 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { RupturaPeriodoDataTableComponent } from './ruptura-periodo-data-table/ruptura-periodo-data-table.component';
 import { NavModule } from '../shared/nav/nav.module';
+import { AlertaValidadeComponent } from './alerta-validade/alerta-validade.component';
+import { MatSortModule } from '@angular/material/sort';
+import { MatProgressSpinner, MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { IconConfigComponent } from './icon-config/icon-config.component';
+import { ModalConfigComponent } from './modal-config/modal-config.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,6 +28,9 @@ import { NavModule } from '../shared/nav/nav.module';
     AtivacaoGraficoCardComponent,
     RupturaDataTableComponent,
     RupturaPeriodoDataTableComponent,
+    AlertaValidadeComponent,
+    IconConfigComponent,
+    ModalConfigComponent,
   ],
   imports: [
     CommonModule,
@@ -30,7 +39,10 @@ import { NavModule } from '../shared/nav/nav.module';
     MultiSelectModule,
     MatTableModule,
     MatPaginatorModule,
-    NavModule
+    MatSortModule,
+    MatProgressSpinnerModule,
+    NavModule,
+    ReactiveFormsModule
   ]
 })
 export class AnalyticModule { }

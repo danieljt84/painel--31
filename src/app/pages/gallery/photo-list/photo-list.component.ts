@@ -5,7 +5,7 @@ import { DataPhotoGrid } from 'src/app/model/gallery/data-photo-grid';
 import { DataFilePhoto } from 'src/app/model/gallery/datafile-photo';
 import { Filter } from 'src/app/model/filter';
 
-import { ApiService } from 'src/app/services/api.service';
+import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { FilterGalleryDTO } from 'src/app/model/gallery/filter-gallery.dto';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 
@@ -24,7 +24,7 @@ export class PhotoListComponent implements OnInit, OnDestroy {
   isAlive = true;
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiPainelService) {}
 
   //Recebe a emissão do evento e realiza o carregamento dos dados
   ngOnInit(): void {

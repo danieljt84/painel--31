@@ -1,15 +1,17 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DataFileDetails } from '../model/detail/datafile-details';
-import { FilterDatatableDTO } from '../model/detail/filter-datatable.dto';
-import { Filter } from '../model/filter';
-import { DataFilePhoto } from '../model/gallery/datafile-photo';
-import { FilterGalleryDTO } from '../model/gallery/filter-gallery.dto';
+import { Observable } from 'rxjs';
+import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
+import { DataFileDetails } from '../../model/detail/datafile-details';
+import { FilterDatatableDTO } from '../../model/detail/filter-datatable.dto';
+import { Filter } from '../../model/filter';
+import { DataFilePhoto } from '../../model/gallery/datafile-photo';
+import { FilterGalleryDTO } from '../../model/gallery/filter-gallery.dto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ApiService {
+export class ApiPainelService {
   constructor(private http: HttpClient) {}
 
   getDataDetails(filter: Filter) {
@@ -58,6 +60,24 @@ export class ApiService {
     );
   }
 
+  getFilterToActivitionCard(
+    initialDate: string,
+    finalDate: string,
+    brandId: any
+  ) {
+    let params = new HttpParams({
+      fromObject: {
+        initialDate: initialDate,
+        finalDate: finalDate,
+        brandId: String(brandId),
+      },
+    });
+    return this.http.get<FilterActivationDTO>(
+      'http://localhost:8080/filter/activation',
+      { params }
+    );
+  }
+
   getFilterToGallery(
     initialDate: string,
     finalDate: string,
@@ -74,6 +94,22 @@ export class ApiService {
       'http://localhost:8080/filter/gallery',
       { params }
     );
+  }
+
+  getRupturaBetweenDateByBrand(idBrand:number,initialDate:string,finalDate:string):Observable<any>{
+    let params = new HttpParams()
+    .set('initialDate', initialDate)
+    .set('finalDate', finalDate)
+    .set('idBrand', idBrand);
+   return this.http.get('http://localhost:8080/detail/ruptura',{params});
+  }
+
+  getValidityBetweenDateByBrand(idBrand:number,initialDate:string,finalDate:string):Observable<any>{
+    let params = new HttpParams()
+    .set('initialDate', initialDate)
+    .set('finalDate', finalDate)
+    .set('idBrand', idBrand);
+   return this.http.get('http://localhost:8080/detail/validity',{params});
   }
 
   private replacer(key:any, value:Map<string,string[]>) {

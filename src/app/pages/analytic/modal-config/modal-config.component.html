@@ -1,0 +1,24 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Configuração - Análise</h5>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="activeModal.close()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <label>Periodo:</label>
+        <div class="d-flex">
+            <input type="date" class="data-input form-control" [formControl]="initialDate" id="initialDate" />
+            <input type="date" class="data-input form-control"[formControl]="finalDate" id="finalDate" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="activeModal.close()">
+          Fechar
+        </button>
+        <button type="button" (click)="emitEventsChanges()" class="btn btn-primary">Aplicar</button>
+      </div>
+</div>
