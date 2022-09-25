@@ -142,7 +142,7 @@ export class AtivacaoCardComponent implements OnInit {
 
   eventListenerSetItem() {
     EventEmiterService.get('set-item').subscribe((data) => {
-      if ((data.type = 'activation')) {
+      if ((data.type == 'activation')) {
         this.loadItensSelected(data);
         this.loadDatasWithFilter()
       }

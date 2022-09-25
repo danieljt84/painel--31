@@ -92,8 +92,9 @@ export class AtivacaoGraficoCardComponent implements OnInit,AfterViewInit {
       this.chartBase.update()
     })).subscribe(data =>{
       this.valuesToFilter = data.valuesToFilter;
-      let keys = Object.keys(data);
+      let keys = Object.keys(data.complete);
       this.datasets[0].data.length = 0;
+      this.labels = [];
       keys.reverse().forEach(key =>{
         this.labels.push(key);
         this.datasets[0].data.push(data.complete[key]);
@@ -103,7 +104,7 @@ export class AtivacaoGraficoCardComponent implements OnInit,AfterViewInit {
 
   eventListenerSetItem() {
     EventEmiterService.get('set-item').subscribe((data) => {
-      if ((data.type = 'activation-chart')) {
+      if ((data.type == 'activation-chart')) {
         this.loadItensSelected(data);
         this.loadDatasWithFilter()
       }

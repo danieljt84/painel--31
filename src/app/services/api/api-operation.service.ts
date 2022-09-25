@@ -9,7 +9,7 @@ import { Filter } from "src/app/model/filter";
   })
 export class ApiOperationService{
 
-    url = "http://localhost:8081";
+    url = "http://192.168.1.104:8081";
 
     constructor(private http: HttpClient) {}
     
@@ -81,12 +81,14 @@ export class ApiOperationService{
     }
 
     getCountActivityCompleteWithDateBetweenDateByBrandWithFilter(filter:Filter):Observable<any>{
+      const headers = { 'content-type': 'application/json'}  
+
       let params = new HttpParams()
       .set('brand', filter.idBrand)
       .set('initialDate', filter.initialDate)
       .set('finalDate', filter.finalDate);
       const str = this.transformMapInStringArray(filter.filter);
-      return this.http.post<number>(this.url+"/datatask/countactivitycompletewithdatebetweendatebybrand",str,{params});
+      return this.http.post<number>(this.url+"/datatask/countactivitycompletewithdatebetweendatebybrand",str,{params,headers});
   }
 
     getFilterToActivitionCard(
