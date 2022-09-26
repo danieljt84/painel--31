@@ -25,14 +25,12 @@ export class ApiOperationService{
         .set('date', date);
        return this.http.get<number>(this.url+"/datatask/countactivitydoingbybrand",{params});
     }
-
     getCountActivityMissingByBrand(brand: string, date: string){
         let params = new HttpParams()
         .set('brand', brand)
         .set('date', date);
        return this.http.get<number>(this.url+"/datatask/countactivitymissingbybrand",{params});
     }
-
     getCountActivityCompleteBetweenDateByBrand(brand: string, initialDate: string,finalDate: string):Observable<number>{
       const headers = { 'content-type': 'application/json'}  
       let params = new HttpParams()
@@ -41,8 +39,7 @@ export class ApiOperationService{
       .set('finalDate', finalDate);
 
       return this.http.get<number>(this.url+"/datatask/countactivitycompletebetweendatebybrand",{params,headers});
-  }
-
+    }
     getCountActivityCompleteBetweenDateByBrandUsingFilter(filter:Filter):Observable<number>{
         const headers = { 'content-type': 'application/json'}  
         let params = new HttpParams()
@@ -53,7 +50,6 @@ export class ApiOperationService{
 
         return this.http.post<number>(this.url+"/datatask/countactivitycompletebetweendatebybrand",str,{params,headers});
     }
-
     getCountActivityMissingBetweenDateByBrand(brand: string, initialDate: string,finalDate: string):Observable<number>{
         let params = new HttpParams()
         .set('brand', brand)
@@ -71,7 +67,6 @@ export class ApiOperationService{
         const str = this.transformMapInStringArray(filter.filter);
         return this.http.post<number>(this.url+"/datatask/countactivitymissingbetweendatebybrand",str,{params,headers});
     }
-
     getCountActivityCompleteWithDateBetweenDateByBrand(brand: string, initialDate:string, finalDate:string):Observable<any>{
         let params = new HttpParams()
         .set('brand', brand)
@@ -79,7 +74,6 @@ export class ApiOperationService{
         .set('finalDate', finalDate);
         return this.http.get<number>(this.url+"/datatask/countactivitycompletewithdatebetweendatebybrand",{params});
     }
-
     getCountActivityCompleteWithDateBetweenDateByBrandWithFilter(filter:Filter):Observable<any>{
       const headers = { 'content-type': 'application/json'}  
 
@@ -90,7 +84,6 @@ export class ApiOperationService{
       const str = this.transformMapInStringArray(filter.filter);
       return this.http.post<number>(this.url+"/datatask/countactivitycompletewithdatebetweendatebybrand",str,{params,headers});
   }
-
     getFilterToActivitionCard(
       initialDate: string,
       finalDate: string,
@@ -109,6 +102,15 @@ export class ApiOperationService{
       );
     }
 
+    getPrevistoRealizadoToDownload(filter:Filter){
+      const headers = { 'content-type': 'application/json'}  
+      let params = new HttpParams()
+      .set('brand', filter.idBrand)
+      .set('initialDate', filter.initialDate)
+      .set('finalDate', filter.finalDate);
+
+      return this.http.get<Blob>(this.url+"/report/previstorealizado",{params})
+    }
     transformMapInStringArray(map:Map<string,string[]>){
         let index = 1;
         let string ='{"filter":{';
@@ -124,5 +126,5 @@ export class ApiOperationService{
         })
     
         return string +'}}';
-      }
+    }
 }

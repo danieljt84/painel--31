@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { format, isThisSecond, subDays } from 'date-fns';
 import { BaseChartDirective } from 'ng2-charts';
-import { filter, finalize, forkJoin } from 'rxjs';
+import { filter, finalize, forkJoin, Observable } from 'rxjs';
 import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
 import { Filter } from 'src/app/model/filter';
 import { ApiOperationService } from 'src/app/services/api/api-operation.service';
@@ -25,6 +25,7 @@ export class AtivacaoCardComponent implements OnInit {
   valuesToFilter: FilterActivationDTO;
   itensSelecteds = new Map<string, string[]>();
   isLoadingValues = true;
+  observableToDownload: Observable<any>;
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
@@ -122,11 +123,17 @@ export class AtivacaoCardComponent implements OnInit {
         this.apiOperationService.getCountActivityMissingBetweenDateByBrandUsingFilter(
           this.filter
         ),
+        valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
+          this.filter.initialDate,
+          this.filter.finalDate,
+          this.userService.obterUsuarioLogado.brand.name
+        )
     }).pipe(finalize(()=>{
       this.isLoadingValues = false;
       this.chart.update();
 
     })).subscribe(data =>{
+      this.valuesToFilter = data.valuesToFilter;
       this.doughnutChartDatasets[0].data.length = 0;
       this.realizado = data.complete;
       this.pendente = data.missing;
@@ -173,5 +180,11 @@ export class AtivacaoCardComponent implements OnInit {
       this.finalDate = data.finalDate;
       this.loadDatasWithFilter()
     })
+  }
+
+  emitObservableToDownload(event:any){
+    if(event.target.value == 'exportar'){
+       this.observableToDownload = this.apiOperationService.getPrevistoRealizadoToDownload(this.filter);
+    }
   }
 }

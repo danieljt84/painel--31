@@ -19,6 +19,8 @@ import { MatProgressSpinner, MatProgressSpinnerModule } from '@angular/material/
 import { IconConfigComponent } from './icon-config/icon-config.component';
 import { ModalConfigComponent } from './modal-config/modal-config.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { IconDropdownModule } from '../shared/icon-dropdown/icon-dropdown.module';
+import { FileSaverModule } from 'ngx-filesaver';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatSortModule,
     MatProgressSpinnerModule,
     NavModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    IconDropdownModule,
+    FileSaverModule
   ]
 })
 export class AnalyticModule { }

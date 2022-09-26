@@ -12,12 +12,15 @@ import { HttpErrorInterceptor } from './core/interceptors/htttp-error.inteceptor
 import { TokenInterceptor } from './core/interceptors/token.inteceptor';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AnalyticComponent } from './pages/analytic/analytic.component';
+import { IconDropdownComponent } from './pages/shared/icon-dropdown/icon-dropdown.component';
+import { ModalDownloadComponent } from './pages/shared/modal-download/modal-download.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
-  ],
+    AppComponent,
+    ModalDownloadComponent
+    ],
   imports: [
     CommonModule,
     HttpClientModule,
