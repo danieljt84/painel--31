@@ -25,7 +25,7 @@ export class AtivacaoCardComponent implements OnInit {
   valuesToFilter: FilterActivationDTO;
   itensSelecteds = new Map<string, string[]>();
   isLoadingValues = true;
-  observableToDownload: Observable<any>;
+  donwload: Download
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
@@ -185,6 +185,7 @@ export class AtivacaoCardComponent implements OnInit {
   emitObservableToDownload(event:any){
     if(event.target.value == 'exportar'){
        this.observableToDownload = this.apiOperationService.getPrevistoRealizadoToDownload(this.filter);
+       this.
     }
   }
 }
