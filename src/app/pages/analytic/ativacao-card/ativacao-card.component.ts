@@ -4,6 +4,7 @@ import { format, isThisSecond, subDays } from 'date-fns';
 import { BaseChartDirective } from 'ng2-charts';
 import { filter, finalize, forkJoin, Observable } from 'rxjs';
 import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
+import { Download } from 'src/app/model/download';
 import { Filter } from 'src/app/model/filter';
 import { ApiOperationService } from 'src/app/services/api/api-operation.service';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
@@ -25,7 +26,7 @@ export class AtivacaoCardComponent implements OnInit {
   valuesToFilter: FilterActivationDTO;
   itensSelecteds = new Map<string, string[]>();
   isLoadingValues = true;
-  donwload: Download
+  download: Download;
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
@@ -183,9 +184,11 @@ export class AtivacaoCardComponent implements OnInit {
   }
 
   emitObservableToDownload(event:any){
-    if(event.target.value == 'exportar'){
-       this.observableToDownload = this.apiOperationService.getPrevistoRealizadoToDownload(this.filter);
-       this.
+    if(event == 'exportar'){
+      this.download = {
+        filename :"previstorealizado",
+        observable: this.apiOperationService.getPrevistoRealizadoToDownload(this.filter)
+      }
     }
   }
 }

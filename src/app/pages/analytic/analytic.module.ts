@@ -21,6 +21,7 @@ import { ModalConfigComponent } from './modal-config/modal-config.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IconDropdownModule } from '../shared/icon-dropdown/icon-dropdown.module';
 import { FileSaverModule } from 'ngx-filesaver';
+import { ModalDownloadModule } from '../shared/modal-download/modal-download.module';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { FileSaverModule } from 'ngx-filesaver';
     NavModule,
     ReactiveFormsModule,
     IconDropdownModule,
-    FileSaverModule
+    FileSaverModule,
+    ModalDownloadModule
   ]
 })
 export class AnalyticModule { }

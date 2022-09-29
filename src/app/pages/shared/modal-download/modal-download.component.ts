@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,AfterViewInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from "rxjs";
 import { FileSaverService } from 'ngx-filesaver'; 
+import { Download } from 'src/app/model/download';
+import { finalize } from 'rxjs/operators';
 
 
 @Component({
@@ -9,18 +11,19 @@ import { FileSaverService } from 'ngx-filesaver';
   templateUrl: './modal-download.component.html',
   styleUrls: ['./modal-download.component.scss']
 })
-export class ModalDownloadComponent implements OnInit {
+export class ModalDownloadComponent implements AfterViewInit {
   
-  observable:Observable<any>
-  filename:string;
+  download:Download
   constructor(public activeModal: NgbActiveModal, private fileSaver: FileSaverService) { }
 
-  ngOnInit(): void {
-    this.doAction(o)
+  ngAfterViewInit(): void {
+    this.doAction()
   }
 
-  doAction(observable:Observable<any>){
-    observable.subscribe(blob => this.fileSaver.save(blob, '.zip'))
+  doAction(){
+    this.download.observable
+    .pipe(finalize(()=> this.activeModal.close()))
+    .subscribe(blob => this.fileSaver.save(blob, 'previstorealizado.xlsx'));
   }
 
 

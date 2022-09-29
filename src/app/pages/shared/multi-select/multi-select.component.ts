@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 
@@ -7,7 +7,8 @@ import { EventEmiterService } from 'src/app/services/event-emiter.service';
   templateUrl: './multi-select.component.html',
   styleUrls: ['./multi-select.component.scss'],
 })
-export class MultiSelectComponent implements OnInit {
+export class MultiSelectComponent implements OnInit, OnChanges {
+ 
   @Input() id: string;
   @Input() type: string;
   @Input() values: string[];
@@ -15,6 +16,12 @@ export class MultiSelectComponent implements OnInit {
   selectedItems: any[] = [];
   dropdownSettings: IDropdownSettings = {};
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['values'] && !changes['values'].isFirstChange()){
+      this.values = changes['values'].currentValue;
+      this.ngOnInit();
+    }
+  }
   ngOnInit() {
     this.dropdownSettings = {
       singleSelection: false,
@@ -31,9 +38,11 @@ export class MultiSelectComponent implements OnInit {
 
   transformValuesInDropdownList() {
     if (this.values) {
+      this.dropdownList.length = 0;
+      this.dropdownList = [];
       let id = 0;
       this.values.forEach((value) =>
-        this.dropdownList.push({
+       this.dropdownList= this.dropdownList.concat({
           item_id: id++,
           item_text: value,
         })

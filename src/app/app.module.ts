@@ -18,8 +18,7 @@ import { ModalDownloadComponent } from './pages/shared/modal-download/modal-down
 
 @NgModule({
   declarations: [
-    AppComponent,
-    ModalDownloadComponent
+    AppComponent
     ],
   imports: [
     CommonModule,

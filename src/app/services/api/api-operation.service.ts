@@ -105,11 +105,11 @@ export class ApiOperationService{
     getPrevistoRealizadoToDownload(filter:Filter){
       const headers = { 'content-type': 'application/json'}  
       let params = new HttpParams()
-      .set('brand', filter.idBrand)
+      .set('nameBrand', filter.idBrand)
       .set('initialDate', filter.initialDate)
       .set('finalDate', filter.finalDate);
 
-      return this.http.get<Blob>(this.url+"/report/previstorealizado",{params})
+      return this.http.post(this.url+"/report/previstorealizado",params,{responseType:'blob'})
     }
     transformMapInStringArray(map:Map<string,string[]>){
         let index = 1;
