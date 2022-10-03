@@ -5,15 +5,19 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
 import { DataFileDetails } from 'src/app/model/detail/datafile-details';
+import { Download } from 'src/app/model/download';
 import { Filter } from 'src/app/model/filter';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
+import { ModalDownloadComponent } from '../../shared/modal-download/modal-download.component';
 
 @Component({
   selector: 'app-data-table',
@@ -30,33 +34,39 @@ import { EventEmiterService } from 'src/app/services/event-emiter.service';
     ]),
   ],
 })
-export class DataTableComponent implements OnInit {
+export class DataTableComponent implements OnInit, OnChanges {
   values: DataFileDetails[] = [];
   isLoadingDatas = "" ;
   destroy$: Subject<boolean> = new Subject<boolean>();
-
   @ViewChild(MatSort) sort: MatSort;
   dataSource = new MatTableDataSource<any>();
   columnsToDisplay = ['shop', 'promoter', 'project','date'];
-
   // MatPaginator Inputs
   length = 100;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   pageEvent: PageEvent;
+  filter: Filter | any;
+  download:Download;
 
-
-  constructor(private apiService: ApiPainelService) {}
+  constructor(private apiService: ApiPainelService,private modalService: NgbModal ) {}
 
   ngOnInit(): void {
+    this.eventEditFilterDataListener();
     //Evento acioanado ao apertar o botão "filtrar"
     EventEmiterService.get('on-filter-data')
       .pipe(takeUntil(this.destroy$))
-      .subscribe((filter) => {
-        this.loadDatas(filter as Filter);
+      .subscribe(() => {
+        this.loadDatas(this.filter);
       });
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['filter'] && !changes['filter'].isFirstChange()){
+      this.filter = changes['filter'];
+    }
+ }
 
   loadDatas(filter: Filter) {
     this.isLoadingDatas = "ATIVO";
@@ -96,4 +106,17 @@ export class DataTableComponent implements OnInit {
   }
 
   changeMode() {}
+
+  eventEditFilterDataListener(){
+    EventEmiterService.get('on-edit-filter-data').subscribe(filter => this.filter= filter);
+  }
+
+  emitObservableToDownload(){
+    this.download = {
+      filename :"details",
+      observable : this.apiService.getDetailsToDownload(this.filter)
+    }
+    const modal = this.modalService.open(ModalDownloadComponent);
+    modal.componentInstance.download = this.download;
+  }
 }

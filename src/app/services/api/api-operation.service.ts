@@ -9,7 +9,7 @@ import { Filter } from "src/app/model/filter";
   })
 export class ApiOperationService{
 
-    url = "http://192.168.1.104:8081";
+    url = "http://localhost:8081";
 
     constructor(private http: HttpClient) {}
     
@@ -111,6 +111,7 @@ export class ApiOperationService{
 
       return this.http.post(this.url+"/report/previstorealizado",params,{responseType:'blob'})
     }
+    
     transformMapInStringArray(map:Map<string,string[]>){
         let index = 1;
         let string ='{"filter":{';

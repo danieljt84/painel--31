@@ -22,6 +22,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
   finalDate: FormControl;
   itensSelecteds = new Map<string, string[]>();
   destroy$: Subject<boolean> = new Subject<boolean>();
+  filter:Filter;
 
   constructor(
     private apiService: ApiPainelService,
@@ -43,6 +44,14 @@ export class FormFilterComponent implements OnInit, OnDestroy {
 
   //Carrega todos os dados possiveis de filtragem
   async loadValuesToFilter( initialDate: string,finalDate: string,idBrand: number ) {
+
+    this.filter = {
+      finalDate:this.finalDate.value,
+      initialDate: this.initialDate.value,
+      idBrand: this.userService.obterUsuarioLogado.brand.id,
+      filter:this.itensSelecteds
+    }
+
     let data = await this.apiService
       .getFilterToDataTable(initialDate, finalDate, idBrand)
       .toPromise();
@@ -57,33 +66,40 @@ export class FormFilterComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((item) => {
         if ((item.type = 'data')) {
-          if (item.itens.length == 0) {
-            if (this.itensSelecteds.has(item.id)) {
-              this.itensSelecteds
-                .get(item.id).length = 0;
-                this.itensSelecteds.delete(item.id);
-            }
-          } else {
-            if (this.itensSelecteds.has(item.id)) {
-              this.itensSelecteds
-                .get(item.id).length = 0;
-              this.itensSelecteds.get(item.id).push(...item.itens);
-            } else {
-              this.itensSelecteds.set(item.id, item.itens);
-            }
-          }
+          this.loadItensSelected(item);
         }
       });
   }
+
+  loadItensSelected(item: any) {
+    if (item.itens.length == 0) {
+      if (this.itensSelecteds.has(item.id)) {
+        this.itensSelecteds.get(item.id).length = 0;
+        this.itensSelecteds.delete(item.id);
+      }
+    } else {
+      if (this.itensSelecteds.has(item.id)) {
+        this.itensSelecteds.get(item.id).length = 0;
+        this.itensSelecteds.get(item.id).push(...item.itens);
+      } else {
+        this.itensSelecteds.set(item.id, item.itens);
+      }
+    }
+    this.onEditFilter();
+  }
   //Emite um evento para filtrar os dados via api
   onFilter() {
-    let filter: Filter = {
+    EventEmiterService.get('on-filter-data').emit();
+  }
+
+  onEditFilter(){
+    this.filter = {
       finalDate: this.finalDate.value,
       initialDate: this.initialDate.value,
       idBrand: this.userService.obterUsuarioLogado.brand.id,
       filter: this.itensSelecteds,
     };
-    EventEmiterService.get('on-filter-data').emit(filter);
+    EventEmiterService.get('on-edit-filter-data').emit(this.filter);
   }
 
   ngOnDestroy(): void {

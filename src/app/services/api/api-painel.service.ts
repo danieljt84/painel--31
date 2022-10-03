@@ -112,9 +112,14 @@ export class ApiPainelService {
    return this.http.get('http://localhost:8080/detail/validity',{params});
   }
 
-  private replacer(key:any, value:Map<string,string[]>) {
-      let body ='{filter:'+this.transformMapInStringArray(value)+'}'
-      return body;
+  getDetailsToDownload(filter:Filter){
+    const headers = { 'content-type': 'application/json'}  
+    let params = new HttpParams()
+    .set('idBrand', filter.idBrand)
+    .set('initialDate', filter.initialDate)
+    .set('finalDate', filter.finalDate);
+
+    return this.http.post("http://localhost:8080/report/details",params,{responseType:'blob',headers})
   }
 
   transformMapInStringArray(map:Map<string,string[]>){
