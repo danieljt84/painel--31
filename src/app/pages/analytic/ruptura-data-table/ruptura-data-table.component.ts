@@ -3,6 +3,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { format, subDays } from 'date-fns';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
+import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -13,8 +14,8 @@ import { UserService } from 'src/app/services/user.service';
 export class RupturaDataTableComponent implements OnInit,AfterViewInit {
   displayedColumns: string[] = ['Loja', 'Produto', 'Data'];
   dataSource = new MatTableDataSource<any>();
-  today:string;
-  yesterday:string;
+  initialDate:string;
+  finalDate:string;
   // MatPaginator Inputs
   length = 100;
   pageSize = 5;
@@ -29,14 +30,15 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.today = format(new Date(),'yyyy-MM-dd');
-    this.yesterday = format(subDays(new Date(),1),'yyyy-MM-dd');
+    this.finalDate = format(new Date(),'yyyy-MM-dd');
+    this.initialDate = format(subDays(new Date(),30),'yyyy-MM-dd');
     this.loadDatas();
+    this.eventListenerChangeDate();
   }
 
   loadDatas(){
     this.apiPainelService
-    .getRupturaBetweenDateByBrand(this.userService.obterUsuarioLogado.brand.id,this.yesterday,this.today)
+    .getRupturaBetweenDateByBrand(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate)
     .subscribe(data => this.dataSource.data = data );
   }
 
@@ -53,4 +55,12 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
     this.paginator._intl.itemsPerPageLabel = 'Itens por pagina:';
   }
 
+  eventListenerChangeDate(){
+    EventEmiterService.get('change-date-analytic')
+    .subscribe(data=>{
+      this.initialDate = data.initialDate;
+      this.finalDate = data.finalDate;
+      this.loadDatas()
+    })
+  }
 }
