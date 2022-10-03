@@ -89,7 +89,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
   }
   //Emite um evento para filtrar os dados via api
   onFilter() {
-    EventEmiterService.get('on-filter-data').emit();
+    EventEmiterService.get('on-filter-data').emit(this.filter);
   }
 
   onEditFilter(){
@@ -99,7 +99,6 @@ export class FormFilterComponent implements OnInit, OnDestroy {
       idBrand: this.userService.obterUsuarioLogado.brand.id,
       filter: this.itensSelecteds,
     };
-    EventEmiterService.get('on-edit-filter-data').emit(this.filter);
   }
 
   ngOnDestroy(): void {

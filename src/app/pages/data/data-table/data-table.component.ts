@@ -57,7 +57,8 @@ export class DataTableComponent implements OnInit, OnChanges {
     //Evento acioanado ao apertar o botão "filtrar"
     EventEmiterService.get('on-filter-data')
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
+      .subscribe(filter => {
+        this.filter = filter;
         this.loadDatas(this.filter);
       });
   }

@@ -105,9 +105,9 @@ export class ApiOperationService{
     getPrevistoRealizadoToDownload(filter:Filter){
       const headers = { 'content-type': 'application/json'}  
       let params = new HttpParams()
-      .set('nameBrand', filter.idBrand)
-      .set('initialDate', filter.initialDate)
-      .set('finalDate', filter.finalDate);
+      .append('nameBrand', filter.idBrand)
+      .append('initialDate', filter.initialDate)
+      .append('finalDate', filter.finalDate);
 
       return this.http.post(this.url+"/report/previstorealizado",params,{responseType:'blob'})
     }

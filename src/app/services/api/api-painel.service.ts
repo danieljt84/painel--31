@@ -115,11 +115,11 @@ export class ApiPainelService {
   getDetailsToDownload(filter:Filter){
     const headers = { 'content-type': 'application/json'}  
     let params = new HttpParams()
-    .set('idBrand', filter.idBrand)
     .set('initialDate', filter.initialDate)
     .set('finalDate', filter.finalDate);
+    const str = this.transformMapInStringArray(filter.filter);
 
-    return this.http.post("http://localhost:8080/report/details",params,{responseType:'blob',headers})
+    return this.http.post("http://localhost:8080/report/details",str,{responseType:'blob',params,headers})
   }
 
   transformMapInStringArray(map:Map<string,string[]>){
