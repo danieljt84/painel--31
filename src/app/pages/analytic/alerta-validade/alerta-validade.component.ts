@@ -4,6 +4,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { format, subDays } from 'date-fns';
 import { finalize } from 'rxjs';
+import { Download } from 'src/app/model/download';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
@@ -27,8 +28,8 @@ export class AlertaValidadeComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   sortedData: any[];
   isLoading = true;
+  download: Download;
 
-  
   constructor(private apiPainelService:ApiPainelService, private userService:UserService) { }
 
   ngOnInit(): void {
@@ -71,6 +72,15 @@ export class AlertaValidadeComponent implements OnInit {
       this.finalDate = data.finalDate;
       this.loadDatas()
     })
+  }
+
+  emitObservableToDownload(event:any){
+    if(event == 'exportar'){
+      this.download = {
+        filename :"alerta-validade",
+        observable: this.apiPainelService.getValidadeToDownload(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate)
+      }
+    }
   }
 
 }

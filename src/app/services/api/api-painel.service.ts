@@ -122,6 +122,24 @@ export class ApiPainelService {
     return this.http.post("http://localhost:8080/report/details",str,{responseType:'blob',params,headers})
   }
 
+  getRupturaToDownload(idBrand:number,initialDate:string,finalDate:string):Observable<any>{
+    const headers = { 'content-type': 'application/json'};
+    let params = new HttpParams()
+    .set('initialDate', initialDate)
+    .set('finalDate', finalDate)
+    .set('idBrand', idBrand);
+    return this.http.post('http://localhost:8080/report/ruptura',"",{responseType:'blob',params,headers});
+  }
+
+  getValidadeToDownload(idBrand:number,initialDate:string,finalDate:string):Observable<any>{
+    const headers = { 'content-type': 'application/json'};
+    let params = new HttpParams()
+    .set('initialDate', initialDate)
+    .set('finalDate', finalDate)
+    .set('idBrand', idBrand);
+    return this.http.post('http://localhost:8080/report/validade',"",{responseType:'blob',params,headers});
+  }
+
   transformMapInStringArray(map:Map<string,string[]>){
     let index = 1;
     let string ='{"filter":{';

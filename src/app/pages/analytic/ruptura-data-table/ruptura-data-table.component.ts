@@ -3,6 +3,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { format, subDays } from 'date-fns';
 import { finalize } from 'rxjs';
+import { Download } from 'src/app/model/download';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
@@ -24,6 +25,8 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
   @ViewChild (MatPaginator, { static: false }) paginator: MatPaginator;
   pageEvent: PageEvent;
   isLoading = true;
+  download: Download;
+
 
   constructor(private userService:UserService, private apiPainelService:ApiPainelService) { }
 
@@ -65,5 +68,14 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
       this.finalDate = data.finalDate;
       this.loadDatas()
     })
+  }
+
+  emitObservableToDownload(event:any){
+    if(event == 'exportar'){
+      this.download = {
+        filename :"ruptura",
+        observable: this.apiPainelService.getRupturaToDownload(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate)
+      }
+    }
   }
 }
