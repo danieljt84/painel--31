@@ -76,6 +76,7 @@ export class AtivacaoGraficoCardComponent implements OnInit,AfterViewInit {
   }
 
   loadDatasWithFilter(){
+    this.isLoadingvalues = true;
     this.filter = {
       finalDate: this.initialDate,
       initialDate: this.finalDate,

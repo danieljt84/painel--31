@@ -108,6 +108,7 @@ export class AtivacaoCardComponent implements OnInit {
   }
 
   loadDatasWithFilter() {
+    this.isLoadingValues = true;
     this.filter = {
       finalDate: this.finalDate,
       initialDate: this.initialDate,

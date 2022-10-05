@@ -2,6 +2,7 @@ import { Component, OnInit,ViewChild,AfterViewInit } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { format, subDays } from 'date-fns';
+import { finalize } from 'rxjs';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
@@ -19,9 +20,10 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
   // MatPaginator Inputs
   length = 100;
   pageSize = 5;
-  pageSizeOptions: number[] = [5, 10];
+  pageSizeOptions: number[] = [5];
   @ViewChild (MatPaginator, { static: false }) paginator: MatPaginator;
   pageEvent: PageEvent;
+  isLoading = true;
 
   constructor(private userService:UserService, private apiPainelService:ApiPainelService) { }
 
@@ -37,9 +39,10 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
   }
 
   loadDatas(){
+    this.isLoading = true;
     this.apiPainelService
     .getRupturaBetweenDateByBrand(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate)
-    .subscribe(data => this.dataSource.data = data );
+    .pipe(finalize(() => this.isLoading = false)).subscribe(data => this.dataSource.data = data );
   }
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {
