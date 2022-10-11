@@ -141,7 +141,6 @@ export class AtivacaoCardComponent implements OnInit {
       this.pendente = data.missing;
       this.doughnutChartDatasets[0].data.push(this.realizado);
       this.doughnutChartDatasets[0].data.push(this.pendente);
-      this.chart.update();
       this.percentual = (
         (this.realizado / (this.realizado + this.pendente)) *
         100
