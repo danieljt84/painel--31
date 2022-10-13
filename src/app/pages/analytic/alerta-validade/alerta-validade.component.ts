@@ -78,7 +78,8 @@ export class AlertaValidadeComponent implements OnInit {
     if(event == 'exportar'){
       this.download = {
         filename :"alerta-validade",
-        observable: this.apiPainelService.getValidadeToDownload(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate)
+        observable: this.apiPainelService.getValidadeToDownload(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate),
+        type:"xlsx"
       }
     }
   }

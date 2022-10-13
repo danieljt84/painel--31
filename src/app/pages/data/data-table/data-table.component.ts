@@ -53,7 +53,6 @@ export class DataTableComponent implements OnInit, OnChanges {
   constructor(private apiService: ApiPainelService,private modalService: NgbModal ) {}
 
   ngOnInit(): void {
-    this.eventEditFilterDataListener();
     //Evento acioanado ao apertar o botão "filtrar"
     EventEmiterService.get('on-filter-data')
       .pipe(takeUntil(this.destroy$))
@@ -108,14 +107,11 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   changeMode() {}
 
-  eventEditFilterDataListener(){
-    EventEmiterService.get('on-edit-filter-data').subscribe(filter => this.filter= filter);
-  }
-
   emitObservableToDownload(){
     this.download = {
       filename :"details",
-      observable : this.apiService.getDetailsToDownload(this.filter)
+      observable : this.apiService.getDetailsToDownload(this.filter),
+      type:"xlsx"
     }
     const modal = this.modalService.open(ModalDownloadComponent);
     modal.componentInstance.download = this.download;

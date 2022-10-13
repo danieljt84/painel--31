@@ -1,14 +1,17 @@
 import { formatDate } from '@angular/common';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { subDays } from 'date-fns';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { FilterDatatableDTO } from 'src/app/model/detail/filter-datatable.dto';
+import { Download } from 'src/app/model/download';
 import { Filter } from 'src/app/model/filter';
 import { FilterGalleryDTO } from 'src/app/model/gallery/filter-gallery.dto';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
+import { ModalDownloadComponent } from '../../shared/modal-download/modal-download.component';
 
 @Component({
   selector: 'app-form-filter-gallery',
@@ -18,13 +21,12 @@ import { UserService } from 'src/app/services/user.service';
 export class FormFilterGalleryComponent implements OnInit {
   isLoadingValues = true;
   alive: boolean = true;
-  filter: Filter;
   valuesToFilter: FilterGalleryDTO;
   initialDate: FormControl;
   finalDate: FormControl;
   itensSelecteds = new Map<string, string[]>();
   destroy$: Subject<boolean> = new Subject<boolean>();
-
+  filter: Filter;
   
 
   constructor(private apiService: ApiPainelService,private userService:UserService) {}
@@ -72,6 +74,33 @@ export class FormFilterGalleryComponent implements OnInit {
         console.log(this.itensSelecteds);
       });
   }
+
+  loadItensSelected(item:any){
+    if (item.itens.length == 0) {
+      if (this.itensSelecteds.has(item.id)) {
+        this.itensSelecteds.get(item.id).length = 0;
+        this.itensSelecteds.delete(item.id);
+      }
+    } else {
+      if (this.itensSelecteds.has(item.id)) {
+        this.itensSelecteds.get(item.id).length = 0;
+        this.itensSelecteds.get(item.id).push(...item.itens);
+      } else {
+        this.itensSelecteds.set(item.id, item.itens);
+      }
+    }
+    this.onEditFilter();
+  }
+
+  onEditFilter(){
+    this.filter = {
+      finalDate: this.finalDate.value,
+      initialDate: this.initialDate.value,
+      idBrand: this.userService.obterUsuarioLogado.brand.id,
+      filter: this.itensSelecteds,
+    };
+  }
+
   //Emite um evento que sera capturado pela component Photolist
   onFilter(){
     let filter: Filter ={

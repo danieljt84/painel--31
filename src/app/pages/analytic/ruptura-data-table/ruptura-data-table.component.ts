@@ -74,7 +74,8 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
     if(event == 'exportar'){
       this.download = {
         filename :"ruptura",
-        observable: this.apiPainelService.getRupturaToDownload(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate)
+        observable: this.apiPainelService.getRupturaToDownload(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate),
+        type:"xlsx"
       }
     }
   }

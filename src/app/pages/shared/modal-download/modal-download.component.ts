@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { FileSaverService } from 'ngx-filesaver'; 
 import { Download } from 'src/app/model/download';
 import { finalize } from 'rxjs/operators';
+import { isThisSecond } from 'date-fns';
 
 
 @Component({
@@ -23,7 +24,7 @@ export class ModalDownloadComponent implements AfterViewInit {
   doAction(){
     this.download.observable
     .pipe(finalize(()=> this.activeModal.close()))
-    .subscribe(blob => this.fileSaver.save(blob, this.download.filename+'.xlsx'));
+    .subscribe(blob => this.fileSaver.save(blob, this.download.filename+'.'+this.download.type));
   }
 
 

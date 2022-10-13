@@ -122,6 +122,17 @@ export class ApiPainelService {
     return this.http.post("http://localhost:8080/report/details",str,{responseType:'blob',params,headers})
   }
 
+  generateBookPhotos(filter:Filter){
+    const headers = { 'content-type': 'application/json'}  
+    let params = new HttpParams()
+    .set('initialDate', filter.initialDate)
+    .set('finalDate', filter.finalDate)
+    .set('idBrand', filter.idBrand);
+    const str = this.transformMapInStringArray(filter.filter);
+    return this.http.post("http://localhost:8080/book",str,{responseType:'blob',params,headers})
+
+  }
+
   getRupturaToDownload(idBrand:number,initialDate:string,finalDate:string):Observable<any>{
     const headers = { 'content-type': 'application/json'};
     let params = new HttpParams()

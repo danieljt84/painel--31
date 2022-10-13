@@ -2,5 +2,6 @@ import { Observable } from "rxjs";
 
 export interface Download{
     observable:Observable<any>
-    filename:string
+    filename:string;
+    type:string
 }

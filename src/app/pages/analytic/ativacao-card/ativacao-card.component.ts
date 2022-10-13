@@ -187,7 +187,8 @@ export class AtivacaoCardComponent implements OnInit {
     if(event == 'exportar'){
       this.download = {
         filename :"previstorealizado",
-        observable: this.apiOperationService.getPrevistoRealizadoToDownload(this.filter)
+        observable: this.apiOperationService.getPrevistoRealizadoToDownload(this.filter),
+        type:"xlsx"
       }
     }
   }

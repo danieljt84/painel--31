@@ -9,7 +9,7 @@ import { Filter } from "src/app/model/filter";
   })
 export class ApiOperationService{
 
-    url = "http://localhost:8081";
+    url = "http://192.168.1.104:8081";
 
     constructor(private http: HttpClient) {}
     
