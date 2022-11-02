@@ -14,6 +14,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { AnalyticComponent } from './pages/analytic/analytic.component';
 import { IconDropdownComponent } from './pages/shared/icon-dropdown/icon-dropdown.component';
 import { ModalDownloadComponent } from './pages/shared/modal-download/modal-download.component';
+import { NavModule } from './pages/shared/nav/nav.module';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { ModalDownloadComponent } from './pages/shared/modal-download/modal-down
     HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,
+    NavModule,
     RouterModule.forRoot(appRotas),
   ],
   providers: [

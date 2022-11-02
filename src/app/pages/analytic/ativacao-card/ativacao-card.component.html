@@ -1,29 +1,31 @@
 
 <ng-container *ngIf="!isLoadingValues">
   <div class="card mt-4">
-    <div class="row ml-3 mt-2 title-card justify-content-between">
-      <h4>Ativação</h4>
-      <app-icon-dropdown [download]="download" (eventGetObservable)="emitObservableToDownload($event)" style="margin-right: 2rem"></app-icon-dropdown>
+    <div class="d-flex mt-2 ps-2 pe-4  title-card justify-content-between">
+            <h4>Ativação</h4>
+      <app-icon-dropdown [download]="download" (eventGetObservable)="emitObservableToDownload($event)"></app-icon-dropdown>
     </div>
     <div class="d-flex ml-4 flex-row">
-      <div class="relative">
-        <canvas
-          baseChart
-          [labels]="doughnutChartLabels"
-          [datasets]="doughnutChartDatasets"
-          [options]="doughnutChartOptions"
-          [type]="'doughnut'"
-          [width]="170"
-          [height]="170"
-        >
-        </canvas>
-        <div class="absolute-center text-center">
-          <p class="h3" style="margin: 0;">{{percentual}}%</p>
+      <div class="d-flex">
+        <div class="relative">
+          <canvas
+            baseChart
+            [labels]="doughnutChartLabels"
+            [datasets]="doughnutChartDatasets"
+            [options]="doughnutChartOptions"
+            [type]="'doughnut'"
+            [width]="170"
+            [height]="170"
+          >
+          </canvas>
+          <div class="absolute-center text-center">
+            <p class="h3" style="margin: 0;">{{percentual}}%</p>
+          </div>
         </div>
-      </div>
-      <div class="activition-info">
-          <h4 class="mb-3">Realizado: {{realizado}}</h4>
-          <h4 class="mb-0">Pendente: {{pendente}}</h4>
+        <div class="activition-info">
+            <h4 class="mb-3">Realizado: {{realizado}}</h4>
+            <h4 class="mb-0">Pendente: {{pendente}}</h4>
+        </div>
       </div>
       <div class="activition-input d-flex p-2 flex-column justify-content-center" >
           <app-multi-select [values]="valuesToFilter['project']" [type]="'activation'" [id]="'project'"></app-multi-select>

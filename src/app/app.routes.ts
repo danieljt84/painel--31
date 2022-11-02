@@ -5,7 +5,7 @@ import { UserNotAutenticatedService } from './core/guards/user-not-autenticated.
 
 export const appRotas: Routes =[
     { 
-        path:'', component: AppComponent, canActivate:[UserAutenticatedService]
+        path:'', redirectTo:'analise',pathMatch: 'full'
     },
     {
         path:'dados', loadChildren: ()=> import('./pages/data/data.module').then(x =>x.DataModule), canLoad:[UserAutenticatedService]

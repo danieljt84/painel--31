@@ -12,9 +12,9 @@
      </mat-progress-spinner>
      </div>
   <div [hidden]="isLoading">
-    <div class="row ml-3 mt-2 title-card justify-content-between">
-      <h4>Alerta de validade</h4>
-      <app-icon-dropdown [download]="download" (eventGetObservable)="emitObservableToDownload($event)" style="margin-right: 2rem"></app-icon-dropdown>
+    <div class="d-flex mt-2 ps-2 pe-4  title-card justify-content-between">
+        <h4>Alerta de validade</h4>
+        <app-icon-dropdown [download]="download" (eventGetObservable)="emitObservableToDownload($event)"></app-icon-dropdown>
     </div>
     <div class="d-flex p-2 card-content flex-row">
       <div style="width: 100%">

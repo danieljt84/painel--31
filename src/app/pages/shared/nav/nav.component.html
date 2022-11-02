@@ -1,28 +1,50 @@
-<nav class="navbar navbar-expand-lg">
-  <div class="brand navbar-brand order-md-last">
-    <span class="span-brand">{{username}} | Dashboard</span>
-    <a href="">
-      <img src="assets/logo4p.png" height="36">
+
+  <div #sidebar class="sidebar  pb-3 open">
+    <nav class="navbar bg-color-nav navbar-dark">
+        <a href="index.html" class="navbar-brand mx-4 mb-3">
+            <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>DarkPan</h3>
+        </a>
+        <div class="d-flex align-items-center ms-4 mb-4">
+            <div class="position-relative">
+                <img class="rounded-circle" src="https://technext.github.io/darkpan/img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+            </div>
+            <div class="ms-3">
+                <h6 class="mb-0 user-name">Usuario</h6>
+                <span class="role">Admin</span>
+            </div>
+        </div>
+        <div class="navbar-nav w-100">
+            <a  [routerLink]="['/main']" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Painel de compras</a>
+                <a  [routerLink]="['/venda']" class="nav-item nav-link active" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Análise de vendas</a>
+            <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Relatório</a>
+        </div>
+    </nav>
+    <div class="footer-sidebar">
+        <img src="assets/logo4p.png" alt="">
+        <span>PAINEL</span>
+    </div>
+  </div>
+  <nav class="navbar navbar-expand bg-color-nav navbar-dark sticky-top px-4 py-0">
+    <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+        <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
     </a>
+    <a (click)="openSideBar()" class="sidebar-toggler flex-shrink-0">
+        <i class="fa fa-bars"></i>
+    </a>
+    <div class="navbar-nav align-items-center ms-auto">
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                <img class="rounded-circle me-lg-2" src="https://technext.github.io/darkpan/img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                <span class="d-none d-lg-inline-flex">Usuario</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                <a href="#" class="dropdown-item">Meu Perfil</a>
+                <a href="#" class="dropdown-item">Sair</a>
+            </div>
+        </div>
+    </div>
+  </nav>
+  <div #content class="content open">
+    <ng-content></ng-content>
   </div>
-  <button class="navbar-toggler" style="background-color: aliceblue;" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse show" id="navbarNavDropdown">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" routerLink="/analise">Análise <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/dados">Dados</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/galeria">Galeria</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/">Configuração</a>
-      </li>
-    </ul>
-  </div>
-</nav>

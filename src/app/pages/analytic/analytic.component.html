@@ -1,25 +1,27 @@
-<app-nav></app-nav>
-<div class="container-body">
-  <div class="row">
-    <div class="col-lg-12">
-      <app-resumo-diario-card></app-resumo-diario-card>
+<app-nav>
+  <div class="container-body">
+    <div class="row">
+      <div class="col-lg-12">
+        <app-resumo-diario-card></app-resumo-diario-card>
+      </div>
     </div>
+    <div class="row">
+      <div class="col-lg-6 col-sm-12">
+        <app-ativacao-card></app-ativacao-card>
+      </div>
+      <div class="col-lg-6 col-sm-12">
+        <app-ativacao-grafico-card></app-ativacao-grafico-card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <app-ruptura-data-table></app-ruptura-data-table>
+      </div>
+      <div class="col-lg-6">
+        <app-alerta-validade></app-alerta-validade>
+      </div>
+    </div>
+    <app-icon-config></app-icon-config>
   </div>
-  <div class="row">
-    <div class="col-lg-6 col-sm-12">
-      <app-ativacao-card></app-ativacao-card>
-    </div>
-    <div class="col-lg-6 col-sm-12">
-      <app-ativacao-grafico-card></app-ativacao-grafico-card>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-6">
-      <app-ruptura-data-table></app-ruptura-data-table>
-    </div>
-    <div class="col-lg-6">
-      <app-alerta-validade></app-alerta-validade>
-    </div>
-  </div>
-  <app-icon-config></app-icon-config>
-</div>
+  
+</app-nav>
