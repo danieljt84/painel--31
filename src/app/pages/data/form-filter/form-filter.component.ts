@@ -1,7 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { format, subDays } from 'date-fns';
+import { format, subDays, subMonths } from 'date-fns';
 import { finalize, Subject, takeUntil, takeWhile } from 'rxjs';
 import { FilterDatatableDTO } from 'src/app/model/detail/filter-datatable.dto';
 import { Filter } from 'src/app/model/filter';
@@ -35,7 +35,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
     this.initialDate = new FormControl(formatDate(subDays(new Date(), 7), 'yyyy-MM-dd', 'en'));
 
     this.loadValuesToFilter(
-      this.initialDate.value,
+      formatDate(subMonths(new Date(), 1), 'yyyy-MM-dd', 'en'),
       this.finalDate.value,
       this.userService.obterUsuarioLogado.brand.id
     );
