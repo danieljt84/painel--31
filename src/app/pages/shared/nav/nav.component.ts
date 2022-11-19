@@ -26,6 +26,9 @@ export class NavComponent implements OnInit {
     this.renderer[active ? 'removeClass' : 'addClass'](this.content.nativeElement, 'open');
   }
 
+  logout(){
+    this.userService.deslogar();
+  }
   
   isLogin():boolean{
     return this.userService.logado

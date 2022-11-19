@@ -2,7 +2,7 @@ import { formatDate } from '@angular/common';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { subDays } from 'date-fns';
+import { subDays, subMonths } from 'date-fns';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { FilterDatatableDTO } from 'src/app/model/detail/filter-datatable.dto';
 import { Download } from 'src/app/model/download';
@@ -35,15 +35,16 @@ export class FormFilterGalleryComponent implements OnInit {
     this.finalDate = new FormControl();
     this.finalDate.setValue(formatDate(new Date(), 'yyyy-MM-dd', 'en'));
     this.initialDate = new FormControl(
-      formatDate(subDays(new Date(), 7), 'yyyy-MM-dd', 'en')
+      formatDate(subMonths(new Date(), 1), 'yyyy-MM-dd', 'en')
     );
-    this.loadValuesToFilter(this.initialDate.value, this.finalDate.value,this.userService.obterUsuarioLogado.brand.id);
+    this.loadValuesToFilter();
     this.eventListenerSetItem();
   }
 
-  async loadValuesToFilter(initialDate: string, finalDate: string,idBrand: number) {
+  async loadValuesToFilter() {
+    this.onEditFilter();
     this.apiService
-      .getFilterToGallery(initialDate, finalDate,idBrand)
+      .getFilterToGallery(this.initialDate.value, this.finalDate.value,this.userService.obterUsuarioLogado.brand.id)
       .pipe(finalize(() => (this.isLoadingValues = false)), takeUntil(this.destroy$))
       .subscribe((data) => (this.valuesToFilter = data));
   }

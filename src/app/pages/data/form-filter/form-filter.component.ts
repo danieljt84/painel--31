@@ -22,7 +22,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
   finalDate: FormControl;
   itensSelecteds = new Map<string, string[]>();
   destroy$: Subject<boolean> = new Subject<boolean>();
-  filter:Filter;
+  filter: Filter;
 
   constructor(
     private apiService: ApiPainelService,
@@ -32,33 +32,23 @@ export class FormFilterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.finalDate = new FormControl();
     this.finalDate.setValue(formatDate(new Date(), 'yyyy-MM-dd', 'en'));
-    this.initialDate = new FormControl(formatDate(subDays(new Date(), 7), 'yyyy-MM-dd', 'en'));
-
-    this.loadValuesToFilter(
-      formatDate(subMonths(new Date(), 1), 'yyyy-MM-dd', 'en'),
-      this.finalDate.value,
-      this.userService.obterUsuarioLogado.brand.id
+    this.initialDate = new FormControl(
+      formatDate(subMonths(new Date(), 1), 'yyyy-MM-dd', 'en')
     );
+
+    this.loadValuesToFilter();
     this.eventListenerSetItem();
   }
 
   //Carrega todos os dados possiveis de filtragem
-  async loadValuesToFilter( initialDate: string,finalDate: string,idBrand: number ) {
-
-    this.filter = {
-      finalDate:this.finalDate.value,
-      initialDate: this.initialDate.value,
-      idBrand: this.userService.obterUsuarioLogado.brand.id,
-      filter:this.itensSelecteds
-    }
-
-    let data = await this.apiService
-      .getFilterToDataTable(initialDate, finalDate, idBrand)
-      .toPromise();
-    this.valuesToFilter = data;
-    console.log(this.valuesToFilter)
-    this.isLoadingValues = false;
+  loadValuesToFilter() {
+    this.onEditFilter();
+    this.apiService
+      .getFilterToDataTable(this.initialDate.value, this.finalDate.value, this.userService.obterUsuarioLogado.brand.id)
+      .pipe(finalize(() => (this.isLoadingValues = false)),takeUntil(this.destroy$))
+      .subscribe((data) => (this.valuesToFilter = data));
   }
+  
   //funcao que ouve o evento "set-item"
   //recebe todos os dados selecionados, classificado pelos ids
   eventListenerSetItem() {
@@ -70,7 +60,6 @@ export class FormFilterComponent implements OnInit, OnDestroy {
         }
       });
   }
-
   loadItensSelected(item: any) {
     if (item.itens.length == 0) {
       if (this.itensSelecteds.has(item.id)) {
@@ -92,7 +81,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
     EventEmiterService.get('on-filter-data').emit(this.filter);
   }
 
-  onEditFilter(){
+  onEditFilter() {
     this.filter = {
       finalDate: this.finalDate.value,
       initialDate: this.initialDate.value,
