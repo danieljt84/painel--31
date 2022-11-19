@@ -18,10 +18,11 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex-grow: 0;
+    flex-grow: 1;
   }
   .activition-input{
-    flex-grow: 1;
+    flex-grow: 0;
+    width: 40%;
     &>*{
        padding-bottom: 10px;
     }
