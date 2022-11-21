@@ -12,34 +12,38 @@ import { FilterGalleryDTO } from '../../model/gallery/filter-gallery.dto';
   providedIn: 'root',
 })
 export class ApiPainelService {
-  constructor(private http: HttpClient) {}
+  url = '192.168.1.15';
 
+  constructor(private http: HttpClient) {}
   getDataDetails(filter: Filter) {
-    const headers = { 'content-type': 'application/json'}  
+    const headers = { 'content-type': 'application/json' };
 
     let params = new HttpParams()
       .set('initialDate', filter.initialDate)
       .set('finalDate', filter.finalDate)
       .set('idBrand', filter.idBrand);
     const str = this.transformMapInStringArray(filter.filter);
-    
+
     return this.http.post<DataFileDetails[]>(
-      'http://localhost:8080/datafile/details/',str,
-      {'headers':headers,'params':params}
+      'http://localhost:8080/datafile/details/',
+      str,
+      { headers: headers, params: params }
     );
   }
   getDataPhotos(filter: Filter) {
-    const headers = { 'content-type': 'application/json'}  
+    const headers = { 'content-type': 'application/json' };
 
     let params = new HttpParams()
       .set('initialDate', filter.initialDate)
       .set('finalDate', filter.finalDate)
       .set('idBrand', filter.idBrand);
     const str = this.transformMapInStringArray(filter.filter);
-    
+
     return this.http.post<DataFilePhoto[]>(
-      'http://localhost:8080/datafile/photos/',str, {'headers':headers,'params':params}
-      );
+      'http://localhost:8080/datafile/photos/',
+      str,
+      { headers: headers, params: params }
+    );
   }
 
   getFilterToDataTable(
@@ -96,75 +100,106 @@ export class ApiPainelService {
     );
   }
 
-  getRupturaBetweenDateByBrand(idBrand:number,initialDate:string,finalDate:string):Observable<any>{
+  getRupturaBetweenDateByBrand(
+    idBrand: number,
+    initialDate: string,
+    finalDate: string
+  ): Observable<any> {
     let params = new HttpParams()
-    .set('initialDate', initialDate)
-    .set('finalDate', finalDate)
-    .set('idBrand', idBrand);
-   return this.http.get('http://localhost:8080/detail/ruptura',{params});
+      .set('initialDate', initialDate)
+      .set('finalDate', finalDate)
+      .set('idBrand', idBrand);
+    return this.http.get('http://localhost:8080/detail/ruptura', { params });
   }
 
-  getValidityBetweenDateByBrand(idBrand:number,initialDate:string,finalDate:string):Observable<any>{
+  getValidityBetweenDateByBrand(
+    idBrand: number,
+    initialDate: string,
+    finalDate: string
+  ): Observable<any> {
     let params = new HttpParams()
-    .set('initialDate', initialDate)
-    .set('finalDate', finalDate)
-    .set('idBrand', idBrand);
-   return this.http.get('http://localhost:8080/detail/validity',{params});
+      .set('initialDate', initialDate)
+      .set('finalDate', finalDate)
+      .set('idBrand', idBrand);
+    return this.http.get('http://localhost:8080/detail/validity', { params });
   }
 
-  getDetailsToDownload(filter:Filter){
-    const headers = { 'content-type': 'application/json'}  
+  getDetailsToDownload(filter: Filter) {
+    const headers = { 'content-type': 'application/json' };
     let params = new HttpParams()
-    .set('initialDate', filter.initialDate)
-    .set('finalDate', filter.finalDate);
+      .set('initialDate', filter.initialDate)
+      .set('finalDate', filter.finalDate);
     const str = this.transformMapInStringArray(filter.filter);
 
-    return this.http.post("http://localhost:8080/report/details",str,{responseType:'blob',params,headers})
+    return this.http.post('http://localhost:8080/report/details', str, {
+      responseType: 'blob',
+      params,
+      headers,
+    });
   }
 
-  generateBookPhotos(filter:Filter){
-    const headers = { 'content-type': 'application/json'}  
+  generateBookPhotos(filter: Filter) {
+    const headers = { 'content-type': 'application/json' };
     let params = new HttpParams()
-    .set('initialDate', filter.initialDate)
-    .set('finalDate', filter.finalDate)
-    .set('idBrand', filter.idBrand);
+      .set('initialDate', filter.initialDate)
+      .set('finalDate', filter.finalDate)
+      .set('idBrand', filter.idBrand);
     const str = this.transformMapInStringArray(filter.filter);
-    return this.http.post("http://localhost:8080/book",str,{responseType:'blob',params,headers})
-
+    return this.http.post('http://localhost:8080/book', str, {
+      responseType: 'blob',
+      params,
+      headers,
+    });
   }
 
-  getRupturaToDownload(idBrand:number,initialDate:string,finalDate:string):Observable<any>{
-    const headers = { 'content-type': 'application/json'};
+  getRupturaToDownload(
+    idBrand: number,
+    initialDate: string,
+    finalDate: string
+  ): Observable<any> {
+    const headers = { 'content-type': 'application/json' };
     let params = new HttpParams()
-    .set('initialDate', initialDate)
-    .set('finalDate', finalDate)
-    .set('idBrand', idBrand);
-    return this.http.post('http://localhost:8080/report/ruptura',"",{responseType:'blob',params,headers});
+      .set('initialDate', initialDate)
+      .set('finalDate', finalDate)
+      .set('idBrand', idBrand);
+    return this.http.post('http://localhost:8080/report/ruptura', '', {
+      responseType: 'blob',
+      params,
+      headers,
+    });
   }
 
-  getValidadeToDownload(idBrand:number,initialDate:string,finalDate:string):Observable<any>{
-    const headers = { 'content-type': 'application/json'};
+  getValidadeToDownload(
+    idBrand: number,
+    initialDate: string,
+    finalDate: string
+  ): Observable<any> {
+    const headers = { 'content-type': 'application/json' };
     let params = new HttpParams()
-    .set('initialDate', initialDate)
-    .set('finalDate', finalDate)
-    .set('idBrand', idBrand);
-    return this.http.post('http://localhost:8080/report/validade',"",{responseType:'blob',params,headers});
+      .set('initialDate', initialDate)
+      .set('finalDate', finalDate)
+      .set('idBrand', idBrand);
+    return this.http.post('http://localhost:8080/report/validade', '', {
+      responseType: 'blob',
+      params,
+      headers,
+    });
   }
 
-  transformMapInStringArray(map:Map<string,string[]>){
+  transformMapInStringArray(map: Map<string, string[]>) {
     let index = 1;
-    let string ='{"filter":{';
+    let string = '{"filter":{';
 
-    map.forEach((value,key,m) =>{
-      string = string +'"'+ key +'":'+ JSON.stringify(value) +"";
+    map.forEach((value, key, m) => {
+      string = string + '"' + key + '":' + JSON.stringify(value) + '';
 
-      if(index<m.size){
+      if (index < m.size) {
         string = string + ',';
       }
 
       index++;
-    })
+    });
 
-    return string +'}}';
+    return string + '}}';
   }
 }
