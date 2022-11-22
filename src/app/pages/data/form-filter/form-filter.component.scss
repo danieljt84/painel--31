@@ -1,27 +1,54 @@
-::host{
-font-family: Roboto, "Helvetica Neue", sans-serif;;
+::host {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
-.data-group{
-    display: flex;
-}
-
-.data-input{
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    background: #ffffff;
-    width: 100%;
-    border: 1px solid #adadad;
+.data-group {
+  display: flex;
 }
 
-.input-group{
-    display: flex;
-    flex-direction: column;
-    label{
-        margin: 0px 0px 0px 0px;
-    }
+.data-input {
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  background: #ffffff;
+  width: 100%;
+  border: 1px solid #adadad;
 }
-.row-input{
-    width: 100%;
-    padding-left: 10px;
-    padding-right: 10px;
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  label {
+    margin: 0px 0px 0px 0px;
+  }
 }
+.row-input {
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 1rem;
+}
+
+.button-filter {
+  width: 100px;
+  height: 50px;
+  margin-top: auto;
+  margin-left: auto;
+  background: #ff6047;
+}
+
+@media only screen and (max-width: 768px) {
+    .button-filter {
+        width: 100px;
+        height: 50px;
+        margin-top: 10px;
+        margin-left: auto;
+        background: #ff6047;
+      }
+      .row-input{
+        width: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-left: 0px;
+        margin-top: 0px;
+      }
+}
+

@@ -1,50 +1,79 @@
 .example-detail-row {
-    height: 0;
-  }
-  
-  .example-element-row td {
-    border-bottom-width: 0;
-  }
-  
-  .example-element-detail {
-    overflow: hidden;
-    display: flex;
-  }
-  
-  .mat-sort-header{
-    font-weight: bold;
-    font-size: 1rem;
-    color: #68778c;
-  }
-  .mat-cell{
-    padding-right: 10px;
-  }
+  height: 0;
+}
 
-  .detail-table {
-    background: #e2e2e273;
-    text-align: center;
-    .ng-tns-c136-0{
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.mat-sort-header {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #68778c;
+}
+.mat-cell {
+  padding-right: 10px;
+}
+
+.detail-table {
+  background: #e2e2e273;
+  text-align: center;
+  .ng-tns-c136-0 {
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
-  table{
-    width: 100%;
-   }
-   .mat-table {
-    overflow-x: scroll;
+}
+table {
+  width: 100%;
+}
+.mat-table {
+  overflow-x: scroll;
+}
+.top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 5px 0px 5px 0px;
+}
+.btn {
+  width: 100px;
+  .bt-clicked {
+    background-color: #ff6047;
   }
-  .top-bar {
+}
+
+@media only screen and (max-width: 768px) {
+
+  .top-bar{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin: 5px 0px 5px 0px
+    margin: 5px 0px 5px 0px;
+    flex-direction: column;
+    align-items: center;
+
+    .button-exportar{
+      margin-top: 10px;
+      background: #ff6047
+    }
   }
-.btn{
-  width: 100px;
-  .bt-clicked{
-    background-color: #FF6047;
+
+  mat-row, .mat-header-row {
+    width: 450vw; //PERSONALLY I HAD 45 COLUMNS
+  }
+  .mat-header-row { //THIS MAKES THE HEADER STICKY
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 1;
+    background-color: inherit;
+  }
+  .table { //OR WHATEVER YOU CALL THE mat-table
+    overflow: scroll;
   }
 }
-  
-  
