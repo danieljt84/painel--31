@@ -115,5 +115,8 @@
       }
     }
   },
-  "defaultProject": "painel4p"
+  "defaultProject": "painel4p",
+  "cli": {
+    "analytics": false
+  }
 }

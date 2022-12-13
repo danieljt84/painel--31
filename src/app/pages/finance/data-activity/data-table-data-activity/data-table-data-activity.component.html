@@ -1,0 +1,30 @@
+<nz-table #nzTable [nzData]="listToDisplay" nzTableLayout="fixed">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Industria</th>
+      <th>Atividade</th>
+      <th>PDV</th>
+      <th>Preço</th>
+      <th>Horas Contr.</th>
+      <th>Dias</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of nzTable.data">
+      <td>{{ data.id }}</td>
+      <td>{{ data.activity.brand.name }}</td>
+      <td>{{ data.activity.name }}</td>
+      <td>{{ data.shop.name }}</td>
+      <td>{{ data.price }}</td>
+      <td>{{ data.hoursContracted }}</td>
+      <td>{{ data.daysInWeekContracted}}</td>
+      <td>
+        <a >Exibir</a>
+        <nz-divider nzType="vertical"></nz-divider>
+        <a>Excluir</a>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
