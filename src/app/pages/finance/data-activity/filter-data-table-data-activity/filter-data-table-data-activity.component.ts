@@ -1,46 +1,23 @@
-import { formatDate } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { format, subDays, subMonths } from 'date-fns';
-import { finalize, Subject, takeUntil, takeWhile } from 'rxjs';
-import { FilterDatatableDTO } from 'src/app/model/detail/filter-datatable.dto';
-import { Filter } from 'src/app/model/filter';
-import { ApiPainelService } from 'src/app/services/api/api-painel.service';
-import { EventEmiterService } from 'src/app/services/event-emiter.service';
-import { UserService } from 'src/app/services/user.service';
+import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-form-filter',
-  templateUrl: './form-filter.component.html',
-  styleUrls: ['./form-filter.component.scss'],
+  selector: 'app-filter-data-table-data-activity',
+  templateUrl: './filter-data-table-data-activity.component.html',
+  styleUrls: ['./filter-data-table-data-activity.component.scss']
 })
-export class FormFilterComponent implements OnInit, OnDestroy {
-  alive: boolean = true;
-  valuesToFilter: FilterDatatableDTO;
-  isLoadingValues = true;
-  initialDate: FormControl;
-  finalDate: FormControl;
+export class FilterDataTableDataActivityComponent implements OnInit {
+  valuesToFilter:any;
+  isLoadingValues:any;
   itensSelecteds = new Map<string, string[]>();
   destroy$: Subject<boolean> = new Subject<boolean>();
   filter: Filter;
 
-  constructor(
-    private apiService: ApiPainelService,
-    private userService: UserService
-  ) {}
+  constructor() { }
 
   ngOnInit(): void {
-    this.finalDate = new FormControl();
-    this.finalDate.setValue(formatDate(new Date(), 'yyyy-MM-dd', 'en'));
-    this.initialDate = new FormControl(
-      formatDate(subMonths(new Date(), 1), 'yyyy-MM-dd', 'en')
-    );
-
-    this.loadValuesToFilter();
-    this.eventListenerSetItem();
   }
 
-  //Carrega todos os dados possiveis de filtragem
   loadValuesToFilter() {
     this.onEditFilter();
     this.apiService
@@ -48,18 +25,19 @@ export class FormFilterComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => (this.isLoadingValues = false)),takeUntil(this.destroy$))
       .subscribe((data) => (this.valuesToFilter = data));
   }
-  
+
   //funcao que ouve o evento "set-item"
   //recebe todos os dados selecionados, classificado pelos ids
   eventListenerSetItem() {
     EventEmiterService.get('set-item')
       .pipe(takeUntil(this.destroy$))
       .subscribe((item) => {
-        if ((item.type = 'data')) {
+        if ((item.type = 'data-activity')) {
           this.loadItensSelected(item);
         }
       });
   }
+
   loadItensSelected(item: any) {
     if (item.itens.length == 0) {
       if (this.itensSelecteds.has(item.id)) {
@@ -76,7 +54,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
     }
     this.onEditFilter();
   }
-  //Emite um evento para filtrar os dados via api
+
   onFilter() {
     EventEmiterService.get('on-filter-data').emit(this.filter);
   }
@@ -94,4 +72,6 @@ export class FormFilterComponent implements OnInit, OnDestroy {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
+
+
 }

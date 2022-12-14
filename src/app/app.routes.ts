@@ -4,7 +4,7 @@ import { UserAutenticatedService } from './core/guards/user-autenticated.service
 import { UserNotAutenticatedService } from './core/guards/user-not-autenticated.service';
 
 export const appRotas: Routes =[
-    { 
+    {
         path:'', redirectTo:'analise',pathMatch: 'full'
     },
     {
@@ -20,5 +20,12 @@ export const appRotas: Routes =[
     {
         path:'analise', loadChildren: ()=> import('./pages/analytic/analytic.module').then(x =>x.AnalyticModule),canLoad:[UserAutenticatedService]
 
+    },
+    {
+        path:'analise', loadChildren: ()=> import('./pages/analytic/analytic.module').then(x =>x.AnalyticModule),canLoad:[UserAutenticatedService]
+
+    },
+    {
+        path:'atividades', loadChildren: ()=> import('./pages/finance/data-activity/data-activity.module').then(x =>x.DataActivityModule),canLoad:[UserAutenticatedService]
     }
 ]

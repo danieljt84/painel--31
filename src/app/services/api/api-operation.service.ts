@@ -12,7 +12,7 @@ export class ApiOperationService{
     url = "http://192.168.1.15:8081";
 
     constructor(private http: HttpClient) {}
-    
+
     getCountActivityCompleteByBrand(brand: string, date: string):Observable<number>{
         let params = new HttpParams()
         .set('brand', brand)
@@ -32,7 +32,7 @@ export class ApiOperationService{
        return this.http.get<number>(this.url+"/datatask/countactivitymissingbybrand",{params});
     }
     getCountActivityCompleteBetweenDateByBrand(brand: string, initialDate: string,finalDate: string):Observable<number>{
-      const headers = { 'content-type': 'application/json'}  
+      const headers = { 'content-type': 'application/json'}
       let params = new HttpParams()
       .set('brand', brand)
       .set('initialDate', initialDate)
@@ -41,7 +41,7 @@ export class ApiOperationService{
       return this.http.get<number>(this.url+"/datatask/countactivitycompletebetweendatebybrand",{params,headers});
     }
     getCountActivityCompleteBetweenDateByBrandUsingFilter(filter:Filter):Observable<number>{
-        const headers = { 'content-type': 'application/json'}  
+        const headers = { 'content-type': 'application/json'}
         let params = new HttpParams()
         .set('brand', filter.idBrand)
         .set('initialDate', filter.initialDate)
@@ -58,7 +58,7 @@ export class ApiOperationService{
         return this.http.get<number>(this.url+"/datatask/countactivitymissingbetweendatebybrand",{params});
     }
     getCountActivityMissingBetweenDateByBrandUsingFilter(filter:Filter):Observable<number>{
-        const headers = { 'content-type': 'application/json'}  
+        const headers = { 'content-type': 'application/json'}
 
         let params = new HttpParams()
         .set('brand', filter.idBrand)
@@ -75,7 +75,7 @@ export class ApiOperationService{
         return this.http.get<number>(this.url+"/datatask/countactivitycompletewithdatebetweendatebybrand",{params});
     }
     getCountActivityCompleteWithDateBetweenDateByBrandWithFilter(filter:Filter):Observable<any>{
-      const headers = { 'content-type': 'application/json'}  
+      const headers = { 'content-type': 'application/json'}
 
       let params = new HttpParams()
       .set('brand', filter.idBrand)
@@ -103,7 +103,7 @@ export class ApiOperationService{
     }
 
     getPrevistoRealizadoToDownload(filter:Filter){
-      const headers = { 'content-type': 'application/json'}  
+      const headers = { 'content-type': 'application/json'}
       let params = new HttpParams()
       .append('nameBrand', filter.idBrand)
       .append('initialDate', filter.initialDate)
@@ -111,21 +111,21 @@ export class ApiOperationService{
 
       return this.http.post(this.url+"/report/previstorealizado",params,{responseType:'blob'})
     }
-    
+
     transformMapInStringArray(map:Map<string,string[]>){
         let index = 1;
         let string ='{"filter":{';
-    
+
         map.forEach((value,key,m) =>{
           string = string +'"'+ key +'":'+ JSON.stringify(value) +"";
-    
+
           if(index<m.size){
             string = string + ',';
           }
-    
+
           index++;
         })
-    
+
         return string +'}}';
     }
 }

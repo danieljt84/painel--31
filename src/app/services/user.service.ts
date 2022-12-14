@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { User } from '../model/user';
 
 @Injectable({
@@ -12,7 +13,7 @@ export class UserService {
 
   logar(user: User): Observable<any> {
     return this.httpClient
-      .post<any>('http://localhost:8080' + '/login', user)
+      .post<any>(environment.apiUrlServer + '/login', user)
       .pipe(
         tap((resposta) => {
           localStorage.setItem('token', JSON.stringify(resposta['token']));
@@ -21,7 +22,7 @@ export class UserService {
         })
       );
   }
-  
+
   deslogar() {
     localStorage.clear();
     this.router.navigate(['login']);

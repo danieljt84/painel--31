@@ -11,6 +11,6 @@ export class DataActivityService {
   constructor(private httpClient: HttpClient) { }
 
   list(){
-    return this.httpClient.get<DataActivity[]>(environment.apiUrl+"dataactivity/list");
+    return this.httpClient.get<DataActivity[]>(environment.apiUrlOperation+"/dataactivity/list");
   }
 }
