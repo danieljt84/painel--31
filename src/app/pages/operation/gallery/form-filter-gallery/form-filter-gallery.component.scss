@@ -1,0 +1,27 @@
+::host{
+    font-family: Roboto, "Helvetica Neue", sans-serif;;
+    }
+    .data-group{
+        display: flex;
+    }
+    
+    .data-input{
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        background: #ffffff;
+        width: 100%;
+        border: 1px solid #adadad;
+    }
+    
+    .input-group{
+        display: flex;
+        flex-direction: column;
+        label{
+            margin: 0px 0px 0px 0px;
+        }
+    }
+    .row-input{
+        width: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+    }

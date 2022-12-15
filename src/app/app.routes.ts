@@ -8,24 +8,20 @@ export const appRotas: Routes =[
         path:'', redirectTo:'analise',pathMatch: 'full'
     },
     {
-        path:'dados', loadChildren: ()=> import('./pages/data/data.module').then(x =>x.DataModule), canLoad:[UserAutenticatedService]
+        path:'dados', loadChildren: ()=> import('./pages/operation/data/data.module').then(x =>x.DataModule), canLoad:[UserAutenticatedService]
     },
     {
-        path:'galeria', loadChildren: ()=> import('./pages/gallery/gallery.module').then(x =>x.GalleryModule),canLoad:[UserAutenticatedService]
+        path:'galeria', loadChildren: ()=> import('./pages/operation/gallery/gallery.module').then(x =>x.GalleryModule),canLoad:[UserAutenticatedService]
     },
     {
         path:'login', loadChildren: ()=> import('./pages/login/login.module').then(x =>x.LoginModule),canLoad:[UserNotAutenticatedService]
 
     },
     {
-        path:'analise', loadChildren: ()=> import('./pages/analytic/analytic.module').then(x =>x.AnalyticModule),canLoad:[UserAutenticatedService]
+        path:'analise', loadChildren: ()=> import('./pages/operation/analytic/analytic.module').then(x =>x.AnalyticModule),canLoad:[UserAutenticatedService]
 
     },
     {
-        path:'analise', loadChildren: ()=> import('./pages/analytic/analytic.module').then(x =>x.AnalyticModule),canLoad:[UserAutenticatedService]
-
-    },
-    {
-        path:'atividades', loadChildren: ()=> import('./pages/finance/data-activity/data-activity.module').then(x =>x.DataActivityModule),canLoad:[UserAutenticatedService]
+        path:'atividade', loadChildren: ()=> import('./pages/finance/data-activity/data-activity.module').then(x =>x.DataActivityModule),canLoad:[UserAutenticatedService]
     }
 ]

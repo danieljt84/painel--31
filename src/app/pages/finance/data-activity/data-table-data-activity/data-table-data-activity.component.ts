@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
 import { DataActivity } from 'src/app/model/finance/data-activity';
 import { DataActivityService } from 'src/app/services/data-activity.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
@@ -19,10 +20,19 @@ export class DataTableDataActivityComponent implements OnInit {
     this.loadDataActivity();
   }
 
-  loadDataActivity() {
-    this.dataActivityService.list().subscribe((data) => {
-      this.datasActivity = data;
-      this.listToDisplay = [...this.datasActivity];
-    });
+  loadDatas(filter: FilterActivationDTO) {
+    this.isLoadingDatas = "ATIVO";
+    this.apiService
+      .getDataDetails(filter)
+      .pipe(
+        finalize(() => {
+          this.isLoadingDatas = "INATIVO";
+          this.dataSource.data = this.values;
+          this.dataSource.paginator = this.paginator;
+          this.changeTextLabelPaginator();
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((data) => (this.values = data));
   }
 }

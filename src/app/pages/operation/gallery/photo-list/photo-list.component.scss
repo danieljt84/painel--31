@@ -1,0 +1,19 @@
+.top-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 5px 0px 5px 0px
+  }
+  .row-photo{
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px 10px 10px 10px;
+    width: 100%;
+  }
+  .btn{
+    width: 100px;
+    .bt-clicked{
+      background-color: #FF6047;
+    }
+  }
+  

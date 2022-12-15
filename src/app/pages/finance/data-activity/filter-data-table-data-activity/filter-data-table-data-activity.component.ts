@@ -1,28 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { FilterDataTableDataActivity } from 'src/app/model/finance/FilterDataTableDataActivity';
+import { EventData } from 'src/app/model/multiselect/event-data';
+import { EventEmiterService } from 'src/app/services/event-emiter.service';
+import { FilterService } from 'src/app/services/filter.service';
 
 @Component({
   selector: 'app-filter-data-table-data-activity',
   templateUrl: './filter-data-table-data-activity.component.html',
-  styleUrls: ['./filter-data-table-data-activity.component.scss']
+  styleUrls: ['./filter-data-table-data-activity.component.scss'],
 })
 export class FilterDataTableDataActivityComponent implements OnInit {
-  valuesToFilter:any;
-  isLoadingValues:any;
-  itensSelecteds = new Map<string, string[]>();
+  valuesToFilter: any;
+  isLoadingValues: any;
   destroy$: Subject<boolean> = new Subject<boolean>();
-  filter: Filter;
+  filter: FilterDataTableDataActivity;
 
-  constructor() { }
+  constructor(private filterService: FilterService) {}
 
   ngOnInit(): void {
+    this.loadValuesToFilter();
+    this.eventListenerSetItem();
   }
 
   loadValuesToFilter() {
-    this.onEditFilter();
-    this.apiService
-      .getFilterToDataTable(this.initialDate.value, this.finalDate.value, this.userService.obterUsuarioLogado.brand.id)
-      .pipe(finalize(() => (this.isLoadingValues = false)),takeUntil(this.destroy$))
+    this.filterService
+      .getFilterToDataTableDataActivity(
+      )
+      .pipe(
+        finalize(() => (this.isLoadingValues = false)),
+        takeUntil(this.destroy$)
+      )
       .subscribe((data) => (this.valuesToFilter = data));
   }
 
@@ -31,47 +39,64 @@ export class FilterDataTableDataActivityComponent implements OnInit {
   eventListenerSetItem() {
     EventEmiterService.get('set-item')
       .pipe(takeUntil(this.destroy$))
-      .subscribe((item) => {
+      .subscribe((item: EventData) => {
         if ((item.type = 'data-activity')) {
           this.loadItensSelected(item);
         }
       });
   }
 
-  loadItensSelected(item: any) {
-    if (item.itens.length == 0) {
-      if (this.itensSelecteds.has(item.id)) {
-        this.itensSelecteds.get(item.id).length = 0;
-        this.itensSelecteds.delete(item.id);
-      }
-    } else {
-      if (this.itensSelecteds.has(item.id)) {
-        this.itensSelecteds.get(item.id).length = 0;
-        this.itensSelecteds.get(item.id).push(...item.itens);
-      } else {
-        this.itensSelecteds.set(item.id, item.itens);
-      }
+  loadItensSelected(item: EventData) {
+    switch (item.id) {
+      case 'brand':
+        if (item.itens.length == 0) {
+          this.filter.brand.length = 0;
+        } else {
+          this.filter.brand.length = 0;
+          this.filter.brand.push(...item.itens);
+        }
+        break;
+      case 'description':
+        if (item.itens.length == 0) {
+          this.filter.description.length = 0;
+        } else {
+          this.filter.description.length = 0;
+          this.filter.description.push(...item.itens);
+        }
+        break;
+      case 'shop':
+        if (item.itens.length == 0) {
+          this.filter.shop.length = 0;
+        } else {
+          this.filter.shop.length = 0;
+          this.filter.shop.push(...item.itens);
+        }
+        break;
+      case 'hoursContracted':
+        if (item.itens.length == 0) {
+          this.filter.hoursContracted.length = 0;
+        } else {
+          this.filter.hoursContracted.length = 0;
+          this.filter.hoursContracted.push(...item.itens);
+        }
+        break;
+      case 'daysInWeekContracted':
+        if (item.itens.length == 0) {
+          this.filter.daysInWeekContracted.length = 0;
+        } else {
+          this.filter.daysInWeekContracted.length = 0;
+          this.filter.daysInWeekContracted.push(...item.itens);
+        }
+        break;
     }
-    this.onEditFilter();
   }
 
   onFilter() {
     EventEmiterService.get('on-filter-data').emit(this.filter);
   }
-
-  onEditFilter() {
-    this.filter = {
-      finalDate: this.finalDate.value,
-      initialDate: this.initialDate.value,
-      idBrand: this.userService.obterUsuarioLogado.brand.id,
-      filter: this.itensSelecteds,
-    };
-  }
-
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
-
 
 }

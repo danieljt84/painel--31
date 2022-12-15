@@ -1,1 +1,56 @@
-<p>filter-data-table-data-activity works!</p>
+
+<ng-container *ngIf="!isLoadingValues">
+    <div class="top-bar">
+        <h2 class="tilte-card">Filtro</h2>
+    </div>
+    <div style="justify-content: space-between" class="row row-input">
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <label>Industria:</label>
+                <app-multi-select [values]="valuesToFilter['brand']"  [type]="'data-table-data-activity'" [id]="'brand'"></app-multi-select>
+        </div>
+        <div class=" col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <label>Atividade:</label>
+                <app-multi-select [values]="valuesToFilter['description']" [type]="'data-table-data-activity'" [id]="'description'"></app-multi-select>
+        </div>
+        <div class=" col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <label>PDV</label>
+                <app-multi-select [values]="valuesToFilter['shop']" [type]="'data-table-data-activity'" [id]="'shop'"></app-multi-select>
+        </div>
+    </div>
+    <div class="row row-input mt-3">
+        
+        <div class=" col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <label>Horas Contratadas:</label>
+                <app-multi-select [values]="valuesToFilter['hoursContracted']" [type]="'data-table-data-activity'" [id]="'hoursContracted'"></app-multi-select>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <label>Dias Contratados:</label>
+                <app-multi-select [values]="valuesToFilter['daysInWeekContracted']" [type]="'data'" [id]="'daysInWeekContracted'"></app-multi-select>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <label>Status:</label>
+                <app-multi-select [values]="valuesToFilter['status']" [type]="'data'" [id]="'status'"></app-multi-select>
+        </div>
+    </div>
+    <div class="row row-input mt-3">
+        <button type="button" (click)="onFilter()" style="width: 100px;height: 50px;margin-top: auto; margin-left: auto; background: #ff6047;" class="btn btn-secondary">
+            Filtrar
+          </button>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="isLoadingValues">
+    <div
+    *ngIf="isLoadingValues"
+     style="
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       background: white;
+     "
+   >
+     <mat-progress-spinner color="primary" mode="indeterminate">
+     </mat-progress-spinner>
+   </div>
+ 
+</ng-container>

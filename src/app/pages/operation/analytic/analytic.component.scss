@@ -1,0 +1,14 @@
+.card{
+    &>*{
+        margin: 0px 0px;
+    }
+
+    .content-card{
+        display: flex;
+    }
+}
+
+@media only screen and (max-width: 768px){
+    
+}
+

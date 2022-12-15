@@ -4,6 +4,7 @@ import { FilterGalleryDTO } from 'src/app/model/gallery/filter-gallery.dto';
 import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
 import { FilterDatatableDTO } from 'src/app/model/detail/filter-datatable.dto';
 import { environment } from 'src/environments/environment';
+import { FilterDataTableDataActivity } from '../model/finance/FilterDataTableDataActivity';
 
 @Injectable({ providedIn: 'root' })
 export class FilterService {
@@ -22,7 +23,7 @@ export class FilterService {
       },
     });
     return this.httpClient.get<FilterGalleryDTO>(
-      environment.apiUrlServer+'/filter/gallery',
+      environment.apiUrlServer + '/filter/gallery',
       { params }
     );
   }
@@ -40,7 +41,7 @@ export class FilterService {
       },
     });
     return this.httpClient.get<FilterActivationDTO>(
-      environment.apiUrlOperation+'/filter/activation',
+      environment.apiUrlOperation + '/filter/activation',
       { params }
     );
   }
@@ -58,9 +59,15 @@ export class FilterService {
       },
     });
     return this.httpClient.get<FilterDatatableDTO>(
-      environment.apiUrlServer+'/filter/datatable',
+      environment.apiUrlServer + '/filter/datatable',
       { params }
     );
+  }
+
+  getFilterToDataTableDataActivity() {
+
+    return this.httpClient.get<FilterDataTableDataActivity>(
+      environment.apiUrlOperation+'/filter/datatable/dataactivity');
   }
 
 }

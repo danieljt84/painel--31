@@ -1,0 +1,45 @@
+<ng-container *ngIf="!isLoadingvalues">
+<div class="card mt-4" >
+  <div class="d-flex mt-2 me-3 ms-3 justify-content-between">
+    <h4>Ativação por gráfico</h4>
+    </div>
+    <div class="content-card ml-4">
+        <div class="content-chart">
+            <canvas
+            baseChart
+            [labels]="labels"
+            [datasets]="datasets"
+            [options]="options"
+            [type]="'line'"
+            style="width: 100%; height:200%"
+          >
+          </canvas>
+        </div>
+      <div style="flex-grow:1;" class="activition-input d-flex p-2 flex-column justify-content-center" >
+        <app-multi-select [values]="valuesToFilter['project']" [type]="'activation-chart'" [id]="'project'"></app-multi-select>
+        <app-multi-select></app-multi-select>
+        <app-multi-select [values]="valuesToFilter['shop']" [type]="'activation-chart'" [id]="'shop'"></app-multi-select>
+      </div>
+    </div>
+</div>
+</ng-container>
+
+
+<ng-container *ngIf="isLoadingvalues">
+  <div class="mt-4"
+  *ngIf="isLoadingvalues"
+   style="
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     background: white;
+     margin-bottom: auto;
+     margin-top: auto;
+   "
+ >
+   <mat-progress-spinner color="primary" mode="indeterminate">
+   </mat-progress-spinner>
+ </div>
+
+</ng-container>
+
