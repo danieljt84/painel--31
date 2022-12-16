@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataActivityComponent } from './data-activity.component';
 import { RouterModule } from '@angular/router';
@@ -10,12 +10,15 @@ import { DataTableDataActivityComponent } from './data-table-data-activity/data-
 import { MultiSelectModule } from '../../shared/multi-select/multi-select.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilterDataTableDataActivityComponent } from './filter-data-table-data-activity/filter-data-table-data-activity.component';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { CollapseResumoFinanceiroComponent } from './data-table-data-activity/collapse-resumo-financeiro/collapse-resumo-financeiro.component';
 
 @NgModule({
   declarations: [
     DataActivityComponent,
     DataTableDataActivityComponent,
-    FilterDataTableDataActivityComponent
+    FilterDataTableDataActivityComponent,
+    CollapseResumoFinanceiroComponent
   ],
   imports: [
     CommonModule,
@@ -24,7 +27,9 @@ import { FilterDataTableDataActivityComponent } from './filter-data-table-data-a
     NzIconModule,
     NzDividerModule,
     MultiSelectModule,
+    NzCollapseModule,
     MatProgressSpinnerModule
-  ]
+  ],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DataActivityModule { }

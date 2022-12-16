@@ -1,3 +1,5 @@
+<app-collapse-resumo-financeiro [mediaPrice]="mediaPrice" [sumPrice]="sumPrice" [activityTotal]="activityTotal"></app-collapse-resumo-financeiro>
+
 <nz-table #nzTable [nzData]="listToDisplay" nzTableLayout="fixed">
   <thead>
     <tr>
@@ -24,8 +26,6 @@
       <td>{{ data.daysInWeekContracted}}</td>
       <td>
         <a >Exibir</a>
-        <nz-divider nzType="vertical"></nz-divider>
-        <a>Excluir</a>
       </td>
     </tr>
   </tbody>

@@ -1,0 +1,59 @@
+<nz-collapse>
+  <nz-collapse-panel
+    nzHeader="Resumo Financeiro"
+    nzActive="true"
+    nzDisabled="false"
+  >
+    <p>Total de registro:100</p>
+    <div class="content-collapse-finance">
+      <div class="col-lg-4">
+        <ul class="list-group">
+          <li class="group-item">
+            <div class="li-content">
+              <div class="li-content-left">Soma Preço:</div>
+              <div class="li-content-right">{{sumPrice | currency:'BRL'}}</div>
+            </div>
+          </li>
+          <li class="group-item">
+            <div class="li-content">
+              <div class="li-content-left">Media Preço:</div>
+              <div class="li-content-right">{{mediaPrice| currency:'BRL'}}</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <ul class="list-group">
+          <li class="group-item">
+            <div class="li-content">
+              <div class="li-content-left">Atividades Total:</div>
+              <div class="li-content-right">{{activityTotal}}</div>
+            </div>
+          </li>
+          <li class="group-item">
+            <div class="li-content">
+              <div class="li-content-left">Horas Total:</div>
+              <div class="li-content-right">10000</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <ul class="list-group">
+          <li class="group-item">
+            <div class="li-content">
+              <div class="li-content-left">Ticket Médio:</div>
+              <div class="li-content-right">10000</div>
+            </div>
+          </li>
+          <li class="group-item">
+            <div class="li-content">
+              <div class="li-content-left">Faturamento resumido:</div>
+              <div class="li-content-right">10000</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nz-collapse-panel>
+</nz-collapse>
