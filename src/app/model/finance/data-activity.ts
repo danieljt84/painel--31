@@ -7,5 +7,5 @@ export interface DataActivity{
     activity:Activity,
     price:number,
     hoursContracted:number
-    daysInWeekContracted:number
+    daysInWeekContracted:number,
 }

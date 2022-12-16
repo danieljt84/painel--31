@@ -14,19 +14,30 @@ export class FilterDataTableDataActivityComponent implements OnInit {
   valuesToFilter: any;
   isLoadingValues: any;
   destroy$: Subject<boolean> = new Subject<boolean>();
-  filter: FilterDataTableDataActivity;
+  filter: FilterDataTableDataActivity = null;
 
   constructor(private filterService: FilterService) {}
 
   ngOnInit(): void {
+    this.createFilter();
     this.loadValuesToFilter();
     this.eventListenerSetItem();
   }
 
+  createFilter() {
+    this.filter = {
+      brand: [],
+      daysInWeekContracted: [],
+      description: [],
+      hoursContracted: [],
+      shop: [],
+      project:[]
+    };
+  }
+
   loadValuesToFilter() {
     this.filterService
-      .getFilterToDataTableDataActivity(
-      )
+      .getFilterToDataTableDataActivity()
       .pipe(
         finalize(() => (this.isLoadingValues = false)),
         takeUntil(this.destroy$)
@@ -88,6 +99,14 @@ export class FilterDataTableDataActivityComponent implements OnInit {
           this.filter.daysInWeekContracted.push(...item.itens);
         }
         break;
+        case 'project':
+          if (item.itens.length == 0) {
+            this.filter.project.length = 0;
+          } else {
+            this.filter.project.length = 0;
+            this.filter.project.push(...item.itens);
+          }
+          break;
     }
   }
 
@@ -98,5 +117,4 @@ export class FilterDataTableDataActivityComponent implements OnInit {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
-
 }

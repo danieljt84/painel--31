@@ -3,5 +3,6 @@ export interface FilterDataTableDataActivity{
     description:string[],
     shop:string[],
     hoursContracted:string[],
-    daysInWeekContracted:string[]
+    daysInWeekContracted:string[],
+    project:string[]
 }

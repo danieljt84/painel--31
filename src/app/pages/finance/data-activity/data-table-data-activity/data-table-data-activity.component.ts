@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
 import { DataActivity } from 'src/app/model/finance/data-activity';
+import { FilterDataTableDataActivity } from 'src/app/model/finance/FilterDataTableDataActivity';
 import { DataActivityService } from 'src/app/services/data-activity.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 
@@ -12,27 +14,34 @@ import { EventEmiterService } from 'src/app/services/event-emiter.service';
 export class DataTableDataActivityComponent implements OnInit {
 
   datasActivity: DataActivity[];
-  listToDisplay: DataActivity[]
+  listToDisplay: DataActivity[];
+  isLoadingDatas = "" ;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  filter: FilterDataTableDataActivity
+
 
   constructor(private dataActivityService: DataActivityService) { }
 
   ngOnInit(): void {
-    this.loadDataActivity();
+    EventEmiterService.get('on-filter-data')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(filter => {
+        this.filter = filter;
+        this.loadDatas();
+      });
   }
 
-  loadDatas(filter: FilterActivationDTO) {
+  loadDatas() {
     this.isLoadingDatas = "ATIVO";
-    this.apiService
-      .getDataDetails(filter)
+    this.dataActivityService
+      .findByFilter(this.filter)
       .pipe(
         finalize(() => {
           this.isLoadingDatas = "INATIVO";
-          this.dataSource.data = this.values;
-          this.dataSource.paginator = this.paginator;
-          this.changeTextLabelPaginator();
+          this.listToDisplay = [...this.datasActivity]
         }),
         takeUntil(this.destroy$)
       )
-      .subscribe((data) => (this.values = data));
+      .subscribe((data) => (this.datasActivity = data));
   }
 }
