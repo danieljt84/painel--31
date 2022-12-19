@@ -1,0 +1,29 @@
+<nz-table #nzTable [nzData]="listToDisplay" nzTableLayout="fixed">
+  <thead>
+    <tr>
+      <th nzWidth="60px"></th>
+      <th>Id</th>
+      <th>Responsável</th>
+      <th>Criado em</th>
+      <th>Finaliza em</th>
+      <th>Dias</th>
+      <th>Preço</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let data of nzTable.data">
+      <tr>
+        <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+        <td>{{ data.id }}</td>
+        <td>{{ data.responsible }}</td>
+        <td>{{ data.createdAt }}</td>
+        <td>{{ data.finishedAt }}</td>
+        <td>{{ data.daysInWeek }}</td>
+        <td>{{ data.price | currency:"BRL" }}</td>
+      </tr>
+      <tr [nzExpand]="expandSet.has(data.id)">
+        <app-expanded-data-table-bonus [datasActivity]="data.datasActivity"></app-expanded-data-table-bonus>
+      </tr>
+    </ng-container>
+  </tbody>
+</nz-table>

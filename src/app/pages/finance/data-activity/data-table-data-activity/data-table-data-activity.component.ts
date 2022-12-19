@@ -20,7 +20,7 @@ export class DataTableDataActivityComponent implements OnInit {
   sumPrice: number;
   activityTotal: number;
   mediaPrice:number;
-
+  isToShowCollapse = false;
   constructor(private dataActivityService: DataActivityService) {}
 
   ngOnInit(): void {
@@ -38,6 +38,7 @@ export class DataTableDataActivityComponent implements OnInit {
       .findByFilter(this.filter)
       .pipe(
         finalize(() => {
+          this.isToShowCollapse = true;
           this.isLoadingDatas = 'INATIVO';
           this.listToDisplay = [...this.datasActivity];
         }),

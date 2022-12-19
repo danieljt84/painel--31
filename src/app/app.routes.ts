@@ -23,5 +23,8 @@ export const appRotas: Routes =[
     },
     {
         path:'atividade', loadChildren: ()=> import('./pages/finance/data-activity/data-activity.module').then(x =>x.DataActivityModule),canLoad:[UserAutenticatedService]
-    }
+    },
+    {
+      path:'bonus', loadChildren: ()=> import('./pages/finance/bonus/bonus.module').then(x =>x.BonusModule),canLoad:[UserAutenticatedService]
+  }
 ]

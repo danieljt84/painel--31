@@ -1,4 +1,4 @@
-<app-collapse-resumo-financeiro [mediaPrice]="mediaPrice" [sumPrice]="sumPrice" [activityTotal]="activityTotal"></app-collapse-resumo-financeiro>
+<app-collapse-resumo-financeiro *ngIf="isToShowCollapse"  [mediaPrice]="mediaPrice" [sumPrice]="sumPrice" [activityTotal]="activityTotal"></app-collapse-resumo-financeiro>
 
 <nz-table #nzTable [nzData]="listToDisplay" nzTableLayout="fixed">
   <thead>
