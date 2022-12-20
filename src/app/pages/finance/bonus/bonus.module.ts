@@ -7,18 +7,29 @@ import { RouterModule } from '@angular/router';
 import { bonusRoutes } from './bonus.routes';
 import { ExpandedDataTableBonusComponent } from './data-table-bonus/expanded-data-table-bonus/expanded-data-table-bonus.component';
 import { ModalBonusComponent } from './modal-bonus/modal-bonus.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DataTableModalBonusComponent } from './modal-bonus/data-table-modal-bonus/data-table-modal-bonus.component';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { MultiSelectModule } from '../../shared/multi-select/multi-select.module';
 
 @NgModule({
   declarations: [
     BonusComponent,
     DataTableBonusComponent,
     ExpandedDataTableBonusComponent,
-    ModalBonusComponent
+    ModalBonusComponent,
+    DataTableModalBonusComponent
   ],
   imports: [
     RouterModule.forChild(bonusRoutes),
     CommonModule,
-    NzTableModule
+    FormsModule,
+    ReactiveFormsModule,
+    NzTableModule,
+    NgbModule,
+    NzAutocompleteModule,
+    MultiSelectModule
   ]
 })
 export class BonusModule { }

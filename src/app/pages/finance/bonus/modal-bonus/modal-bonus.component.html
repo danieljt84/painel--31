@@ -1,1 +1,29 @@
-<p>modal-bonus works!</p>
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title">Cadastro - Bonificação
+    </h4>
+  </div>
+  <div class="modal-body">
+    <div class="modal-container">
+      <form>
+        <label for="brand">Atividade</label>
+        <app-multi-select [singleSelection]="true"  [values]="['oi','oi2','oi3']" [id]="'activity'"></app-multi-select>
+        <label for="type_bonus">Tipo de Bonificação</label>
+        <select class="form-control" id="type_bonus" [(ngModel)]="typeBonus">
+          <option value="per_price">Preço</option>
+          <option value="days_in_week">Dias na semana</option>
+        </select>
+        <ng-container *ngIf="typeBonus=='per_price'">
+          <label for="price">Novo valor da atividade</label>
+          <input class="form-control" type="number" name="price" id="price">
+        </ng-container>
+        <ng-container *ngIf="typeBonus=='days_in_week'">
+          <label for="price">Dias de desconto</label>
+          <input class="form-control" type="number" name="days_in_week" id="days_in_week">
+        </ng-container>
+        {{typeBonus}}
+        <app-data-table-modal-bonus></app-data-table-modal-bonus>
+      </form>
+    </div>
+  </div>
+</div>

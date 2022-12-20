@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, takeUntil } from 'rxjs';
 import { Bonus } from 'src/app/model/finance/bonus';
 import { BonusService } from 'src/app/services/bonus.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
+import { ModalBonusComponent } from '../modal-bonus/modal-bonus.component';
 
 @Component({
   selector: 'app-data-table-bonus',
@@ -14,8 +16,8 @@ export class DataTableBonusComponent implements OnInit,OnDestroy {
   listToDisplay:Bonus[];
   bonus:Bonus[];
   destroy$: Subject<boolean> = new Subject<boolean>();
-
-  constructor(private bonusService:BonusService) { }
+  value="";
+  constructor(private bonusService:BonusService, private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.loadDatas();
@@ -36,6 +38,10 @@ export class DataTableBonusComponent implements OnInit,OnDestroy {
     } else {
       this.expandSet.delete(id);
     }
+  }
+
+  showModal(){
+    this.modalService.open(ModalBonusComponent);
   }
 
   ngOnDestroy(): void {
