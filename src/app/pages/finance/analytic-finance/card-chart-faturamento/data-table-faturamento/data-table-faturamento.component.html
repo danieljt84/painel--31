@@ -1,0 +1,19 @@
+<nz-table #borderedTable nzBordere nzFooter="Footer" nzTitle="Header" [nzData]="dataSet">
+  <thead>
+    <tr>
+      <th>Atividade</th>
+      <th>Total PDV</th>
+      <th>Média valor</th>
+      <th>Soma faturamento</th>
+      <th>Ticket Médio</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of borderedTable.data">
+      <td>{{ data.name }}</td>
+      <td>{{ data.age }}</td>
+      <td>{{ data.address }}</td>
+    </tr>
+  </tbody>
+</nz-table>

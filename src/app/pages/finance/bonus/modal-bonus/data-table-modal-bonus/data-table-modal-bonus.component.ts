@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Shop } from 'src/app/model/shop';
 
 @Component({
   selector: 'app-data-table-modal-bonus',
@@ -6,68 +7,32 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./data-table-modal-bonus.component.scss']
 })
 export class DataTableModalBonusComponent implements OnInit {
-  listOfSelection = [
-    {
-      text: 'Select All Row',
-      onSelect: () => {
-        this.onAllChecked(true);
-      }
-    },
-    {
-      text: 'Select Odd Row',
-      onSelect: () => {
-        this.listOfCurrentPageData.forEach((data, index) => this.updateCheckedSet(data.id, index % 2 !== 0));
-        this.refreshCheckedStatus();
-      }
-    },
-    {
-      text: 'Select Even Row',
-      onSelect: () => {
-        this.listOfCurrentPageData.forEach((data, index) => this.updateCheckedSet(data.id, index % 2 === 0));
-        this.refreshCheckedStatus();
-      }
-    }
-  ];
+  @Input() listOfData : readonly Shop[] = [];
+  @Output() setItemEvent = new EventEmitter<Shop[]>();
+  shopsSelected: Shop[] = [];
   checked = false;
-  indeterminate = false;
-  listOfCurrentPageData: readonly any[]= [];
-  listOfData : readonly any[] = [];
-  setOfCheckedId = new Set<number>();
+  ngOnInit(): void {
+  }
 
-  updateCheckedSet(id: number, checked: boolean): void {
-    if (checked) {
-      this.setOfCheckedId.add(id);
-    } else {
-      this.setOfCheckedId.delete(id);
+  setAllItem(){
+    if(!this.checked){
+      this.shopsSelected.length = 0;
+      this.shopsSelected.push(...this.listOfData);
+      this.checked = true;
+    }else{
+      this.shopsSelected.length =0;
+      this.checked = false;
     }
   }
 
-  onItemChecked(id: number, checked: boolean): void {
-    this.updateCheckedSet(id, checked);
-    this.refreshCheckedStatus();
+  setItem(data:Shop){
+    if(this.shopsSelected.includes(data)){
+     this.shopsSelected.splice(this.shopsSelected.indexOf(data),1);
+    }else{
+      this.shopsSelected.push(data);
+    }
+    this.setItemEvent.emit(this.shopsSelected);
   }
 
-  onAllChecked(value: boolean): void {
-    this.listOfCurrentPageData.forEach(item => this.updateCheckedSet(item.id, value));
-    this.refreshCheckedStatus();
-  }
 
-  onCurrentPageDataChange($event: readonly any[]): void {
-    this.listOfCurrentPageData = $event;
-    this.refreshCheckedStatus();
-  }
-
-  refreshCheckedStatus(): void {
-    this.checked = this.listOfCurrentPageData.every(item => this.setOfCheckedId.has(item.id));
-    this.indeterminate = this.listOfCurrentPageData.some(item => this.setOfCheckedId.has(item.id)) && !this.checked;
-  }
-
-  ngOnInit(): void {
-    this.listOfData = new Array(200).fill(0).map((_, index) => ({
-      id: index,
-      name: `Edward King ${index}`,
-      age: 32,
-      address: `London, Park Lane no. ${index}`
-    }));
-  }
 }

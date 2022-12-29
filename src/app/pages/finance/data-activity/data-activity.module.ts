@@ -12,17 +12,22 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilterDataTableDataActivityComponent } from './filter-data-table-data-activity/filter-data-table-data-activity.component';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { CollapseResumoFinanceiroComponent } from './data-table-data-activity/collapse-resumo-financeiro/collapse-resumo-financeiro.component';
+import { ModalDataTableDataActivityComponent } from './data-table-data-activity/modal-data-table-data-activity/modal-data-table-data-activity.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     DataActivityComponent,
     DataTableDataActivityComponent,
     FilterDataTableDataActivityComponent,
-    CollapseResumoFinanceiroComponent
+    CollapseResumoFinanceiroComponent,
+    ModalDataTableDataActivityComponent
   ],
   imports: [
-    CommonModule,
     RouterModule.forChild(dataActivityRoutes),
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     NzTableModule,
     NzIconModule,
     NzDividerModule,
