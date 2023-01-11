@@ -15,7 +15,6 @@ export const appRotas: Routes =[
     },
     {
         path:'login', loadChildren: ()=> import('./pages/login/login.module').then(x =>x.LoginModule),canLoad:[UserNotAutenticatedService]
-
     },
     {
         path:'analise', loadChildren: ()=> import('./pages/operation/analytic/analytic.module').then(x =>x.AnalyticModule),canLoad:[UserAutenticatedService]
@@ -28,7 +27,7 @@ export const appRotas: Routes =[
       path:'finance/bonus', loadChildren: ()=> import('./pages/finance/bonus/bonus.module').then(x =>x.BonusModule),canLoad:[UserAutenticatedService]
     },
     {
-      path:'finance/analise', loadChildren: ()=> import('./pages/finance/analytic-finance/analytic-finance.module').then(x =>x.AnalyticFinanceModule),canLoad:[UserAutenticatedService]
+      path:'finance/analise', loadChildren: ()=> import('./pages/finance/analytic-finance/analytic-finance.module').then(x =>x.AnalyticFinanceModule),
     },
 
 ]

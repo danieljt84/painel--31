@@ -8,6 +8,7 @@ import { ChartBarFaturamentoComponent } from './card-chart-faturamento/chart-bar
 import { DataTableFaturamentoComponent } from './card-chart-faturamento/data-table-faturamento/data-table-faturamento.component';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CardInfoComponent } from './card-info/card-info.component';
 
 const routes:Routes = [{
   path:'', component:AnalyticFinanceComponent
@@ -18,7 +19,8 @@ const routes:Routes = [{
     AnalyticFinanceComponent,
     CardChartFaturamentoComponent,
     ChartBarFaturamentoComponent,
-    DataTableFaturamentoComponent
+    DataTableFaturamentoComponent,
+    CardInfoComponent
   ],
   imports: [
     CommonModule,
