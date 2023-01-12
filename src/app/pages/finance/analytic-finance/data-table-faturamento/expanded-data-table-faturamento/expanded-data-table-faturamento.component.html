@@ -1,0 +1,19 @@
+<nz-table [nzFrontPagination]="false" #basicTable [nzData]="datasActivity">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Descrição</th>
+        <th>Loja</th>
+        <th>Preço</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{ data.id }}</td>
+        <td>{{ data.activity.description }}</td>
+        <td>{{ data.shop.name }}</td>
+        <td>{{ data.price}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  

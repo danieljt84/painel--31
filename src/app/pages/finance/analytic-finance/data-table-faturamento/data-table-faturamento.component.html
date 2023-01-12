@@ -1,0 +1,29 @@
+<nz-table #nzTable [nzData]="listToDisplay" nzTableLayout="fixed">
+  <thead>
+    <tr>
+      <th nzWidth="60px"></th>
+      <th>Industria</th>
+      <th>Total PDV</th>
+      <th>Valor Faturado</th>
+      <th>Valor Bonificado</th>
+      <th>Valor Desconto</th>
+      <th>Ticket Médio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let data of nzTable.data">
+      <tr>
+        <td [nzExpand]="expandSet.has(data.brand.name)" (nzExpandChange)="onExpandChange(data.brand.name, $event)"></td>
+        <td>{{ data.brand.name }}</td>
+        <td>{{ data.sumPDV }}</td>
+        <td>{{ data.sumBilling }}</td>
+        <td>{{ data.sumBonus }}</td>
+        <td>{{ data.sumDiscount }}</td>
+        <td>{{ data.averageTicket | currency:"BRL" }}</td>
+      </tr>
+      <tr [nzExpand]="expandSet.has(data.brand.name)">
+        <app-expanded-data-table-faturamento [datasActivity]="expandedListToDisplay"></app-expanded-data-table-faturamento >
+      </tr>
+    </ng-container>
+  </tbody>
+</nz-table>

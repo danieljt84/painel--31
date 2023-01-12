@@ -4,11 +4,11 @@ import { AnalyticFinanceComponent } from './analytic-finance.component';
 import { CardChartFaturamentoComponent } from './card-chart-faturamento/card-chart-faturamento.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgChartsModule } from 'ng2-charts';
-import { ChartBarFaturamentoComponent } from './card-chart-faturamento/chart-bar-faturamento/chart-bar-faturamento.component';
-import { DataTableFaturamentoComponent } from './card-chart-faturamento/data-table-faturamento/data-table-faturamento.component';
+import { DataTableFaturamentoComponent } from './data-table-faturamento/data-table-faturamento.component';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CardInfoComponent } from './card-info/card-info.component';
+import { ExpandedDataTableFaturamentoComponent } from './data-table-faturamento/expanded-data-table-faturamento/expanded-data-table-faturamento.component';
 
 const routes:Routes = [{
   path:'', component:AnalyticFinanceComponent
@@ -18,9 +18,9 @@ const routes:Routes = [{
   declarations: [
     AnalyticFinanceComponent,
     CardChartFaturamentoComponent,
-    ChartBarFaturamentoComponent,
     DataTableFaturamentoComponent,
-    CardInfoComponent
+    CardInfoComponent,
+    ExpandedDataTableFaturamentoComponent
   ],
   imports: [
     CommonModule,
