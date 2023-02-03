@@ -26,9 +26,9 @@ export class ResumoDiarioCardComponent implements OnInit {
   loadDatas(){
     this.isLoading = true;
     forkJoin({
-      complete : this.apiOperationService.getCountActivityCompleteByBrand(this.userService.obterUsuarioLogado.brand.name,this.today),
-      doing : this.apiOperationService.getCountActivityDoingByBrand(this.userService.obterUsuarioLogado.brand.name,this.today),
-      missing : this.apiOperationService.getCountActivityMissingByBrand(this.userService.obterUsuarioLogado.brand.name,this.today)
+      complete : this.apiOperationService.getCountActivityCompleteByBrand(this.userService.obterUsuarioLogado.brand.id,this.today),
+      doing : this.apiOperationService.getCountActivityDoingByBrand(this.userService.obterUsuarioLogado.brand.id,this.today),
+      missing : this.apiOperationService.getCountActivityMissingByBrand(this.userService.obterUsuarioLogado.brand.id,this.today)
     })
     .pipe(finalize(() => this.isLoading = false))
     .subscribe(data =>{

@@ -3,6 +3,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/model/user';
 
 @Component({
   selector: 'app-nav',
@@ -11,13 +12,13 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class NavComponent implements OnInit {
 
-  username="";
+  user:User;
   @ViewChild("sidebar") sidebar: ElementRef;
   @ViewChild("content") content: ElementRef;
   constructor(private elRef: ElementRef, private renderer: Renderer2 ,private userService: UserService) {}
 
   ngOnInit(): void {
-    this.username = this.userService.obterUsuarioLogado.username
+    this.user = this.userService.obterUsuarioLogado;
   }
 
   openSideBar(){

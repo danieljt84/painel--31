@@ -10,7 +10,7 @@ export class ReportService {
     getPrevistoRealizadoToDownload(filter:Filter){
         const headers = { 'content-type': 'application/json'}
         let params = new HttpParams()
-        .append('nameBrand', filter.idBrand)
+        .append('idBrand', filter.idBrand)
         .append('initialDate', filter.initialDate)
         .append('finalDate', filter.finalDate);
 

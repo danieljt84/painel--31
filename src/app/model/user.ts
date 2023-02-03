@@ -4,5 +4,6 @@ export interface User{
     id: string,
     username: string;
     password: string,
-    brand:Brand
+    brand:Brand,
+    img:string;
 }

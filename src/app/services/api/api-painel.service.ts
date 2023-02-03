@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
+import { environment } from 'src/environments/environment';
 import { DataFileDetails } from '../../model/detail/datafile-details';
 import { FilterDatatableDTO } from '../../model/detail/filter-datatable.dto';
 import { Filter } from '../../model/filter';
@@ -25,7 +26,7 @@ export class ApiPainelService {
     const str = this.transformMapInStringArray(filter.filter);
 
     return this.http.post<DataFileDetails[]>(
-      'http://localhost:8080/datafile/details/',
+      environment.apiUrlServer+'/datafile/details/',
       str,
       { headers: headers, params: params }
     );
@@ -40,7 +41,7 @@ export class ApiPainelService {
     const str = this.transformMapInStringArray(filter.filter);
 
     return this.http.post<DataFilePhoto[]>(
-      'http://localhost:8080/datafile/photos/',
+      environment.apiUrlServer+'/datafile/photos/',
       str,
       { headers: headers, params: params }
     );
@@ -59,7 +60,7 @@ export class ApiPainelService {
       },
     });
     return this.http.get<FilterDatatableDTO>(
-      'http://localhost:8080/filter/datatable',
+      environment.apiUrlServer+'/filter/datatable',
       { params }
     );
   }
@@ -77,7 +78,7 @@ export class ApiPainelService {
       },
     });
     return this.http.get<FilterActivationDTO>(
-      'http://localhost:8080/filter/activation',
+      environment.apiUrlServer+'/filter/activation',
       { params }
     );
   }
@@ -95,7 +96,7 @@ export class ApiPainelService {
       },
     });
     return this.http.get<FilterGalleryDTO>(
-      'http://localhost:8080/filter/gallery',
+      environment.apiUrlServer+'/filter/gallery',
       { params }
     );
   }
@@ -109,7 +110,7 @@ export class ApiPainelService {
       .set('initialDate', initialDate)
       .set('finalDate', finalDate)
       .set('idBrand', idBrand);
-    return this.http.get('http://localhost:8080/detail/ruptura', { params });
+    return this.http.get(environment.apiUrlServer+'/detail/ruptura', { params });
   }
 
   getValidityBetweenDateByBrand(
@@ -121,17 +122,18 @@ export class ApiPainelService {
       .set('initialDate', initialDate)
       .set('finalDate', finalDate)
       .set('idBrand', idBrand);
-    return this.http.get('http://localhost:8080/detail/validity', { params });
+    return this.http.get(environment.apiUrlServer+'/detail/validity', { params });
   }
 
   getDetailsToDownload(filter: Filter) {
     const headers = { 'content-type': 'application/json' };
     let params = new HttpParams()
       .set('initialDate', filter.initialDate)
-      .set('finalDate', filter.finalDate);
+      .set('finalDate', filter.finalDate)
+      .set('idBrand',filter.idBrand);
     const str = this.transformMapInStringArray(filter.filter);
 
-    return this.http.post('http://localhost:8080/report/details', str, {
+    return this.http.post(environment.apiUrlServer+'/report/details', str, {
       responseType: 'blob',
       params,
       headers,
@@ -145,7 +147,7 @@ export class ApiPainelService {
       .set('finalDate', filter.finalDate)
       .set('idBrand', filter.idBrand);
     const str = this.transformMapInStringArray(filter.filter);
-    return this.http.post('http://localhost:8080/book', str, {
+    return this.http.post(environment.apiUrlServer+'/book', str, {
       responseType: 'blob',
       params,
       headers,
@@ -162,7 +164,7 @@ export class ApiPainelService {
       .set('initialDate', initialDate)
       .set('finalDate', finalDate)
       .set('idBrand', idBrand);
-    return this.http.post('http://localhost:8080/report/ruptura', '', {
+    return this.http.post(environment.apiUrlServer+'/report/ruptura', '', {
       responseType: 'blob',
       params,
       headers,
@@ -179,7 +181,7 @@ export class ApiPainelService {
       .set('initialDate', initialDate)
       .set('finalDate', finalDate)
       .set('idBrand', idBrand);
-    return this.http.post('http://localhost:8080/report/validade', '', {
+    return this.http.post(environment.apiUrlServer+'/report/validade', '', {
       responseType: 'blob',
       params,
       headers,

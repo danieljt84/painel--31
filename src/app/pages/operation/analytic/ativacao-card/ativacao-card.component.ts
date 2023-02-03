@@ -56,7 +56,7 @@ export class AtivacaoCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.finalDate = format(new Date(), 'yyyy-MM-dd');
-    this.initialDate = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+    this.initialDate = format(new Date(), 'yyyy-MM-dd');
     this.loadDatas();
     this.eventListenerSetItem();
     this.eventListenerChangeDate();
@@ -66,27 +66,27 @@ export class AtivacaoCardComponent implements OnInit {
     this.filter = {
       finalDate: this.finalDate,
       initialDate: this.initialDate,
-      idBrand: this.userService.obterUsuarioLogado.brand.name,
+      idBrand: this.userService.obterUsuarioLogado.brand.id,
       filter: this.itensSelecteds,
     };
 
     forkJoin({
       complete:
         this.apiOperationService.getCountActivityCompleteBetweenDateByBrand(
-          this.userService.obterUsuarioLogado.brand.name,
+          this.userService.obterUsuarioLogado.brand.id,
           this.initialDate,
           this.finalDate
         ),
       missing:
         this.apiOperationService.getCountActivityMissingBetweenDateByBrand(
-          this.userService.obterUsuarioLogado.brand.name,
+          this.userService.obterUsuarioLogado.brand.id,
           this.initialDate,
           this.finalDate
         ),
       valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
         this.filter.initialDate,
         this.filter.finalDate,
-        this.userService.obterUsuarioLogado.brand.name
+        this.userService.obterUsuarioLogado.brand.id
       ),
     })
     .pipe(finalize(()=>{
@@ -112,7 +112,7 @@ export class AtivacaoCardComponent implements OnInit {
     this.filter = {
       finalDate: this.finalDate,
       initialDate: this.initialDate,
-      idBrand: this.userService.obterUsuarioLogado.brand.name,
+      idBrand: this.userService.obterUsuarioLogado.brand.id,
       filter: this.itensSelecteds,
     };
 
@@ -128,7 +128,7 @@ export class AtivacaoCardComponent implements OnInit {
         valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
           this.filter.initialDate,
           this.filter.finalDate,
-          this.userService.obterUsuarioLogado.brand.name
+          this.userService.obterUsuarioLogado.brand.id
         )
     }).pipe(finalize(()=>{
       this.isLoadingValues = false;
