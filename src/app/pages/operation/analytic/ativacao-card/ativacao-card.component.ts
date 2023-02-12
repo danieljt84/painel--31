@@ -27,6 +27,7 @@ export class AtivacaoCardComponent implements OnInit {
   itensSelecteds = new Map<string, string[]>();
   isLoadingValues = true;
   download: Download;
+  showButtonFilter = false;
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
@@ -108,7 +109,7 @@ export class AtivacaoCardComponent implements OnInit {
   }
 
   loadDatasWithFilter() {
-    this.isLoadingValues = true;
+    //this.isLoadingValues = true;
     this.filter = {
       finalDate: this.finalDate,
       initialDate: this.initialDate,
@@ -148,15 +149,23 @@ export class AtivacaoCardComponent implements OnInit {
     })
   }
 
+  //Captura event do MultiSelect, que envia dados selecionados
+  //Necessário ter o "type" como "activation"
   eventListenerSetItem() {
     EventEmiterService.get('set-item').subscribe((data) => {
       if ((data.type == 'activation')) {
+        this.showButtonFilter = true;
         this.loadItensSelected(data);
-        this.loadDatasWithFilter()
       }
     });
   }
 
+  //Filtra dados na API
+  getDatas(){
+    this.loadDatasWithFilter()
+  }
+
+  //Função que trata o controle da lista de itens do filtro selecionado
   loadItensSelected(item: any) {
     if (item.itens.length == 0) {
       if (this.itensSelecteds.has(item.id)) {
@@ -173,10 +182,10 @@ export class AtivacaoCardComponent implements OnInit {
     }
   }
 
+  //Captura event do troca de data do filtro
   eventListenerChangeDate(){
     EventEmiterService.get('change-date-analytic')
     .subscribe(data=>{
-      console.log('oi');
       this.initialDate = data.initialDate;
       this.finalDate = data.finalDate;
       this.loadDatasWithFilter()

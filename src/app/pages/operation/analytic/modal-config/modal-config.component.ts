@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -18,8 +19,11 @@ export class ModalConfigComponent implements OnInit {
   constructor(public activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
-    this.initialDate = new FormControl('');
-    this.finalDate = new FormControl('');
+    this.initialDate = new FormControl();
+    this.finalDate = new FormControl();
+
+    this.initialDate.setValue(formatDate(new Date(), 'yyyy-MM-dd', 'en'))
+    this.finalDate.setValue(formatDate(new Date(), 'yyyy-MM-dd', 'en'))
   }
 
 
