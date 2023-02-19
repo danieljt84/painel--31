@@ -33,7 +33,7 @@ export class ModalConfigComponent implements OnInit {
   }
 
   getConfig(){
-    this.configService.getUser().subscribe(config =>{
+    this.configService.getConfig().subscribe(config =>{
       this.initialDate.setValue(config.initialDate);
       this.finalDate.setValue(config.initialDate);
       this.brands = config.brands;
@@ -49,7 +49,7 @@ export class ModalConfigComponent implements OnInit {
       initialDate: this.initialDate.value,
       finalDate: this.finalDate.value
     }
-    this.configService.setUser(config);
+    this.configService.setConfig(config);
   }
 
   //funcao que ouve o evento "set-item"
