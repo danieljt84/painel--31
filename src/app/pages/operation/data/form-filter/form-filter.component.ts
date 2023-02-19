@@ -60,6 +60,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
         }
       });
   }
+  
   loadItensSelected(item: any) {
     if (item.itens.length == 0) {
       if (this.itensSelecteds.has(item.id)) {
