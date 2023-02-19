@@ -23,11 +23,11 @@ export class ConfigService {
     }
   }
 
-  setUser(config: Config): void {
+  setConfig(config: Config): void {
     this.configData.next(config);
   }
 
-  getUser(): Observable<Config> {
+  getConfig(): Observable<Config> {
     return this.configData.asObservable();
   }
 
