@@ -18,13 +18,12 @@ import { Config } from 'src/app/model/config';
 })
 export class ModalConfigComponent implements OnInit {
 
-  private initialDate:FormControl;
-  private finalDate:FormControl;
+  initialDate:FormControl;
+  finalDate:FormControl;
   brands: Brand[];
   projects: Project[];
   private itensSelecteds = new Map<string, Object[]>();
   private destroy$: Subject<boolean> = new Subject<boolean>();
-
 
   constructor(public activeModal: NgbActiveModal,private configService:ConfigService) { }
 
