@@ -8,6 +8,7 @@ import { Brand } from 'src/app/model/brand';
 import { Project } from 'src/app/model/project';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { ConfigService } from 'src/app/services/config.service';
+import { Config } from 'src/app/model/config';
 
 
 @Component({
@@ -19,9 +20,9 @@ export class ModalConfigComponent implements OnInit {
 
   private initialDate:FormControl;
   private finalDate:FormControl;
-   brands: Brand[];
-   projects: Project[];
-  private itensSelecteds = new Map<string, string[]>();
+  brands: Brand[];
+  projects: Project[];
+  private itensSelecteds = new Map<string, Object[]>();
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
 
@@ -42,10 +43,13 @@ export class ModalConfigComponent implements OnInit {
 
   //Emite evento quando um campo é filtrado
   setConfig(){
-    EventEmiterService.get('change-date-analytic').emit({
-      initialDate:this.initialDate.value,
-      finalDate:this.finalDate.value
-    })
+    let config:Config = {
+      brands: this.itensSelecteds.has('brand')? this.itensSelecteds.get('brand') as Brand[] : this.brands,
+      projects: this.itensSelecteds.has('project')? this.itensSelecteds.get('project') as Project[] : this.projects,
+      initialDate: this.initialDate.value,
+      finalDate: this.finalDate.value
+    }
+    this.configService.setUser(config);
   }
 
   //funcao que ouve o evento "set-item"
