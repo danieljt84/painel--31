@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Brand } from '../model/brand';
+import { Project } from '../model/project';
 import { User } from '../model/user';
 
 @Injectable({
@@ -18,7 +20,7 @@ export class UserService {
         tap((resposta) => {
           localStorage.setItem('token', JSON.stringify(resposta['token']));
           localStorage.setItem('user', JSON.stringify(resposta['user']));
-          localStorage.setItem('expired',JSON.stringify(resposta['expired']))
+          localStorage.setItem('expired', JSON.stringify(resposta['expired']));
         })
       );
   }
@@ -26,24 +28,35 @@ export class UserService {
   deslogar() {
     localStorage.clear();
     this.router.navigate(['login']);
-}
-get obterUsuarioLogado(): User {
-  return localStorage.getItem('user')
-    ? JSON.parse(localStorage.getItem('user'))
-    : null;
-}
-get obterIdUsuarioLogado(): string {
-  return localStorage.getItem('user')
-    ? (JSON.parse((localStorage.getItem('user'))) as User).id
-    : null;
-}
-get obterTokenUsuario(): string {
-  return localStorage.getItem('token')
-    ? JSON.parse((localStorage.getItem('token')))
-    : null;
-}
-get logado(): boolean {
-  return localStorage.getItem('token') ? true : false;
-}
+  }
+  get obterUsuarioLogado(): User {
+    return localStorage.getItem('user')
+      ? JSON.parse(localStorage.getItem('user'))
+      : null;
+  }
+  get obterIdUsuarioLogado(): string {
+    return localStorage.getItem('user')
+      ? (JSON.parse(localStorage.getItem('user')) as User).id
+      : null;
+  }
+  get obterTokenUsuario(): string {
+    return localStorage.getItem('token')
+      ? JSON.parse(localStorage.getItem('token'))
+      : null;
+  }
+  get logado(): boolean {
+    return localStorage.getItem('token') ? true : false;
+  }
 
+  get obterBrands(): Brand[] {
+    return localStorage.getItem('user')
+      ? (JSON.parse(localStorage.getItem('brands')) as Brand[])
+      : null;
+  }
+
+  get obterProjects(): Project[] {
+    return localStorage.getItem('user')
+      ? (JSON.parse(localStorage.getItem('projects')) as Project[])
+      : null;
+  }
 }

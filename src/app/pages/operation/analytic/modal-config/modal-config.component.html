@@ -14,11 +14,15 @@
             <input type="date" class="data-input form-control" [formControl]="initialDate" id="initialDate" />
             <input type="date" class="data-input form-control"[formControl]="finalDate" id="finalDate" />
         </div>
+        <div class="d-flex">
+          <app-multi-select [values]="brands" [type]="'config'" [id]="'brand'"></app-multi-select>
+          <app-multi-select [values]="projects" [type]="'config'" [id]="'project'"></app-multi-select>
+      </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="activeModal.close()">
           Fechar
         </button>
-        <button type="button" (click)="emitEventsChanges()" class="btn btn-primary">Aplicar</button>
+        <button type="button" (click)="setConfig()" class="btn btn-primary">Aplicar</button>
       </div>
 </div>
