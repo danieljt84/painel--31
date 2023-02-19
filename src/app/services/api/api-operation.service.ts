@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { filter, Observable } from "rxjs";
 import { FilterActivationDTO } from "src/app/model/analytic/filter-activation.dto";
+import { Brand } from "src/app/model/brand";
 import { Filter } from "src/app/model/filter";
 import { environment } from "src/environments/environment";
 
@@ -13,23 +14,29 @@ export class ApiOperationService{
 
     constructor(private http: HttpClient) {}
 
-    getCountActivityCompleteByBrand(idBrand: number, date: string):Observable<number>{
-        let params = new HttpParams()
-        .set('idBrand', idBrand)
-        .set('date', date);
-       return this.http.get<number>(environment.apiUrlOperation+"/datatask/countactivitycompletebybrand",{params});
+    getCountActivityCompleteByBrand(idBrands: number[], date: string):Observable<number>{
+       return this.http.get<number>(environment.apiUrlOperation+"/datatask/countactivitycompletebybrand",{
+        params:{
+          idBrands:idBrands,
+          date:date
+        }
+       });
     }
-    getCountActivityDoingByBrand(idBrand: number, date: string){
-        let params = new HttpParams()
-        .set('idBrand', idBrand)
-        .set('date', date);
-       return this.http.get<number>(environment.apiUrlOperation+"/datatask/countactivitydoingbybrand",{params});
+    getCountActivityDoingByBrand(idBrands: number[], date: string){
+       return this.http.get<number>(environment.apiUrlOperation+"/datatask/countactivitydoingbybrand",{
+        params:{
+          idBrands:idBrands,
+          date:date
+        }
+       });
     }
-    getCountActivityMissingByBrand(idBrand: number, date: string){
-        let params = new HttpParams()
-        .set('idBrand', idBrand)
-        .set('date', date);
-       return this.http.get<number>(environment.apiUrlOperation+"/datatask/countactivitymissingbybrand",{params});
+    getCountActivityMissingByBrand(idBrands: number[], date: string){
+       return this.http.get<number>(environment.apiUrlOperation+"/datatask/countactivitymissingbybrand",{
+        params:{
+          idBrands:idBrands,
+          date:date
+        }
+       });
     }
     getCountActivityCompleteBetweenDateByBrand(idBrand: number, initialDate: string,finalDate: string):Observable<number>{
       const headers = { 'content-type': 'application/json'}
