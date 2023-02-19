@@ -16,7 +16,7 @@ import { EventEmiterService } from 'src/app/services/event-emiter.service';
 export class MultiSelectComponent implements OnInit, OnChanges {
   @Input() id: string;
   @Input() type: string;
-  @Input() values: string[];
+  @Input() values: any[];
   @Input() singleSelection = false;
   dropdownList: any[] = [];
   selectedItems: any[] = [];
