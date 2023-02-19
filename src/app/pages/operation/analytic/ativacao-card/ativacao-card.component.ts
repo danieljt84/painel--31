@@ -1,13 +1,18 @@
+import { Chain } from '@angular/compiler';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { format, isThisSecond, subDays } from 'date-fns';
 import { BaseChartDirective } from 'ng2-charts';
 import { filter, finalize, forkJoin, Observable } from 'rxjs';
 import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
+import { Brand } from 'src/app/model/brand';
 import { Download } from 'src/app/model/download';
 import { Filter } from 'src/app/model/filter';
+import { Project } from 'src/app/model/project';
+import { Shop } from 'src/app/model/shop';
 import { ApiOperationService } from 'src/app/services/api/api-operation.service';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
+import { ConfigService } from 'src/app/services/config.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -20,11 +25,13 @@ export class AtivacaoCardComponent implements OnInit {
   realizado: number;
   pendente: number;
   percentual: string;
-  finalDate: string;
-  initialDate: string;
+  private finalDate: Date;
+  private initialDate: Date;
+  private brands: Brand[];
+  private projects: Project[]
   filter: Filter;
   valuesToFilter: FilterActivationDTO;
-  itensSelecteds = new Map<string, string[]>();
+  itensSelecteds = new Map<string, Object[]>();
   isLoadingValues = true;
   download: Download;
   showButtonFilter = false;
@@ -51,43 +58,40 @@ export class AtivacaoCardComponent implements OnInit {
 
   constructor(
     private apiOperationService: ApiOperationService,
-    private apiPainelService: ApiPainelService,
-    private userService: UserService
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
-    this.finalDate = format(new Date(), 'yyyy-MM-dd');
-    this.initialDate = format(new Date(), 'yyyy-MM-dd');
+    this.getConfig();
     this.loadDatas();
     this.eventListenerSetItem();
-    this.eventListenerChangeDate();
   }
 
   loadDatas() {
     this.filter = {
-      finalDate: this.finalDate,
-      initialDate: this.initialDate,
-      idBrand: this.userService.obterUsuarioLogado.brand.id,
-      filter: this.itensSelecteds,
+      shops: this.itensSelecteds.has('shop')? this.itensSelecteds.get('shop') as Shop[] : null,
+      chains: this.itensSelecteds.has('chain')? this.itensSelecteds.get('chain') as Chain[] : null,
     };
 
     forkJoin({
       complete:
         this.apiOperationService.getCountActivityCompleteBetweenDateByBrand(
-          this.userService.obterUsuarioLogado.brand.id,
-          this.initialDate,
-          this.finalDate
+          this.brands.map(brand => brand.id),
+          this.itensSelecteds.has('project')? this.itensSelecteds.get('project') as Project[] : this.projects,
+          this.initialDate.toISOString(),
+          this.finalDate.toISOString()
         ),
       missing:
         this.apiOperationService.getCountActivityMissingBetweenDateByBrand(
-          this.userService.obterUsuarioLogado.brand.id,
-          this.initialDate,
-          this.finalDate
+          this.brands.map(brand => brand.id),
+          this.itensSelecteds.has('project')? this.itensSelecteds.get('project') as Project[] : this.projects,
+          this.initialDate.toISOString(),
+          this.finalDate.toISOString()
         ),
       valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
-        this.filter.initialDate,
-        this.filter.finalDate,
-        this.userService.obterUsuarioLogado.brand.id
+        this.initialDate.toISOString(),
+        this.finalDate.toISOString(),
+        this.brands.map(brand => brand.id)
       ),
     })
     .pipe(finalize(()=>{
@@ -111,25 +115,30 @@ export class AtivacaoCardComponent implements OnInit {
   loadDatasWithFilter() {
     //this.isLoadingValues = true;
     this.filter = {
-      finalDate: this.finalDate,
-      initialDate: this.initialDate,
-      idBrand: this.userService.obterUsuarioLogado.brand.id,
-      filter: this.itensSelecteds,
+      projects :this.itensSelecteds.has('project')? this.itensSelecteds.get('project') as Project[] : this.projects,
+      shops: this.itensSelecteds.has('shop')? this.itensSelecteds.get('shop') as Shop[] : null,
+      chains: this.itensSelecteds.has('chain')? this.itensSelecteds.get('chain') as Chain[] : null,
     };
 
     forkJoin({
       complete:
         this.apiOperationService.getCountActivityCompleteBetweenDateByBrandUsingFilter(
+          this.brands.map(brand => brand.id),
+          this.initialDate.toISOString(),
+          this.finalDate.toISOString(),
           this.filter
         ),
       missing:
         this.apiOperationService.getCountActivityMissingBetweenDateByBrandUsingFilter(
+          this.brands.map(brand => brand.id),
+          this.initialDate.toISOString(),
+          this.finalDate.toISOString(),
           this.filter
         ),
         valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
-          this.filter.initialDate,
-          this.filter.finalDate,
-          this.userService.obterUsuarioLogado.brand.id
+          this.initialDate.toISOString(),
+          this.finalDate.toISOString(),
+          this.brands.map(brand => brand.id)
         )
     }).pipe(finalize(()=>{
       this.isLoadingValues = false;
@@ -182,16 +191,18 @@ export class AtivacaoCardComponent implements OnInit {
     }
   }
 
-  //Captura event do troca de data do filtro
-  eventListenerChangeDate(){
-    EventEmiterService.get('change-date-analytic')
-    .subscribe(data=>{
-      this.initialDate = data.initialDate;
-      this.finalDate = data.finalDate;
-      this.loadDatasWithFilter()
+
+  //Recupera as configuracõe globais do ConfigService
+  getConfig(){
+    this.configService.getConfig().subscribe(config => {
+      this.initialDate = config.initialDate;
+      this.finalDate = config.finalDate;
+      this.brands = config.brands;
+      this.projects = config.projects;
     })
   }
 
+  //Emite evento que envia objeto como elementos para download
   emitObservableToDownload(event:any){
     if(event == 'exportar'){
       this.download = {
