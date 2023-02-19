@@ -14,15 +14,15 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./resumo-diario-card.component.scss']
 })
 export class ResumoDiarioCardComponent implements OnInit {
-   private isLoading = true;
-   private countComplete: number;
-   private countDoing: number;
-   private countMissing: number;
+    isLoading = true;
+    countComplete: number;
+    countDoing: number;
+    countMissing: number;
    private today: string;
    private brands: Brand[];
    private projects: Project[];
 
-  constructor(private apiOperationService: ApiOperationService,private userService: UserService,private configService:ConfigService) { }
+  constructor(private apiOperationService: ApiOperationService,private configService:ConfigService) { }
 
   ngOnInit(): void {
     this.getConfig();
@@ -33,9 +33,9 @@ export class ResumoDiarioCardComponent implements OnInit {
   loadDatas(){
     this.isLoading = true;
     forkJoin({
-      complete : this.apiOperationService.getCountActivityCompleteByBrand(this.brands.map(brand => brand.id),this.today),
-      doing : this.apiOperationService.getCountActivityDoingByBrand(this.brands.map(brand => brand.id),this.today),
-      missing : this.apiOperationService.getCountActivityMissingByBrand(this.brands.map(brand => brand.id),this.today)
+      complete : this.apiOperationService.getCountActivityCompleteByBrand(this.brands.map(brand => brand.id),this.projects,this.today),
+      doing : this.apiOperationService.getCountActivityDoingByBrand(this.brands.map(brand => brand.id),this.projects,this.today),
+      missing : this.apiOperationService.getCountActivityMissingByBrand(this.brands.map(brand => brand.id),this.projects,this.today)
     })
     .pipe(finalize(() => this.isLoading = false))
     .subscribe(data =>{
