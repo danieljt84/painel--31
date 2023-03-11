@@ -14,9 +14,11 @@
             <input type="date" class="data-input form-control" [formControl]="initialDate" id="initialDate" />
             <input type="date" class="data-input form-control"[formControl]="finalDate" id="finalDate" />
         </div>
-        <div class="d-flex">
-          <app-multi-select [values]="brands" [type]="'config'" [id]="'brand'"></app-multi-select>
-          <app-multi-select [values]="projects" [type]="'config'" [id]="'project'"></app-multi-select>
+        <div class="d-flex flex-column">
+          <label for="brand">Marca</label>
+          <app-multi-select [values]="valueToFilter.brand" [type]="'config'" [id]="'brand'"></app-multi-select>
+          <label for="project">Projeto</label>
+          <app-multi-select [values]="valueToFilter.project" [type]="'config'" [id]="'project'"></app-multi-select>
       </div>
       </div>
       <div class="modal-footer">

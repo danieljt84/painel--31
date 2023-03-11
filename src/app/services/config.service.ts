@@ -10,25 +10,36 @@ import { UserService } from './user.service';
 })
 export class ConfigService {
   config:Config
-  private configData = new BehaviorSubject<Config>(undefined);
+  private configData;
 
 
-  constructor(private userService:UserService) {
-    this.config = {
-      initialDate: new Date(),
-      finalDate: new Date(),
-      brands: this.userService.obterBrands,
-      projects: this.userService.obterProjects
-
-    }
+  constructor() {
+    this.getConfigFromLocalStorage();
+    this.configData = new BehaviorSubject<Config>(this.config);
   }
 
   setConfig(config: Config): void {
+    this.addConfigToLocalStorage(config);
     this.configData.next(config);
   }
 
   getConfig(): Observable<Config> {
     return this.configData.asObservable();
+  }
+
+  private addConfigToLocalStorage(config:Config){
+    localStorage.setItem('config',JSON.stringify(config))
+  }
+
+  private deleteConfigFromLocalStorage(){
+    if(localStorage.getItem('config')) localStorage.removeItem('config');
+  }
+
+  private getConfigFromLocalStorage(){
+    let localConfig = this.config = JSON.parse(localStorage.getItem('config')) as Config;
+    if(!this.config && localConfig){
+      this.config = localConfig;
+    }
   }
 
   

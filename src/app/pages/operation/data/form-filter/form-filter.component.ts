@@ -3,11 +3,29 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { format, subDays, subMonths } from 'date-fns';
 import { finalize, Subject, takeUntil, takeWhile } from 'rxjs';
+import { Chain } from 'src/app/model/chain';
+import { Config } from 'src/app/model/config';
 import { FilterDatatableDTO } from 'src/app/model/detail/filter-datatable.dto';
+import { Product } from 'src/app/model/detail/Product';
 import { Filter } from 'src/app/model/filter';
+import { MultiSelectData } from 'src/app/model/multiselect/multiselectdata';
+import { Project } from 'src/app/model/project';
+import { Promoter } from 'src/app/model/promoter';
+import { Shop } from 'src/app/model/shop';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
+import { ConfigService } from 'src/app/services/config.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
+import { firstValueFrom} from 'rxjs';
+
+interface ValuesToFilter {
+  brands: any[];
+  shop: any[];
+  product: any[];
+  promoter: any[];
+  project: any[];
+  status: any[];
+}
 
 @Component({
   selector: 'app-form-filter',
@@ -16,17 +34,19 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class FormFilterComponent implements OnInit, OnDestroy {
   alive: boolean = true;
-  valuesToFilter: FilterDatatableDTO;
+  valuesToFilter: ValuesToFilter;
   isLoadingValues = true;
   initialDate: FormControl;
   finalDate: FormControl;
-  itensSelecteds = new Map<string, string[]>();
+  itensSelecteds = new Map<string, Object[]>();
   destroy$: Subject<boolean> = new Subject<boolean>();
   filter: Filter;
+  config: Config;
 
   constructor(
     private apiService: ApiPainelService,
-    private userService: UserService
+    private userService: UserService,
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +55,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
     this.initialDate = new FormControl(
       formatDate(subMonths(new Date(), 1), 'yyyy-MM-dd', 'en')
     );
-
+    this.getConfig();
     this.loadValuesToFilter();
     this.eventListenerSetItem();
   }
@@ -44,11 +64,31 @@ export class FormFilterComponent implements OnInit, OnDestroy {
   loadValuesToFilter() {
     this.onEditFilter();
     this.apiService
-      .getFilterToDataTable(this.initialDate.value, this.finalDate.value, this.userService.obterUsuarioLogado.brand.id)
-      .pipe(finalize(() => (this.isLoadingValues = false)),takeUntil(this.destroy$))
-      .subscribe((data) => (this.valuesToFilter = data));
+      .getFilterToDataTable(
+        format(new Date(this.initialDate.value), 'yyyy-MM-dd'),
+        format(new Date(this.finalDate.value), 'yyyy-MM-dd'),
+        this.userService.obterBrands.map((element) => element.id)
+      )
+      .pipe(
+        finalize(() => (this.isLoadingValues = false)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(
+        (data) =>{
+          console.log(this.config);
+          (this.valuesToFilter = {
+            brands: this.generateInterfaceToFilter(this.config.brands),
+            product: this.generateInterfaceToFilter(data.brands),
+            project: this.generateInterfaceToFilter(data.project),
+            promoter: this.generateInterfaceToFilter(data.promoter),
+            shop: this.generateInterfaceToFilter(data.shop),
+            status: this.generateInterfaceToFilter(data.status),
+          })
+        }
+          
+      );
   }
-  
+
   //funcao que ouve o evento "set-item"
   //recebe todos os dados selecionados, classificado pelos ids
   eventListenerSetItem() {
@@ -60,7 +100,7 @@ export class FormFilterComponent implements OnInit, OnDestroy {
         }
       });
   }
-  
+
   loadItensSelected(item: any) {
     if (item.itens.length == 0) {
       if (this.itensSelecteds.has(item.id)) {
@@ -79,20 +119,58 @@ export class FormFilterComponent implements OnInit, OnDestroy {
   }
   //Emite um evento para filtrar os dados via api
   onFilter() {
-    EventEmiterService.get('on-filter-data').emit(this.filter);
+    EventEmiterService.get('on-filter-data').emit({
+      filter: this.filter,
+      initialDate: this.initialDate,
+      finalDate: this.finalDate,
+    });
   }
 
   onEditFilter() {
     this.filter = {
-      finalDate: this.finalDate.value,
-      initialDate: this.initialDate.value,
-      idBrand: this.userService.obterUsuarioLogado.brand.id,
-      filter: this.itensSelecteds,
+      shops: this.itensSelecteds.has('shop')
+        ? (this.itensSelecteds.get('shop') as Shop[]).map(
+            (element) => element.id
+          )
+        : null,
+      chains: this.itensSelecteds.has('chain')
+        ? (this.itensSelecteds.get('chain') as Chain[]).map(
+            (element) => element.id
+          )
+        : null,
+      promoters: this.itensSelecteds.has('promoter')
+        ? (this.itensSelecteds.get('promoter') as Promoter[]).map(
+            (element) => element.id
+          )
+        : null,
+      products: this.itensSelecteds.has('product')
+        ? (this.itensSelecteds.get('product') as Product[]).map(
+            (element) => element.id
+          )
+        : null,
+      projects: this.itensSelecteds.has('project')
+        ? (this.itensSelecteds.get('project') as Project[]).map(
+            (element) => element.id
+          )
+        : null,
     };
   }
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
+  }
+
+  async getConfig() {
+     this.config = await firstValueFrom(this.configService.getConfig());
+  }
+
+  generateInterfaceToFilter(datas: any[]): MultiSelectData[] {
+    return datas.map((data) => {
+      return <MultiSelectData>{
+        id: data.id,
+        item: data.name,
+      };
+    });
   }
 }

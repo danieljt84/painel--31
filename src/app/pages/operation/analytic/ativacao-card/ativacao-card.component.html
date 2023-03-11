@@ -28,9 +28,9 @@
         </div>
       </div>
       <div class="activition-input d-flex p-2 flex-column justify-content-center" >
-          <app-multi-select [values]="valuesToFilter['project']" [type]="'activation'" [id]="'project'"></app-multi-select>
+          <app-multi-select [values]="valuesToFilter.project" [type]="'activation'" [id]="'project'"></app-multi-select>
           <app-multi-select></app-multi-select>
-          <app-multi-select [values]="valuesToFilter['shop']" [type]="'activation'" [id]="'shop'"></app-multi-select>
+          <app-multi-select [values]="valuesToFilter.shop" [type]="'activation'" [id]="'shop'"></app-multi-select>
           <button (click)="getDatas()" [hidden]="!showButtonFilter" type="button" class="btn btn-primary">filtrar</button>
         </div>
     </div>

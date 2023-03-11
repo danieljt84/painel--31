@@ -44,7 +44,7 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
   loadDatas(){
     this.isLoading = true;
     this.apiPainelService
-    .getRupturaBetweenDateByBrand(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate)
+    .getRupturaBetweenDateByBrand(this.initialDate,this.finalDate,this.userService.obterBrands.map(element => element.id),this.userService.obterProjects)
     .pipe(finalize(() => this.isLoading = false)).subscribe(data => this.dataSource.data = data );
   }
 
@@ -74,7 +74,7 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
     if(event == 'exportar'){
       this.download = {
         filename :"ruptura",
-        observable: this.apiPainelService.getRupturaToDownload(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate),
+        observable: this.apiPainelService.getRupturaToDownload(this.initialDate,this.finalDate,this.userService.obterBrands.map(element => element.id),this.userService.obterProjects),
         type:"xlsx"
       }
     }

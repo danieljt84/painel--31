@@ -1,4 +1,11 @@
-import { Component, Input, OnDestroy, OnInit,OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { finalize, Subject, Subscription, takeUntil } from 'rxjs';
 import { DataPhotoGrid } from 'src/app/model/gallery/data-photo-grid';
@@ -9,6 +16,7 @@ import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { Download } from 'src/app/model/download';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalDownloadComponent } from 'src/app/pages/shared/modal-download/modal-download.component';
+import { Brand } from 'src/app/model/brand';
 
 @Component({
   selector: 'app-photo-list',
@@ -24,33 +32,50 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
   isAlive = true;
   destroy$: Subject<boolean> = new Subject<boolean>();
   filter: Filter | any;
-  download:Download;
+  download: Download;
+  initialDate: string;
+  finalDate: string;
+  idBrands: number[];
 
-  constructor(private apiService: ApiPainelService,private modalService: NgbModal) {}
+  constructor(
+    private apiService: ApiPainelService,
+    private modalService: NgbModal
+  ) {}
 
   //Recebe a emissão do evento e realiza o carregamento dos dados
   ngOnInit(): void {
     EventEmiterService.get('on-filter-gallery')
       .pipe(takeUntil(this.destroy$))
-      .subscribe((filter) => {
-        this.filter = filter;
-        this.loadDatas(this.filter);
+      .subscribe((data) => {
+        this.initialDate = data.initialDate;
+        this.finalDate = data.finalDate;
+        this.idBrands = data.idBrands;
+        this.filter = data.filter;
+        this.loadDatas( data.initialDate,
+          data.finalDate,
+          data.idBrands,
+          data.filter);
       });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['filter'] && !changes['filter'].isFirstChange()){
+    if (changes['filter'] && !changes['filter'].isFirstChange()) {
       this.filter = changes['filter'];
     }
   }
 
-  loadDatas(filter: Filter) {
-    this.isLoadingDatas = "ATIVO";
+  loadDatas(
+    initialDate: string,
+    finalDate: string,
+    idBrands: number[],
+    filter: Filter
+  ) {
+    this.isLoadingDatas = 'ATIVO';
     this.apiService
-      .getDataPhotos(filter)
+      .getDataPhotos(initialDate, finalDate, idBrands, filter)
       .pipe(
         finalize(() => {
-          this.isLoadingDatas = "INATIVO";
+          this.isLoadingDatas = 'INATIVO';
           this.transform();
           this.rows = this.groupColumns(this.datasGrid);
         }),
@@ -58,8 +83,8 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe((data) => (this.datas = data));
   }
-  
-  //Transforma os dados e um modelo possivel para a exibição nas linhas 
+
+  //Transforma os dados e um modelo possivel para a exibição nas linhas
   transform() {
     this.datasGrid = [];
     this.datas.forEach((data) => {
@@ -95,7 +120,8 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
     this.destroy$.unsubscribe();
   }
 
-  emitObservableToDownload(){
+emitObservableToDownload(){
+  /*
     this.download = {
       filename :"book-fotos",
       observable : this.apiService.generateBookPhotos(this.filter),
@@ -103,5 +129,7 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
     }
     const modal = this.modalService.open(ModalDownloadComponent);
     modal.componentInstance.download = this.download;
+  */
   }
+  
 }

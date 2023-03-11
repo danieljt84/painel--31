@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
+import { Project } from 'src/app/model/project';
 import { environment } from 'src/environments/environment';
 import { DataFileDetails } from '../../model/detail/datafile-details';
 import { FilterDatatableDTO } from '../../model/detail/filter-datatable.dto';
@@ -16,33 +17,40 @@ export class ApiPainelService {
   url = '192.168.1.15';
 
   constructor(private http: HttpClient) {}
-  getDataDetails(filter: Filter) {
-    const headers = { 'content-type': 'application/json' };
-
-    let params = new HttpParams()
-      .set('initialDate', filter.initialDate)
-      .set('finalDate', filter.finalDate)
-      .set('idBrand', filter.idBrand);
-    const str = this.transformMapInStringArray(filter.filter);
+  getDataDetails(
+    initialDate: string,
+    finalDate: string,
+    idBrands: number[],
+    filter: Filter
+  ) {
 
     return this.http.post<DataFileDetails[]>(
-      environment.apiUrlServer+'/datafile/details/',
-      str,
-      { headers: headers, params: params }
+      environment.apiUrlServer + '/datafile/details/',
+      filter,
+      {
+        params: {
+          initialDate: initialDate,
+          finalDate: finalDate,
+          idBrands: idBrands,
+        },
+      }
     );
   }
-  getDataPhotos(filter: Filter) {
+  getDataPhotos(  initialDate: string,
+    finalDate: string,
+    idBrands: number[], filter:Filter) {
     const headers = { 'content-type': 'application/json' };
 
-    let params = new HttpParams()
-      .set('initialDate', filter.initialDate)
-      .set('finalDate', filter.finalDate)
-      .set('idBrand', filter.idBrand);
-    const str = this.transformMapInStringArray(filter.filter);
+    let params = new HttpParams({
+      fromObject: {
+        initialDate: initialDate,
+        finalDate: finalDate,
+        idBrands: idBrands,
+      },
+    });
 
     return this.http.post<DataFilePhoto[]>(
-      environment.apiUrlServer+'/datafile/photos/',
-      str,
+      environment.apiUrlServer + '/datafile/photos/',filter,
       { headers: headers, params: params }
     );
   }
@@ -50,17 +58,17 @@ export class ApiPainelService {
   getFilterToDataTable(
     initialDate: string,
     finalDate: string,
-    brandId: number = 0
+    idBrands: number[]
   ) {
     let params = new HttpParams({
       fromObject: {
         initialDate: initialDate,
         finalDate: finalDate,
-        brandId: String(brandId),
+        idsBrand: idBrands,
       },
     });
     return this.http.get<FilterDatatableDTO>(
-      environment.apiUrlServer+'/filter/datatable',
+      environment.apiUrlServer + '/filter/datatable',
       { params }
     );
   }
@@ -78,7 +86,7 @@ export class ApiPainelService {
       },
     });
     return this.http.get<FilterActivationDTO>(
-      environment.apiUrlServer+'/filter/activation',
+      environment.apiUrlServer + '/filter/activation',
       { params }
     );
   }
@@ -86,68 +94,85 @@ export class ApiPainelService {
   getFilterToGallery(
     initialDate: string,
     finalDate: string,
-    brandId: number = 0
+    idBrands: number[]
   ) {
     let params = new HttpParams({
       fromObject: {
         initialDate: initialDate,
         finalDate: finalDate,
-        brandId: String(brandId),
+        idBrands: idBrands,
       },
     });
     return this.http.get<FilterGalleryDTO>(
-      environment.apiUrlServer+'/filter/gallery',
+      environment.apiUrlServer + '/filter/gallery',
       { params }
     );
   }
 
   getRupturaBetweenDateByBrand(
-    idBrand: number,
     initialDate: string,
-    finalDate: string
+    finalDate: string,
+    idBrands: number[],
+    project:Project[]
   ): Observable<any> {
-    let params = new HttpParams()
-      .set('initialDate', initialDate)
-      .set('finalDate', finalDate)
-      .set('idBrand', idBrand);
-    return this.http.get(environment.apiUrlServer+'/detail/ruptura', { params });
+    let params = new HttpParams({
+      fromObject: {
+        initialDate: initialDate,
+        finalDate: finalDate,
+        idBrands: idBrands,
+      },
+    });
+    return this.http.get(environment.apiUrlServer + '/detail/ruptura', {
+      params,
+    });
   }
 
   getValidityBetweenDateByBrand(
-    idBrand: number,
     initialDate: string,
-    finalDate: string
+    finalDate: string,
+    idBrands: number[],
+    projects:Project[]
   ): Observable<any> {
-    let params = new HttpParams()
-      .set('initialDate', initialDate)
-      .set('finalDate', finalDate)
-      .set('idBrand', idBrand);
-    return this.http.get(environment.apiUrlServer+'/detail/validity', { params });
+    let params = new HttpParams({
+      fromObject: {
+        initialDate: initialDate,
+        finalDate: finalDate,
+        idBrands: idBrands,
+      },
+    });
+    return this.http.get(environment.apiUrlServer + '/detail/validity', {
+      params,
+    });
   }
 
-  getDetailsToDownload(filter: Filter) {
+  getDetailsToDownload(initialDate:string,finalDate:string,idBrands:number[], filter: Filter) {
     const headers = { 'content-type': 'application/json' };
-    let params = new HttpParams()
-      .set('initialDate', filter.initialDate)
-      .set('finalDate', filter.finalDate)
-      .set('idBrand',filter.idBrand);
-    const str = this.transformMapInStringArray(filter.filter);
-
-    return this.http.post(environment.apiUrlServer+'/report/details', str, {
+    let params = new HttpParams({
+      fromObject: {
+        initialDate: initialDate,
+        finalDate: finalDate,
+        idBrands: idBrands,
+      },
+    });
+    return this.http.post(environment.apiUrlServer + '/report/details', filter, {
       responseType: 'blob',
       params,
       headers,
     });
   }
 
-  generateBookPhotos(filter: Filter) {
+  generateBookPhotos(initialDate: string,
+    finalDate: string,
+    idBrands: number[]) {
     const headers = { 'content-type': 'application/json' };
-    let params = new HttpParams()
-      .set('initialDate', filter.initialDate)
-      .set('finalDate', filter.finalDate)
-      .set('idBrand', filter.idBrand);
-    const str = this.transformMapInStringArray(filter.filter);
-    return this.http.post(environment.apiUrlServer+'/book', str, {
+    let params = new HttpParams({
+      fromObject: {
+        initialDate: initialDate,
+        finalDate: finalDate,
+        idBrands: idBrands,
+      },
+    });
+    return this.http.post(environment.apiUrlServer + '/book', {
       responseType: 'blob',
       params,
       headers,
@@ -155,16 +180,20 @@ export class ApiPainelService {
   }
 
   getRupturaToDownload(
-    idBrand: number,
     initialDate: string,
-    finalDate: string
+    finalDate: string,
+    idBrands: number[],
+    project:Project[]
   ): Observable<any> {
     const headers = { 'content-type': 'application/json' };
-    let params = new HttpParams()
-      .set('initialDate', initialDate)
-      .set('finalDate', finalDate)
-      .set('idBrand', idBrand);
-    return this.http.post(environment.apiUrlServer+'/report/ruptura', '', {
+    let params = new HttpParams({
+      fromObject: {
+        initialDate: initialDate,
+        finalDate: finalDate,
+        idBrands: idBrands,
+      },
+    });
+    return this.http.post(environment.apiUrlServer + '/report/ruptura', '', {
       responseType: 'blob',
       params,
       headers,
@@ -172,36 +201,25 @@ export class ApiPainelService {
   }
 
   getValidadeToDownload(
-    idBrand: number,
     initialDate: string,
-    finalDate: string
+    finalDate: string,
+    idBrands: number[],
+    project:Project[]
   ): Observable<any> {
     const headers = { 'content-type': 'application/json' };
-    let params = new HttpParams()
-      .set('initialDate', initialDate)
-      .set('finalDate', finalDate)
-      .set('idBrand', idBrand);
-    return this.http.post(environment.apiUrlServer+'/report/validade', '', {
+    let params = new HttpParams({
+      fromObject: {
+        initialDate: initialDate,
+        finalDate: finalDate,
+        idBrands: idBrands,
+      },
+    });
+    return this.http.post(environment.apiUrlServer + '/report/validade', '', {
       responseType: 'blob',
       params,
       headers,
     });
   }
 
-  transformMapInStringArray(map: Map<string, string[]>) {
-    let index = 1;
-    let string = '{"filter":{';
-
-    map.forEach((value, key, m) => {
-      string = string + '"' + key + '":' + JSON.stringify(value) + '';
-
-      if (index < m.size) {
-        string = string + ',';
-      }
-
-      index++;
-    });
-
-    return string + '}}';
-  }
+ 
 }

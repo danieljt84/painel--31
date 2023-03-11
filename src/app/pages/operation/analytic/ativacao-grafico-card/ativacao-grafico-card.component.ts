@@ -4,22 +4,34 @@ import { format, subDays } from 'date-fns';
 import { BaseChartDirective } from 'ng2-charts';
 import { finalize, forkJoin } from 'rxjs';
 import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
+import { Brand } from 'src/app/model/brand';
+import { Chain } from 'src/app/model/chain';
 import { Filter } from 'src/app/model/filter';
+import { MultiSelectData } from 'src/app/model/multiselect/multiselectdata';
+import { Project } from 'src/app/model/project';
+import { Shop } from 'src/app/model/shop';
 import { ApiOperationService } from 'src/app/services/api/api-operation.service';
+import { ConfigService } from 'src/app/services/config.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
-
+interface ValuesToFilter{
+  shop:any[];
+  project:any[];
+}
 @Component({
   selector: 'app-ativacao-grafico-card',
   templateUrl: './ativacao-grafico-card.component.html',
   styleUrls: ['./ativacao-grafico-card.component.scss'],
 })
+
 export class AtivacaoGraficoCardComponent implements OnInit, AfterViewInit {
-  initialDate: string;
-  finalDate: string;
+  private finalDate: Date;
+  private initialDate: Date;
+  private brands: Brand[];
+  private projects: Project[]
   filter: Filter;
-  valuesToFilter: FilterActivationDTO;
-  itensSelecteds = new Map<string, string[]>();
+  valuesToFilter: ValuesToFilter;
+  itensSelecteds = new Map<string, Object[]>();
   isLoadingvalues = true;
   @ViewChild(BaseChartDirective) chartBase: BaseChartDirective;
   public labels: string[] = [];
@@ -36,37 +48,35 @@ export class AtivacaoGraficoCardComponent implements OnInit, AfterViewInit {
 
   constructor(
     private apiOperationService: ApiOperationService,
-    private userService: UserService
+    private configService: ConfigService
   ) {}
 
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
-    this.finalDate = format(new Date(), 'yyyy-MM-dd');
-    this.initialDate = format(new Date(), 'yyyy-MM-dd');
+    this.getConfig()
     this.loadDatas();
     this.eventListenerSetItem();
-    this.eventListenerChangeDate();
   }
 
   loadDatas() {
     this.filter = {
-      finalDate: this.initialDate,
-      initialDate: this.finalDate,
-      idBrand: this.userService.obterUsuarioLogado.brand.name,
-      filter: this.itensSelecteds,
+      projects :this.itensSelecteds.has('project')? (this.itensSelecteds.get('project') as Project[]).map(element => element.id) : (this.projects)? this.projects.map(element => element.id):null,
+      shops: this.itensSelecteds.has('shop')? (this.itensSelecteds.get('shop') as Shop[]).map(element => element.id) : null,
+      chains: this.itensSelecteds.has('chain')? (this.itensSelecteds.get('chain') as Chain[]).map(element => element.id) : null,
     };
+
     forkJoin({
       complete:
         this.apiOperationService.getCountActivityCompleteWithDateBetweenDateByBrand(
-          this.userService.obterUsuarioLogado.brand.id,
-          this.finalDate,
-          this.initialDate
+          this.brands.map(brand => brand.id),
+          format(new Date(this.initialDate),'yyyy-MM-dd'),
+          format(new Date(this.finalDate),'yyyy-MM-dd')
         ),
-      valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
-        this.filter.initialDate,
-        this.filter.finalDate,
-        this.userService.obterUsuarioLogado.brand.id
+        valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
+          format(new Date(this.initialDate),'yyyy-MM-dd'),
+          format(new Date(this.finalDate),'yyyy-MM-dd'),
+          this.brands.map(brand => brand.id)
       ),
     })
       .pipe(
@@ -76,47 +86,12 @@ export class AtivacaoGraficoCardComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe((data) => {
-        this.valuesToFilter = data.valuesToFilter;
+        this.valuesToFilter ={
+          project : this.generateInterfaceToFilter(data.valuesToFilter.project),
+          shop : this.generateInterfaceToFilter(data.valuesToFilter.shop),
+        }
         let keys = Object.keys(data.complete);
         this.datasets[0].data.length = 0;
-        keys.reverse().forEach((key) => {
-          this.labels.push(key);
-          this.datasets[0].data.push(data.complete[key]);
-        });
-      });
-  }
-
-  loadDatasWithFilter() {
-    this.isLoadingvalues = true;
-    this.filter = {
-      finalDate: this.finalDate,
-      initialDate: this.initialDate,
-      idBrand: this.userService.obterUsuarioLogado.brand.id,
-      filter: this.itensSelecteds,
-    };
-
-    forkJoin({
-      complete:
-        this.apiOperationService.getCountActivityCompleteWithDateBetweenDateByBrandWithFilter(
-          this.filter
-        ),
-      valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
-        this.filter.initialDate,
-        this.filter.finalDate,
-        this.userService.obterUsuarioLogado.brand.id
-      ),
-    })
-      .pipe(
-        finalize(() => {
-          this.isLoadingvalues = false;
-          this.chartBase.update();
-        })
-      )
-      .subscribe((data) => {
-        this.valuesToFilter = data.valuesToFilter;
-        let keys = Object.keys(data.complete);
-        this.datasets[0].data.length = 0;
-        this.labels = [];
         keys.reverse().forEach((key) => {
           this.labels.push(key);
           this.datasets[0].data.push(data.complete[key]);
@@ -128,7 +103,7 @@ export class AtivacaoGraficoCardComponent implements OnInit, AfterViewInit {
     EventEmiterService.get('set-item').subscribe((data) => {
       if (data.type == 'activation-chart') {
         this.loadItensSelected(data);
-        this.loadDatasWithFilter();
+        this.loadDatas();
       }
     });
   }
@@ -149,11 +124,20 @@ export class AtivacaoGraficoCardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  eventListenerChangeDate() {
-    EventEmiterService.get('change-date-analytic').subscribe((data) => {
-      this.initialDate = data.initialDate;
-      this.finalDate = data.finalDate;
-      this.loadDatasWithFilter();
-    });
+  //Recupera as configuracõe globais do ConfigService
+  getConfig(){
+    this.configService.getConfig().subscribe(config => {
+      this.initialDate = config.initialDate;
+      this.finalDate = config.finalDate;
+      this.brands = config.brands;
+      this.projects = config.projects;
+    })
   }
+
+  generateInterfaceToFilter = (datas: any[]) => datas.map((data) => {
+   return <MultiSelectData>{
+     id: data.id,
+     item: data.name,
+   };
+ });
 }

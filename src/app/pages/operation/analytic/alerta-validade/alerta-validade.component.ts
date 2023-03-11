@@ -41,7 +41,7 @@ export class AlertaValidadeComponent implements OnInit {
 
   loadDatas(){
     this.isLoading = true;
-     this.apiPainelService.getValidityBetweenDateByBrand(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate)
+     this.apiPainelService.getValidityBetweenDateByBrand(this.initialDate,this.finalDate,this.userService.obterBrands.map(element=> element.id),this.userService.obterProjects)
      .pipe(finalize(() => this.isLoading = false )).subscribe(data =>{
        this.dataSource.data = data;
      });
@@ -78,7 +78,7 @@ export class AlertaValidadeComponent implements OnInit {
     if(event == 'exportar'){
       this.download = {
         filename :"alerta-validade",
-        observable: this.apiPainelService.getValidadeToDownload(this.userService.obterUsuarioLogado.brand.id,this.initialDate,this.finalDate),
+        observable: this.apiPainelService.getValidadeToDownload(this.initialDate,this.finalDate,this.userService.obterBrands.map(element => element.id),this.userService.obterProjects),
         type:"xlsx"
       }
     }

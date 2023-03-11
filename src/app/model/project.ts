@@ -1,3 +1,4 @@
-export enum Project{
-    FIXO_RJ,COMPARTILHADO_RJ,COMPARTILHADO_SP,COMPARTILHADO_ES,COMPARTILHADO_BA,EXCLUSIVO_RJ
+export interface Project{
+    id: number;
+    name: string;
 }

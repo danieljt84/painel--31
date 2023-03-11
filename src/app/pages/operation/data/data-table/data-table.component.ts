@@ -5,7 +5,15 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -34,47 +42,60 @@ import { EventEmiterService } from 'src/app/services/event-emiter.service';
     ]),
   ],
 })
-export class DataTableComponent implements OnInit, OnChanges {
+export class DataTableComponent implements OnInit {
   values: DataFileDetails[] = [];
-  isLoadingDatas = "" ;
+  isLoadingDatas = '';
   destroy$: Subject<boolean> = new Subject<boolean>();
   @ViewChild(MatSort) sort: MatSort;
   dataSource = new MatTableDataSource<any>();
-  columnsToDisplay = ['shop', 'promoter', 'project','date'];
+  columnsToDisplay = ['shop', 'promoter', 'project', 'date'];
   // MatPaginator Inputs
   length = 100;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  filter: Filter | any;
-  download:Download;
+  download: Download;
+  filter: Filter;
+  initialDate: string;
+  finalDate: string;
+  idBrands: number[];
 
-  constructor(private apiService: ApiPainelService,private modalService: NgbModal ) {}
+  constructor(
+    private apiService: ApiPainelService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     //Evento acioanado ao apertar o botão "filtrar"
     EventEmiterService.get('on-filter-data')
       .pipe(takeUntil(this.destroy$))
-      .subscribe(filter => {
-        this.filter = filter;
-        this.loadDatas(this.filter);
+      .subscribe((data) => {
+        this.initialDate = data.initialDate;
+        this.finalDate = data.finalDate;
+        this.idBrands = data.idBrands;
+        this.filter = data.filter;
+        this.loadDatas(
+          data.initialDate,
+          data.finalDate,
+          data.idBrands,
+          data.filter
+        );
       });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if(changes['filter'] && !changes['filter'].isFirstChange()){
-      this.filter = changes['filter'];
-    }
- }
-
-  loadDatas(filter: Filter) {
-    this.isLoadingDatas = "ATIVO";
+  loadDatas(
+    initialDate: string,
+    finalDate: string,
+    idsBrands: number[],
+    filter: Filter
+  ) {
+    this.isLoadingDatas = 'ATIVO';
     this.apiService
-      .getDataDetails(filter)
+      .getDataDetails(initialDate, finalDate, idsBrands, filter)
       .pipe(
         finalize(() => {
-          this.isLoadingDatas = "INATIVO";
+          this.isLoadingDatas = 'INATIVO';
           this.dataSource.data = this.values;
           this.dataSource.paginator = this.paginator;
           this.changeTextLabelPaginator();
@@ -107,12 +128,17 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   changeMode() {}
 
-  emitObservableToDownload(){
+  emitObservableToDownload() {
     this.download = {
-      filename :"details",
-      observable : this.apiService.getDetailsToDownload(this.filter),
-      type:"xlsx"
-    }
+      filename: 'details',
+      observable: this.apiService.getDetailsToDownload(
+        this.initialDate,
+        this.finalDate,
+        this.idBrands,
+        this.filter
+      ),
+      type: 'xlsx',
+    };
     const modal = this.modalService.open(ModalDownloadComponent);
     modal.componentInstance.download = this.download;
   }

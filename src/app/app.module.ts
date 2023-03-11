@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { TokenInterceptor } from './core/interceptors/token.inteceptor';
 import { NavModule } from './pages/shared/nav/nav.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     NavModule,
+    NgMultiSelectDropDownModule.forRoot(),
     RouterModule.forRoot(appRotas),
   ],
   providers: [

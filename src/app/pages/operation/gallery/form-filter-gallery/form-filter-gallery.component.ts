@@ -1,13 +1,16 @@
 import { formatDate } from '@angular/common';
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { subDays, subMonths } from 'date-fns';
+import { subMonths } from 'date-fns';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import { FilterDatatableDTO } from 'src/app/model/detail/filter-datatable.dto';
-import { Download } from 'src/app/model/download';
+import { Chain } from 'src/app/model/chain';
+import { Product } from 'src/app/model/detail/Product';
 import { Filter } from 'src/app/model/filter';
 import { FilterGalleryDTO } from 'src/app/model/gallery/filter-gallery.dto';
+import { MultiSelectData } from 'src/app/model/multiselect/multiselectdata';
+import { Project } from 'src/app/model/project';
+import { Promoter } from 'src/app/model/promoter';
+import { Shop } from 'src/app/model/shop';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
@@ -23,12 +26,14 @@ export class FormFilterGalleryComponent implements OnInit {
   valuesToFilter: FilterGalleryDTO;
   initialDate: FormControl;
   finalDate: FormControl;
-  itensSelecteds = new Map<string, string[]>();
+  itensSelecteds = new Map<string, Object[]>();
   destroy$: Subject<boolean> = new Subject<boolean>();
   filter: Filter;
-  
 
-  constructor(private apiService: ApiPainelService,private userService:UserService) {}
+  constructor(
+    private apiService: ApiPainelService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
     this.finalDate = new FormControl();
@@ -43,8 +48,15 @@ export class FormFilterGalleryComponent implements OnInit {
   async loadValuesToFilter() {
     this.onEditFilter();
     this.apiService
-      .getFilterToGallery(this.initialDate.value, this.finalDate.value,this.userService.obterUsuarioLogado.brand.id)
-      .pipe(finalize(() => (this.isLoadingValues = false)), takeUntil(this.destroy$))
+      .getFilterToGallery(
+        this.initialDate.value,
+        this.finalDate.value,
+        this.userService.obterBrands.map((element) => element.id)
+      )
+      .pipe(
+        finalize(() => (this.isLoadingValues = false)),
+        takeUntil(this.destroy$)
+      )
       .subscribe((data) => (this.valuesToFilter = data));
   }
 
@@ -57,14 +69,12 @@ export class FormFilterGalleryComponent implements OnInit {
         if ((item.type = 'gallery')) {
           if (item.itens.length == 0) {
             if (this.itensSelecteds.has(item.id)) {
-              this.itensSelecteds
-                .get(item.id).length = 0;
-                this.itensSelecteds.delete(item.id);
+              this.itensSelecteds.get(item.id).length = 0;
+              this.itensSelecteds.delete(item.id);
             }
           } else {
             if (this.itensSelecteds.has(item.id)) {
-              this.itensSelecteds
-                .get(item.id).length = 0;
+              this.itensSelecteds.get(item.id).length = 0;
               this.itensSelecteds.get(item.id).push(...item.itens);
             } else {
               this.itensSelecteds.set(item.id, item.itens);
@@ -75,7 +85,7 @@ export class FormFilterGalleryComponent implements OnInit {
       });
   }
 
-  loadItensSelected(item:any){
+  loadItensSelected(item: any) {
     if (item.itens.length == 0) {
       if (this.itensSelecteds.has(item.id)) {
         this.itensSelecteds.get(item.id).length = 0;
@@ -92,28 +102,47 @@ export class FormFilterGalleryComponent implements OnInit {
     this.onEditFilter();
   }
 
-  onEditFilter(){
+  onEditFilter() {
     this.filter = {
-      finalDate: this.finalDate.value,
-      initialDate: this.initialDate.value,
-      idBrand: this.userService.obterUsuarioLogado.brand.id,
-      filter: this.itensSelecteds,
+      shops: this.itensSelecteds.has('shop')
+        ? (this.itensSelecteds.get('shop') as Shop[]).map(element => element.id)
+        : null,
+      chains: this.itensSelecteds.has('chain')
+        ? (this.itensSelecteds.get('chain') as Chain[]).map(element => element.id)
+        : null,
+      promoters: this.itensSelecteds.has('promoter')
+        ? (this.itensSelecteds.get('promoter') as Promoter[]).map(element => element.id)
+        : null,
+      products: this.itensSelecteds.has('product')
+        ? (this.itensSelecteds.get('product') as Product[]).map(element => element.id)
+        : null,
+      projects: this.itensSelecteds.has('project')
+        ? (this.itensSelecteds.get('project') as Project[]).map(element => element.id)
+        : null,
     };
   }
 
   //Emite um evento que sera capturado pela component Photolist
-  onFilter(){
-    let filter: Filter ={
-      finalDate: this.finalDate.value,
-      initialDate: this.initialDate.value,
-      idBrand: this.userService.obterUsuarioLogado.brand.id,
-      filter: this.itensSelecteds
-    }
-    EventEmiterService.get('on-filter-gallery').emit(filter);
+  onFilter() {
+    EventEmiterService.get('on-filter-gallery').emit({
+      filter: this.filter,
+      initialDate: this.initialDate,
+      finalDate: this.finalDate,
+    });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
+  }
+
+  generateInterfaceToFilter(datas: any[]):MultiSelectData[] {
+    return datas.map((data) => {
+      return <MultiSelectData>
+      {
+        id: data.id,
+        item: data.name,
+      };
+    });
   }
 }

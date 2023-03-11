@@ -13,7 +13,7 @@
         </div>
         <div class=" col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>Indústria:</label>
-                <input type="text" class="data-input form-control" value="CLIENTE TESTE" readonly id="brand" />
+            <app-multi-select [values]="valuesToFilter.brands"  [type]="'data'" [id]="'brands'"></app-multi-select>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>Projeto:</label>
@@ -23,7 +23,7 @@
     <div class="row row-input">
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>PDV:</label>
-                <app-multi-select [values]="valuesToFilter['shop']" [type]="'data'" [id]="'shop'"></app-multi-select>
+                <app-multi-select [values]="valuesToFilter.shop" [type]="'data'" [id]="'shop'"></app-multi-select>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>Tipo de pesquisa:</label>
@@ -35,17 +35,17 @@
         </div>
         <div class=" col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>Promotor:</label>
-                <app-multi-select [values]="valuesToFilter['promoter']" [type]="'data'" [id]="'promoter'"></app-multi-select>
+                <app-multi-select [values]="valuesToFilter.promoter" [type]="'data'" [id]="'promoter'"></app-multi-select>
         </div>
     </div>
     <div class="row row-input">
         <div class=" col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>Produto:</label>
-                <app-multi-select [values]="valuesToFilter['product']" [type]="'data'" [id]="'product'"></app-multi-select>
+                <app-multi-select [values]="valuesToFilter.product" [type]="'data'" [id]="'product'"></app-multi-select>
         </div>
         <div class=" col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>Ruptura</label>
-                <app-multi-select [values]="valuesToFilter['status']" [type]="'data'" [id]="'status'"></app-multi-select>
+                <app-multi-select [values]="[]" [type]="'data'" [id]="'status'"></app-multi-select>
         </div>
         <button type="button" (click)="onFilter()" class="button-filter btn btn-secondary">
             Filtrar

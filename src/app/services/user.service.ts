@@ -1,17 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { config, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Brand } from '../model/brand';
+import { Config } from '../model/config';
 import { Project } from '../model/project';
 import { User } from '../model/user';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private httpClient: HttpClient, private router: Router) {}
+  constructor(private httpClient: HttpClient, private router: Router,private configService:ConfigService) {}
 
   logar(user: User): Observable<any> {
     return this.httpClient
@@ -21,6 +23,13 @@ export class UserService {
           localStorage.setItem('token', JSON.stringify(resposta['token']));
           localStorage.setItem('user', JSON.stringify(resposta['user']));
           localStorage.setItem('expired', JSON.stringify(resposta['expired']));
+          let config: Config = {
+            brands: this.obterBrands,
+            projects: this.obterProjects,
+            initialDate: new Date(),
+            finalDate: new Date(),
+          }
+          this.configService.setConfig(config)
         })
       );
   }
@@ -50,7 +59,7 @@ export class UserService {
 
   get obterBrands(): Brand[] {
     return localStorage.getItem('user')
-      ? (JSON.parse(localStorage.getItem('brands')) as Brand[])
+      ? (JSON.parse(localStorage.getItem('user')) as User).brands
       : null;
   }
 

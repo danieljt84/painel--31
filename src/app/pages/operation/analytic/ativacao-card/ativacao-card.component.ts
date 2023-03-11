@@ -1,11 +1,12 @@
-import { Chain } from '@angular/compiler';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { format, isThisSecond, subDays } from 'date-fns';
+import { MultiSelectComponent } from 'ng-multiselect-dropdown';
 import { BaseChartDirective } from 'ng2-charts';
 import { filter, finalize, forkJoin, Observable } from 'rxjs';
 import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
 import { Brand } from 'src/app/model/brand';
+import { Chain } from 'src/app/model/chain';
 import { Download } from 'src/app/model/download';
 import { Filter } from 'src/app/model/filter';
 import { Project } from 'src/app/model/project';
@@ -15,6 +16,11 @@ import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { ConfigService } from 'src/app/services/config.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
+
+interface ValuesToFilter {
+  shop: any[];
+  project: any[];
+}
 
 @Component({
   selector: 'app-ativacao-card',
@@ -28,9 +34,9 @@ export class AtivacaoCardComponent implements OnInit {
   private finalDate: Date;
   private initialDate: Date;
   private brands: Brand[];
-  private projects: Project[]
+  private projects: Project[];
   filter: Filter;
-  valuesToFilter: FilterActivationDTO;
+  valuesToFilter: ValuesToFilter;
   itensSelecteds = new Map<string, Object[]>();
   isLoadingValues = true;
   download: Download;
@@ -63,106 +69,78 @@ export class AtivacaoCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getConfig();
-    this.loadDatas();
     this.eventListenerSetItem();
   }
 
   loadDatas() {
     this.filter = {
-      shops: this.itensSelecteds.has('shop')? this.itensSelecteds.get('shop') as Shop[] : null,
-      chains: this.itensSelecteds.has('chain')? this.itensSelecteds.get('chain') as Chain[] : null,
+      shops: this.itensSelecteds.has('shop')
+        ? (this.itensSelecteds.get('shop') as Shop[]).map(
+            (element) => element.id
+          )
+        : null,
+      chains: this.itensSelecteds.has('chain')
+        ? (this.itensSelecteds.get('chain') as Chain[]).map(
+            (element) => element.id
+          )
+        : null,
     };
 
     forkJoin({
       complete:
         this.apiOperationService.getCountActivityCompleteBetweenDateByBrand(
-          this.brands.map(brand => brand.id),
-          this.itensSelecteds.has('project')? this.itensSelecteds.get('project') as Project[] : this.projects,
-          this.initialDate.toISOString(),
-          this.finalDate.toISOString()
+          this.brands.map((brand) => brand.id),
+          format(new Date(this.initialDate), 'yyyy-MM-dd'),
+          format(new Date(this.finalDate), 'yyyy-MM-dd'),
+          this.filter
         ),
       missing:
         this.apiOperationService.getCountActivityMissingBetweenDateByBrand(
-          this.brands.map(brand => brand.id),
-          this.itensSelecteds.has('project')? this.itensSelecteds.get('project') as Project[] : this.projects,
-          this.initialDate.toISOString(),
-          this.finalDate.toISOString()
+          this.brands.map((brand) => brand.id),
+          format(new Date(this.initialDate), 'yyyy-MM-dd'),
+          format(new Date(this.finalDate), 'yyyy-MM-dd'),
+          this.filter
         ),
       valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
-        this.initialDate.toISOString(),
-        this.finalDate.toISOString(),
-        this.brands.map(brand => brand.id)
+        format(new Date(this.initialDate), 'yyyy-MM-dd'),
+        format(new Date(this.finalDate), 'yyyy-MM-dd'),
+        this.brands.map((brand) => brand.id)
       ),
     })
-    .pipe(finalize(()=>{
-      this.isLoadingValues = false;
-      this.chart.update();
-    } ))
-    .subscribe((data) => {
-      this.doughnutChartDatasets[0].data.length = 0;
-      this.realizado = data.complete;
-      this.pendente = data.missing;
-      this.valuesToFilter = data.valuesToFilter;
-      this.doughnutChartDatasets[0].data.push(this.realizado);
-      this.doughnutChartDatasets[0].data.push(this.pendente);
-      this.percentual = (
-        (this.realizado / (this.realizado + this.pendente)) *
-        100
-      ).toFixed(1);
-    });
-  }
-
-  loadDatasWithFilter() {
-    //this.isLoadingValues = true;
-    this.filter = {
-      projects :this.itensSelecteds.has('project')? this.itensSelecteds.get('project') as Project[] : this.projects,
-      shops: this.itensSelecteds.has('shop')? this.itensSelecteds.get('shop') as Shop[] : null,
-      chains: this.itensSelecteds.has('chain')? this.itensSelecteds.get('chain') as Chain[] : null,
-    };
-
-    forkJoin({
-      complete:
-        this.apiOperationService.getCountActivityCompleteBetweenDateByBrandUsingFilter(
-          this.brands.map(brand => brand.id),
-          this.initialDate.toISOString(),
-          this.finalDate.toISOString(),
-          this.filter
-        ),
-      missing:
-        this.apiOperationService.getCountActivityMissingBetweenDateByBrandUsingFilter(
-          this.brands.map(brand => brand.id),
-          this.initialDate.toISOString(),
-          this.finalDate.toISOString(),
-          this.filter
-        ),
-        valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
-          this.initialDate.toISOString(),
-          this.finalDate.toISOString(),
-          this.brands.map(brand => brand.id)
-        )
-    }).pipe(finalize(()=>{
-      this.isLoadingValues = false;
-      this.chart.update();
-
-    })).subscribe(data =>{
-      this.valuesToFilter = data.valuesToFilter;
-      this.doughnutChartDatasets[0].data.length = 0;
-      this.realizado = data.complete;
-      this.pendente = data.missing;
-      this.doughnutChartDatasets[0].data.push(this.realizado);
-      this.doughnutChartDatasets[0].data.push(this.pendente);
-      this.percentual = (
-        (this.realizado / (this.realizado + this.pendente)) *
-        100
-      ).toFixed(1);
-    })
+      .pipe(
+        finalize(() => {
+          this.isLoadingValues = false;
+          this.chart.update();
+        })
+      )
+      .subscribe((data) => {
+        console.log(data);
+        this.doughnutChartDatasets[0].data.length = 0;
+        this.realizado = data.complete;
+        this.pendente = data.missing;
+        this.valuesToFilter = {
+          project :this.generateInterfaceToFilter(
+            data.valuesToFilter.project
+          ),
+          shop:this.generateInterfaceToFilter(
+            data.valuesToFilter.shop
+          )
+        }
+        console.log(this.valuesToFilter.shop);
+        this.doughnutChartDatasets[0].data.push(this.realizado);
+        this.doughnutChartDatasets[0].data.push(this.pendente);
+        this.percentual = (
+          (this.realizado / (this.realizado + this.pendente)) *
+          100
+        ).toFixed(1);
+      });
   }
 
   //Captura event do MultiSelect, que envia dados selecionados
   //Necessário ter o "type" como "activation"
   eventListenerSetItem() {
     EventEmiterService.get('set-item').subscribe((data) => {
-      if ((data.type == 'activation')) {
+      if (data.type == 'activation') {
         this.showButtonFilter = true;
         this.loadItensSelected(data);
       }
@@ -170,8 +148,8 @@ export class AtivacaoCardComponent implements OnInit {
   }
 
   //Filtra dados na API
-  getDatas(){
-    this.loadDatasWithFilter()
+  getDatas() {
+    this.loadDatas();
   }
 
   //Função que trata o controle da lista de itens do filtro selecionado
@@ -191,25 +169,39 @@ export class AtivacaoCardComponent implements OnInit {
     }
   }
 
-
   //Recupera as configuracõe globais do ConfigService
-  getConfig(){
-    this.configService.getConfig().subscribe(config => {
+  getConfig() {
+    this.configService.getConfig().subscribe((config) => {
       this.initialDate = config.initialDate;
       this.finalDate = config.finalDate;
       this.brands = config.brands;
       this.projects = config.projects;
-    })
+      this.loadDatas();
+    });
   }
 
   //Emite evento que envia objeto como elementos para download
-  emitObservableToDownload(event:any){
-    if(event == 'exportar'){
+  emitObservableToDownload(event: any) {
+    if (event == 'exportar') {
       this.download = {
-        filename :"previstorealizado",
-        observable: this.apiOperationService.getPrevistoRealizadoToDownload(this.filter),
-        type:"xlsx"
-      }
+        filename: 'previstorealizado',
+        observable: this.apiOperationService.getPrevistoRealizadoToDownload(
+          format(new Date(this.initialDate), 'yyyy-MM-dd'),
+          format(new Date(this.finalDate), 'yyyy-MM-dd'),
+          this.brands.map((element) => element.id),
+          this.filter
+        ),
+        type: 'xlsx',
+      };
     }
+  }
+
+  generateInterfaceToFilter(datas: any[]) {
+    return datas.map((data) => {
+      return {
+        id: data.id,
+        item: data.name,
+      };
+    });
   }
 }

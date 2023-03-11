@@ -9,8 +9,13 @@ import { Project } from 'src/app/model/project';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { ConfigService } from 'src/app/services/config.service';
 import { Config } from 'src/app/model/config';
+import { format } from 'date-fns';
+import { MultiSelectData } from 'src/app/model/multiselect/multiselectdata';
 
-
+interface ValuesToFilter{
+  brand:any[];
+  project:any[];
+}
 @Component({
   selector: 'app-modal-config',
   templateUrl: './modal-config.component.html',
@@ -18,8 +23,9 @@ import { Config } from 'src/app/model/config';
 })
 export class ModalConfigComponent implements OnInit {
 
-  initialDate:FormControl;
-  finalDate:FormControl;
+  initialDate = new FormControl();
+  finalDate = new FormControl();
+  valueToFilter: ValuesToFilter;
   brands: Brand[];
   projects: Project[];
   private itensSelecteds = new Map<string, Object[]>();
@@ -33,10 +39,15 @@ export class ModalConfigComponent implements OnInit {
 
   getConfig(){
     this.configService.getConfig().subscribe(config =>{
-      this.initialDate.setValue(config.initialDate);
-      this.finalDate.setValue(config.initialDate);
+      console.log(config);
+      this.initialDate.setValue(format(new Date(config.initialDate),'yyyy-MM-dd'));
+      this.finalDate.setValue(format(new Date(config.finalDate),'yyyy-MM-dd'));
       this.brands = config.brands;
       this.projects = config.projects;
+      this.valueToFilter = {
+        brand: this.generateInterfaceToFilter(this.brands),
+        project: this.generateInterfaceToFilter(this.projects)
+      }
     })
   }
 
@@ -82,5 +93,20 @@ export class ModalConfigComponent implements OnInit {
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
+  }
+
+  generateInterfaceToFilter(datas: any[]):any[] {
+    if(datas){
+      return datas.map((data) => {
+        return <MultiSelectData>
+        {
+          id: data.id,
+          item: data.name,
+        };
+      });
+    }else{
+      return []
+    }
+    
   }
 }

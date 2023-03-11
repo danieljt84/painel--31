@@ -6,6 +6,8 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { Brand } from 'src/app/model/brand';
+import { MultiSelectData } from 'src/app/model/multiselect/multiselectdata';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 
 @Component({
@@ -19,7 +21,7 @@ export class MultiSelectComponent implements OnInit, OnChanges {
   @Input() values: any[];
   @Input() singleSelection = false;
   dropdownList: any[] = [];
-  selectedItems: any[] = [];
+  selectedItems: MultiSelectData[] = [];
   dropdownSettings: IDropdownSettings = {};
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -49,12 +51,11 @@ export class MultiSelectComponent implements OnInit, OnChanges {
     if (this.values) {
       this.dropdownList.length = 0;
       this.dropdownList = [];
-      let id = 0;
       this.values.forEach(
         (value) =>
           (this.dropdownList = this.dropdownList.concat({
-            item_id: id++,
-            item_text: value,
+            item_id:value.id,
+            item_text: value.item,
           }))
       );
     }
@@ -66,7 +67,7 @@ export class MultiSelectComponent implements OnInit, OnChanges {
     EventEmiterService.get('set-item').emit({
       type: this.type,
       id: this.id,
-      itens: this.selectedItems.map((item) => item.item_text),
+      itens: this.selectedItems.map((item) => item),
     });
   }
   emitEventSetItemAll(event: any) {
@@ -80,3 +81,4 @@ export class MultiSelectComponent implements OnInit, OnChanges {
     });
   }
 }
+

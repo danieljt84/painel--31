@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
         username: this.form.get('userName').value,
         password: this.form.get('password').value,
         id: '',
-        brand: undefined,
+        brands: [],
         img:''
       };
 

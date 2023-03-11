@@ -1,4 +1,10 @@
+import { Chain } from "@angular/compiler";
+import { Project } from "../project";
+import { Shop } from "../shop";
+
 export interface FilterActivationDTO{
-    shop: string[];
-    project: string[];
+    shop: Shop[];
+    project: Project[];
+    chain: Chain[];
+    
 }
