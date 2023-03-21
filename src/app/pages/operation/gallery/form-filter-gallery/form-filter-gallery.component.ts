@@ -1,20 +1,23 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { subMonths } from 'date-fns';
+import { format, subMonths } from 'date-fns';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import { Chain } from 'src/app/model/chain';
-import { Product } from 'src/app/model/detail/Product';
+import { Config } from 'src/app/model/config';
 import { Filter } from 'src/app/model/filter';
-import { FilterGalleryDTO } from 'src/app/model/gallery/filter-gallery.dto';
 import { MultiSelectData } from 'src/app/model/multiselect/multiselectdata';
-import { Project } from 'src/app/model/project';
-import { Promoter } from 'src/app/model/promoter';
-import { Shop } from 'src/app/model/shop';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
+import { ConfigService } from 'src/app/services/config.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
-
+interface ValuesToFilter {
+  brands: any[];
+  shop: any[];
+  product: any[];
+  promoter: any[];
+  project: any[];
+  status: any[];
+}
 @Component({
   selector: 'app-form-filter-gallery',
   templateUrl: './form-filter-gallery.component.html',
@@ -23,16 +26,18 @@ import { UserService } from 'src/app/services/user.service';
 export class FormFilterGalleryComponent implements OnInit {
   isLoadingValues = true;
   alive: boolean = true;
-  valuesToFilter: FilterGalleryDTO;
+  valuesToFilter: ValuesToFilter;
   initialDate: FormControl;
   finalDate: FormControl;
-  itensSelecteds = new Map<string, Object[]>();
+  itensSelecteds = new Map<string, any[]>();
   destroy$: Subject<boolean> = new Subject<boolean>();
   filter: Filter;
+  config: Config;
 
   constructor(
     private apiService: ApiPainelService,
-    private userService: UserService
+    private userService: UserService,
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -41,7 +46,7 @@ export class FormFilterGalleryComponent implements OnInit {
     this.initialDate = new FormControl(
       formatDate(subMonths(new Date(), 1), 'yyyy-MM-dd', 'en')
     );
-    this.loadValuesToFilter();
+    this.getConfig();
     this.eventListenerSetItem();
   }
 
@@ -49,15 +54,24 @@ export class FormFilterGalleryComponent implements OnInit {
     this.onEditFilter();
     this.apiService
       .getFilterToGallery(
-        this.initialDate.value,
-        this.finalDate.value,
+        format(new Date(this.initialDate.value), 'yyyy-MM-dd'),
+        format(new Date(this.finalDate.value), 'yyyy-MM-dd'),
         this.userService.obterBrands.map((element) => element.id)
       )
       .pipe(
         finalize(() => (this.isLoadingValues = false)),
         takeUntil(this.destroy$)
       )
-      .subscribe((data) => (this.valuesToFilter = data));
+      .subscribe((data) => {
+        this.valuesToFilter = {
+          brands: this.generateInterfaceToFilter(this.config.brands),
+          product: this.generateInterfaceToFilter(data.product),
+          project: this.generateInterfaceToFilter(data.project),
+          promoter: this.generateInterfaceToFilter(data.promoter),
+          shop: this.generateInterfaceToFilter(data.shop),
+          status: this.generateInterfaceToFilter(data.section),
+        };
+      });
   }
 
   //funcao que ouve o evento "set-item"
@@ -81,7 +95,7 @@ export class FormFilterGalleryComponent implements OnInit {
             }
           }
         }
-        console.log(this.itensSelecteds);
+        this.onEditFilter();
       });
   }
 
@@ -102,32 +116,42 @@ export class FormFilterGalleryComponent implements OnInit {
     this.onEditFilter();
   }
 
-  onEditFilter() {
-    this.filter = {
-      shops: this.itensSelecteds.has('shop')
-        ? (this.itensSelecteds.get('shop') as Shop[]).map(element => element.id)
-        : null,
-      chains: this.itensSelecteds.has('chain')
-        ? (this.itensSelecteds.get('chain') as Chain[]).map(element => element.id)
-        : null,
-      promoters: this.itensSelecteds.has('promoter')
-        ? (this.itensSelecteds.get('promoter') as Promoter[]).map(element => element.id)
-        : null,
-      products: this.itensSelecteds.has('product')
-        ? (this.itensSelecteds.get('product') as Product[]).map(element => element.id)
-        : null,
-      projects: this.itensSelecteds.has('project')
-        ? (this.itensSelecteds.get('project') as Project[]).map(element => element.id)
-        : null,
-    };
-  }
-
   //Emite um evento que sera capturado pela component Photolist
   onFilter() {
     EventEmiterService.get('on-filter-gallery').emit({
       filter: this.filter,
-      initialDate: this.initialDate,
-      finalDate: this.finalDate,
+      initialDate: this.initialDate.value,
+      finalDate: this.finalDate.value,
+    });
+  }
+
+  onEditFilter() {
+    this.filter = {
+      shops: this.itensSelecteds.has('shop')
+        ? this.itensSelecteds.get('shop').map((element) => element.item_id)
+        : null,
+      chains: this.itensSelecteds.has('chain')
+        ? this.itensSelecteds.get('chain').map((element) => element.item_id)
+        : null,
+      promoters: this.itensSelecteds.has('promoter')
+        ? this.itensSelecteds.get('promoter').map((element) => element.item_id)
+        : null,
+      products: this.itensSelecteds.has('product')
+        ? this.itensSelecteds.get('product').map((element) => element.item_id)
+        : null,
+      projects: this.itensSelecteds.has('project')
+        ? this.itensSelecteds.get('project').map((element) => element.item_id)
+        : null,
+      brands: this.itensSelecteds.has('brand')
+        ? this.itensSelecteds.get('brand').map((element) => element.item_id)
+        : this.config.brands.map((element) => element.id),
+    };
+  }
+
+  async getConfig() {
+    this.configService.getConfig().subscribe((config) => {
+      this.config = config;
+      this.loadValuesToFilter();
     });
   }
 
@@ -136,13 +160,16 @@ export class FormFilterGalleryComponent implements OnInit {
     this.destroy$.unsubscribe();
   }
 
-  generateInterfaceToFilter(datas: any[]):MultiSelectData[] {
-    return datas.map((data) => {
-      return <MultiSelectData>
-      {
-        id: data.id,
-        item: data.name,
-      };
-    });
+  generateInterfaceToFilter(datas: any[]): MultiSelectData[] {
+    if (datas) {
+      return datas.map((data) => {
+        return <MultiSelectData>{
+          id: data.id,
+          item: data.name,
+        };
+      });
+    } else {
+      return [];
+    }
   }
 }

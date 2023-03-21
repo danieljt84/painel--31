@@ -18,6 +18,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { format } from 'date-fns';
 import { finalize, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
 import { DataFileDetails } from 'src/app/model/detail/datafile-details';
@@ -78,7 +79,7 @@ export class DataTableComponent implements OnInit {
         this.loadDatas(
           data.initialDate,
           data.finalDate,
-          data.idBrands,
+          data.filter.brands,
           data.filter
         );
       });
@@ -134,7 +135,7 @@ export class DataTableComponent implements OnInit {
       observable: this.apiService.getDetailsToDownload(
         this.initialDate,
         this.finalDate,
-        this.idBrands,
+        this.filter.brands,
         this.filter
       ),
       type: 'xlsx',

@@ -4,9 +4,12 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { Brand } from 'src/app/model/brand';
+import { ItemSelectedsStorage } from 'src/app/model/itemselectedstorage';
 import { MultiSelectData } from 'src/app/model/multiselect/multiselectdata';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 
@@ -20,8 +23,9 @@ export class MultiSelectComponent implements OnInit, OnChanges {
   @Input() type: string;
   @Input() values: any[];
   @Input() singleSelection = false;
+  @Output() itemsEventEmmiter = new EventEmitter();
   dropdownList: any[] = [];
-  selectedItems: MultiSelectData[] = [];
+  selectedItems:| any[] = [];
   dropdownSettings: IDropdownSettings = {};
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -39,12 +43,20 @@ export class MultiSelectComponent implements OnInit, OnChanges {
       unSelectAllText: 'Desmarcar todos',
       itemsShowLimit: 6,
       allowSearchFilter: true,
+    
     };
     if(this.singleSelection){
       this.dropdownSettings.limitSelection = 1;
     }
 
     this.transformValuesInDropdownList();
+    this.getItemsSelectedsByIdInLocalStorage();
+
+    this.itemsEventEmmiter.emit({
+      type: this.type,
+      id: this.id,
+      itens: this.selectedItems,
+    })
   }
 
   transformValuesInDropdownList() {
@@ -69,16 +81,33 @@ export class MultiSelectComponent implements OnInit, OnChanges {
       id: this.id,
       itens: this.selectedItems.map((item) => item),
     });
+    this.itemsEventEmmiter.emit({
+      type: this.type,
+      id: this.id,
+      itens: this.selectedItems.map((item) => item)})
   }
   emitEventSetItemAll(event: any) {
     this.selectedItems = event.map(
-      (item: { item_text: any }) => item.item_text
+      (item: any) => item
     );
     EventEmiterService.get('set-item').emit({
       type: this.type,
       id: this.id,
       itens: this.selectedItems,
     });
+
+    this.itemsEventEmmiter.emit({
+      type: this.type,
+      id: this.id,
+      itens: this.selectedItems,
+    })
+  }
+
+  getItemsSelectedsByIdInLocalStorage(){
+    let itemsStorage = (JSON.parse(localStorage.getItem('itemSelecteds')) as ItemSelectedsStorage);
+    let element = itemsStorage.items.filter(it => it.type == this.type && it.id == this.id).map(it => it.items);
+    if(element)     this.selectedItems.push(...element[0]);
+
   }
 }
 

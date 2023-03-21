@@ -16,9 +16,9 @@
         </div>
         <div class="d-flex flex-column">
           <label for="brand">Marca</label>
-          <app-multi-select [values]="valueToFilter.brand" [type]="'config'" [id]="'brand'"></app-multi-select>
+          <app-multi-select (itemsEventEmmiter)="eventListenerSetItem($event)" [values]="valueToFilter.brand" [type]="'config'" [id]="'brand'"></app-multi-select>
           <label for="project">Projeto</label>
-          <app-multi-select [values]="valueToFilter.project" [type]="'config'" [id]="'project'"></app-multi-select>
+          <app-multi-select (itemsEventEmmiter)="eventListenerSetItem($event)" [values]="valueToFilter.project" [type]="'config'" [id]="'project'"></app-multi-select>
       </div>
       </div>
       <div class="modal-footer">

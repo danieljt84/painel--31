@@ -1,10 +1,13 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit,ViewChild,AfterViewInit } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { format, subDays } from 'date-fns';
 import { finalize } from 'rxjs';
+import { Config } from 'src/app/model/config';
 import { Download } from 'src/app/model/download';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
+import { ConfigService } from 'src/app/services/config.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -26,9 +29,11 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
   pageEvent: PageEvent;
   isLoading = true;
   download: Download;
+  config: Config;
 
 
-  constructor(private userService:UserService, private apiPainelService:ApiPainelService) { }
+  constructor(private configService:ConfigService
+    , private apiPainelService:ApiPainelService) { }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -37,14 +42,15 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
   ngOnInit(): void {
     this.finalDate = format(new Date(),'yyyy-MM-dd');
     this.initialDate = format(subDays(new Date(),30),'yyyy-MM-dd');
-    this.loadDatas();
+this.getConfig();
     this.eventListenerChangeDate();
   }
 
   loadDatas(){
     this.isLoading = true;
     this.apiPainelService
-    .getRupturaBetweenDateByBrand(this.initialDate,this.finalDate,this.userService.obterBrands.map(element => element.id),this.userService.obterProjects)
+    .getRupturaBetweenDateByBrand( formatDate(this.initialDate, 'yyyy-MM-dd','en'),
+    formatDate(this.finalDate, 'yyyy-MM-dd','en'),this.config.brands.map(element => element.id),this.config.projects?this.config.projects.map(ele => ele.id) : null)
     .pipe(finalize(() => this.isLoading = false)).subscribe(data => this.dataSource.data = data );
   }
 
@@ -70,11 +76,19 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
     })
   }
 
+   getConfig() {
+    this.configService.getConfig().subscribe(config =>{
+      this.config = config;
+      this.loadDatas();
+    })
+  }
+
   emitObservableToDownload(event:any){
     if(event == 'exportar'){
       this.download = {
         filename :"ruptura",
-        observable: this.apiPainelService.getRupturaToDownload(this.initialDate,this.finalDate,this.userService.obterBrands.map(element => element.id),this.userService.obterProjects),
+        observable: this.apiPainelService .getRupturaToDownload( formatDate(this.initialDate, 'yyyy-MM-dd','en'),
+        formatDate(this.finalDate, 'yyyy-MM-dd','en'),this.config.brands.map(element => element.id),this.config.projects?this.config.projects.map(ele => ele.id) : null),
         type:"xlsx"
       }
     }

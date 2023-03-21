@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';
 import { format, subDays } from 'date-fns';
@@ -70,12 +71,12 @@ export class AtivacaoGraficoCardComponent implements OnInit, AfterViewInit {
       complete:
         this.apiOperationService.getCountActivityCompleteWithDateBetweenDateByBrand(
           this.brands.map(brand => brand.id),
-          format(new Date(this.initialDate),'yyyy-MM-dd'),
-          format(new Date(this.finalDate),'yyyy-MM-dd')
+          formatDate(this.initialDate, 'yyyy-MM-dd','en'),
+          formatDate(this.finalDate, 'yyyy-MM-dd','en'),
         ),
         valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
-          format(new Date(this.initialDate),'yyyy-MM-dd'),
-          format(new Date(this.finalDate),'yyyy-MM-dd'),
+          formatDate(this.initialDate, 'yyyy-MM-dd','en'),
+          formatDate(this.finalDate, 'yyyy-MM-dd','en'),
           this.brands.map(brand => brand.id)
       ),
     })
@@ -131,6 +132,7 @@ export class AtivacaoGraficoCardComponent implements OnInit, AfterViewInit {
       this.finalDate = config.finalDate;
       this.brands = config.brands;
       this.projects = config.projects;
+      this.loadDatas()
     })
   }
 

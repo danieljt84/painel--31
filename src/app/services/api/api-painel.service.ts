@@ -25,13 +25,13 @@ export class ApiPainelService {
   ) {
 
     return this.http.post<DataFileDetails[]>(
-      environment.apiUrlServer + '/datafile/details/',
+      environment.apiUrlServer + '/datafile/details',
       filter,
       {
         params: {
-          initialDate: initialDate,
-          finalDate: finalDate,
-          idBrands: idBrands,
+          initialdate: initialDate,
+          finaldate: finalDate,
+          idsbrand: idBrands,
         },
       }
     );
@@ -43,14 +43,14 @@ export class ApiPainelService {
 
     let params = new HttpParams({
       fromObject: {
-        initialDate: initialDate,
-        finalDate: finalDate,
-        idBrands: idBrands,
+        initialdate: initialDate,
+        finaldate: finalDate,
+        idsbrand: idBrands,
       },
     });
 
     return this.http.post<DataFilePhoto[]>(
-      environment.apiUrlServer + '/datafile/photos/',filter,
+      environment.apiUrlServer + '/datafile/photos',filter,
       { headers: headers, params: params }
     );
   }
@@ -100,7 +100,7 @@ export class ApiPainelService {
       fromObject: {
         initialDate: initialDate,
         finalDate: finalDate,
-        idBrands: idBrands,
+        idsBrand: idBrands,
       },
     });
     return this.http.get<FilterGalleryDTO>(
@@ -112,16 +112,31 @@ export class ApiPainelService {
   getRupturaBetweenDateByBrand(
     initialDate: string,
     finalDate: string,
-    idBrands: number[],
-    project:Project[]
+    idsBrand: number[],
+    idsProject:number[]
   ): Observable<any> {
-    let params = new HttpParams({
-      fromObject: {
-        initialDate: initialDate,
-        finalDate: finalDate,
-        idBrands: idBrands,
-      },
-    });
+    let params;
+    if(idsProject){
+       params = new HttpParams({
+        fromObject: {
+          initialDate: initialDate,
+          finalDate: finalDate,
+          idsBrand: idsBrand,
+          idsProject: idsProject,
+        },
+      });
+    }else{
+       params = new HttpParams({
+        fromObject: {
+          initialDate: initialDate,
+          finalDate: finalDate,
+          idsBrand: idsBrand,
+        },
+      });
+    }
+    
+
+
     return this.http.get(environment.apiUrlServer + '/detail/ruptura', {
       params,
     });
@@ -135,9 +150,9 @@ export class ApiPainelService {
   ): Observable<any> {
     let params = new HttpParams({
       fromObject: {
-        initialDate: initialDate,
-        finalDate: finalDate,
-        idBrands: idBrands,
+        initialdate: initialDate,
+        finaldate: finalDate,
+        idsbrand: idBrands,
       },
     });
     return this.http.get(environment.apiUrlServer + '/detail/validity', {
@@ -151,7 +166,7 @@ export class ApiPainelService {
       fromObject: {
         initialDate: initialDate,
         finalDate: finalDate,
-        idBrands: idBrands,
+        idsBrand: idBrands,
       },
     });
     return this.http.post(environment.apiUrlServer + '/report/details', filter, {
@@ -163,16 +178,17 @@ export class ApiPainelService {
 
   generateBookPhotos(initialDate: string,
     finalDate: string,
-    idBrands: number[]) {
+    idBrands: number[],
+    filter:Filter) {
     const headers = { 'content-type': 'application/json' };
     let params = new HttpParams({
       fromObject: {
         initialDate: initialDate,
         finalDate: finalDate,
-        idBrands: idBrands,
+        idsBrand: idBrands,
       },
     });
-    return this.http.post(environment.apiUrlServer + '/book', {
+    return this.http.post(environment.apiUrlServer + '/book',filter, {
       responseType: 'blob',
       params,
       headers,
@@ -182,17 +198,29 @@ export class ApiPainelService {
   getRupturaToDownload(
     initialDate: string,
     finalDate: string,
-    idBrands: number[],
-    project:Project[]
+    idsBrand: number[],
+    idsProject:number[]
   ): Observable<any> {
     const headers = { 'content-type': 'application/json' };
-    let params = new HttpParams({
-      fromObject: {
-        initialDate: initialDate,
-        finalDate: finalDate,
-        idBrands: idBrands,
-      },
-    });
+    let params;
+    if(idsProject){
+      params = new HttpParams({
+       fromObject: {
+         initialDate: initialDate,
+         finalDate: finalDate,
+         idsBrand: idsBrand,
+         idsProject: idsProject,
+       },
+     });
+   }else{
+      params = new HttpParams({
+       fromObject: {
+         initialDate: initialDate,
+         finalDate: finalDate,
+         idsBrand: idsBrand,
+       },
+     });
+   }
     return this.http.post(environment.apiUrlServer + '/report/ruptura', '', {
       responseType: 'blob',
       params,

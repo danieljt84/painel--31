@@ -1,9 +1,10 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { format, isThisSecond, subDays } from 'date-fns';
 import { MultiSelectComponent } from 'ng-multiselect-dropdown';
 import { BaseChartDirective } from 'ng2-charts';
-import { filter, finalize, forkJoin, Observable } from 'rxjs';
+import { filter, finalize, firstValueFrom, forkJoin, Observable } from 'rxjs';
 import { FilterActivationDTO } from 'src/app/model/analytic/filter-activation.dto';
 import { Brand } from 'src/app/model/brand';
 import { Chain } from 'src/app/model/chain';
@@ -37,7 +38,7 @@ export class AtivacaoCardComponent implements OnInit {
   private projects: Project[];
   filter: Filter;
   valuesToFilter: ValuesToFilter;
-  itensSelecteds = new Map<string, Object[]>();
+  itensSelecteds = new Map<string, any[]>();
   isLoadingValues = true;
   download: Download;
   showButtonFilter = false;
@@ -73,32 +74,32 @@ export class AtivacaoCardComponent implements OnInit {
   }
 
   loadDatas() {
+    console.log(this.itensSelecteds)
     this.filter = {
       shops: this.itensSelecteds.has('shop')
-        ? (this.itensSelecteds.get('shop') as Shop[]).map(
-            (element) => element.id
-          )
+        ? this.itensSelecteds.get('shop').map((element) => element.item_id)
         : null,
       chains: this.itensSelecteds.has('chain')
-        ? (this.itensSelecteds.get('chain') as Chain[]).map(
-            (element) => element.id
-          )
+        ? this.itensSelecteds.get('chain').map((element) => element.item_id)
         : null,
+      projects: this.itensSelecteds.has('project')
+        ? this.itensSelecteds.get('project').map((element) => element.item_id)
+        : this.projects? this.projects.map((element) => element.id) : null,
     };
 
     forkJoin({
       complete:
         this.apiOperationService.getCountActivityCompleteBetweenDateByBrand(
           this.brands.map((brand) => brand.id),
-          format(new Date(this.initialDate), 'yyyy-MM-dd'),
-          format(new Date(this.finalDate), 'yyyy-MM-dd'),
+          formatDate(this.initialDate, 'yyyy-MM-dd','en'),
+          formatDate(this.finalDate, 'yyyy-MM-dd','en'),
           this.filter
         ),
       missing:
         this.apiOperationService.getCountActivityMissingBetweenDateByBrand(
           this.brands.map((brand) => brand.id),
-          format(new Date(this.initialDate), 'yyyy-MM-dd'),
-          format(new Date(this.finalDate), 'yyyy-MM-dd'),
+          formatDate(this.initialDate, 'yyyy-MM-dd','en'),
+          formatDate(this.finalDate, 'yyyy-MM-dd','en'),
           this.filter
         ),
       valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
@@ -119,13 +120,9 @@ export class AtivacaoCardComponent implements OnInit {
         this.realizado = data.complete;
         this.pendente = data.missing;
         this.valuesToFilter = {
-          project :this.generateInterfaceToFilter(
-            data.valuesToFilter.project
-          ),
-          shop:this.generateInterfaceToFilter(
-            data.valuesToFilter.shop
-          )
-        }
+          project: this.generateInterfaceToFilter(data.valuesToFilter.project),
+          shop: this.generateInterfaceToFilter(data.valuesToFilter.shop),
+        };
         console.log(this.valuesToFilter.shop);
         this.doughnutChartDatasets[0].data.push(this.realizado);
         this.doughnutChartDatasets[0].data.push(this.pendente);
@@ -170,14 +167,14 @@ export class AtivacaoCardComponent implements OnInit {
   }
 
   //Recupera as configuracõe globais do ConfigService
-  getConfig() {
-    this.configService.getConfig().subscribe((config) => {
+   getConfig() {
+    this.configService.getConfig().subscribe(config =>{
       this.initialDate = config.initialDate;
       this.finalDate = config.finalDate;
       this.brands = config.brands;
       this.projects = config.projects;
       this.loadDatas();
-    });
+    })
   }
 
   //Emite evento que envia objeto como elementos para download
@@ -186,8 +183,8 @@ export class AtivacaoCardComponent implements OnInit {
       this.download = {
         filename: 'previstorealizado',
         observable: this.apiOperationService.getPrevistoRealizadoToDownload(
-          format(new Date(this.initialDate), 'yyyy-MM-dd'),
-          format(new Date(this.finalDate), 'yyyy-MM-dd'),
+          formatDate(this.initialDate, 'yyyy-MM-dd','en'),
+          formatDate(this.finalDate, 'yyyy-MM-dd','en'),
           this.brands.map((element) => element.id),
           this.filter
         ),

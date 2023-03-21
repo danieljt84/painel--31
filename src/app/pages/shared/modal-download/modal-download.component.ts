@@ -24,7 +24,7 @@ export class ModalDownloadComponent implements AfterViewInit {
   doAction(){
     this.download.observable
     .pipe(finalize(()=> this.activeModal.close()))
-    .subscribe(blob => this.fileSaver.save(blob, this.download.filename+'.'+'xlsx'));
+    .subscribe(blob => this.fileSaver.save(blob, this.download.filename+'.'+this.download.type));
   }
 
 

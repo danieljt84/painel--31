@@ -29,7 +29,9 @@ export class UserService {
             initialDate: new Date(),
             finalDate: new Date(),
           }
-          this.configService.setConfig(config)
+          this.configService.setConfig(config);
+          this.configService.setDefaultBrands(this.obterBrands);
+          this.configService.setDefaultProject(this.obterProjects);
         })
       );
   }

@@ -5,6 +5,7 @@ import { Promoter } from "./promoter";
 import { Shop } from "./shop";
 
 export interface Filter{
+    brands?:number[],
     projects?:number[],
     shops?:number[],
     promoters?:number[],

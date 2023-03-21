@@ -53,7 +53,7 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
         this.filter = data.filter;
         this.loadDatas( data.initialDate,
           data.finalDate,
-          data.idBrands,
+          data.filter.brands,
           data.filter);
       });
   }
@@ -121,15 +121,13 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
 emitObservableToDownload(){
-  /*
     this.download = {
       filename :"book-fotos",
-      observable : this.apiService.generateBookPhotos(this.filter),
+      observable : this.apiService.generateBookPhotos(this.initialDate,this.finalDate,this.filter.brands,this.filter),
       type:"pdf"
     }
     const modal = this.modalService.open(ModalDownloadComponent);
     modal.componentInstance.download = this.download;
-  */
   }
   
 }

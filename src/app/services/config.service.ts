@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Brand } from '../model/brand';
 import { Config } from '../model/config';
 import { Project } from '../model/project';
+import { User } from '../model/user';
 import { UserService } from './user.service';
 
 @Injectable({
@@ -10,6 +11,8 @@ import { UserService } from './user.service';
 })
 export class ConfigService {
   config:Config
+  private defaultBrands: Brand[];
+  private defaultProject: Project[];
   private configData;
 
 
@@ -27,6 +30,14 @@ export class ConfigService {
     return this.configData.asObservable();
   }
 
+  setDefaultBrands(brands: Brand[]){
+    this.defaultBrands = brands;
+  }
+
+  setDefaultProject(projects: Project[]){
+    this.defaultProject = projects;
+  }
+
   private addConfigToLocalStorage(config:Config){
     localStorage.setItem('config',JSON.stringify(config))
   }
@@ -40,6 +51,20 @@ export class ConfigService {
     if(!this.config && localConfig){
       this.config = localConfig;
     }
+  }
+
+  
+
+  get obterBrands(): Brand[] {
+    return localStorage.getItem('user')
+      ? (JSON.parse(localStorage.getItem('user')) as User).brands
+      : null;
+  }
+
+  get obterProjects(): Project[] {
+    return localStorage.getItem('user')
+      ? (JSON.parse(localStorage.getItem('projects')) as Project[])
+      : null;
   }
 
   

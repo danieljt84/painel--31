@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "chrome",
+            "type": "firefox",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
+            "reAttach": true,
+            "name": "Launch localhost",
             "url": "http://localhost:4200",
-            "webRoot": "${workspaceFolder}",
-            "sourceMapPathOverrides":{ "webpack:/*": "${webRoot}/*" }
-            
+            "webRoot": "${workspaceFolder}"
         }
+       
     ]
 }
