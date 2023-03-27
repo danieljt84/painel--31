@@ -7,8 +7,8 @@
         <div  class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <label>Periodo: </label>
             <div class="data-group">
-                <input type="date" class="data-input form-control" [formControl]="initialDate" (change)="loadValuesToFilter()" id="initialDate" />
-                <input type="date" class="data-input form-control"[formControl]="finalDate" (change)="loadValuesToFilter()" id="finalDate" />
+                <input type="date" class="data-input form-control" [formControl]="initialDate" id="initialDate" />
+                <input type="date" class="data-input form-control"[formControl]="finalDate" id="finalDate" />
               </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
@@ -43,7 +43,7 @@
             <label>Secão:</label>
                 <app-multi-select [type]="'gallery'" [values]="[]" [id]="'section'"></app-multi-select>
         </div>
-        <button type="button" (click)="onFilter()" style="width: 100px;height: 50px;margin-top: auto; margin-left: auto; background: #ff6047;" class="btn btn-secondary">
+        <button type="button" (click)="onFilter()" class="button-filtrar btn btn-secondary">
             Filtrar
           </button>
     </div>

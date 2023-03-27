@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrlOperation:"http://localhost:8081",
-  apiUrlServer:"http://localhost:8082",
+  apiUrlOperation:"https://painel4p.com:8081",
+  apiUrlServer:"https://painel4p.com:8082",
 };
 
 /*

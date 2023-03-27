@@ -19,6 +19,7 @@
         <app-multi-select [values]="valuesToFilter.project" [type]="'activation-chart'" [id]="'project'"></app-multi-select>
         <app-multi-select></app-multi-select>
         <app-multi-select [values]="valuesToFilter.shop" [type]="'activation-chart'" [id]="'shop'"></app-multi-select>
+        <button (click)="getDatas()" [hidden]="!showButtonFilter" type="button" class="btn btn-primary">filtrar</button>
       </div>
     </div>
 </div>

@@ -32,8 +32,9 @@ export class AtivacaoGraficoCardComponent implements OnInit, AfterViewInit {
   private projects: Project[]
   filter: Filter;
   valuesToFilter: ValuesToFilter;
-  itensSelecteds = new Map<string, Object[]>();
+  itensSelecteds = new Map<string, any[]>();
   isLoadingvalues = true;
+  showButtonFilter = false;
   @ViewChild(BaseChartDirective) chartBase: BaseChartDirective;
   public labels: string[] = [];
   public datasets = [{ data: [''] }];
@@ -61,10 +62,17 @@ export class AtivacaoGraficoCardComponent implements OnInit, AfterViewInit {
   }
 
   loadDatas() {
+    this.isLoadingvalues = true;
     this.filter = {
-      projects :this.itensSelecteds.has('project')? (this.itensSelecteds.get('project') as Project[]).map(element => element.id) : (this.projects)? this.projects.map(element => element.id):null,
-      shops: this.itensSelecteds.has('shop')? (this.itensSelecteds.get('shop') as Shop[]).map(element => element.id) : null,
-      chains: this.itensSelecteds.has('chain')? (this.itensSelecteds.get('chain') as Chain[]).map(element => element.id) : null,
+      shops: this.itensSelecteds.has('shop')
+        ? this.itensSelecteds.get('shop').map((element) => element.item_id)
+        : null,
+      chains: this.itensSelecteds.has('chain')
+        ? this.itensSelecteds.get('chain').map((element) => element.item_id)
+        : null,
+      projects: this.itensSelecteds.has('project')
+        ? this.itensSelecteds.get('project').map((element) => element.item_id)
+        : this.projects? this.projects.map((element) => element.id) : null,
     };
 
     forkJoin({
@@ -87,6 +95,7 @@ export class AtivacaoGraficoCardComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe((data) => {
+        this.labels.length = 0;
         this.valuesToFilter ={
           project : this.generateInterfaceToFilter(data.valuesToFilter.project),
           shop : this.generateInterfaceToFilter(data.valuesToFilter.shop),
@@ -103,10 +112,14 @@ export class AtivacaoGraficoCardComponent implements OnInit, AfterViewInit {
   eventListenerSetItem() {
     EventEmiterService.get('set-item').subscribe((data) => {
       if (data.type == 'activation-chart') {
+        this.showButtonFilter = true;
         this.loadItensSelected(data);
-        this.loadDatas();
       }
     });
+  }
+
+  getDatas() {
+    this.loadDatas();
   }
 
   loadItensSelected(item: any) {

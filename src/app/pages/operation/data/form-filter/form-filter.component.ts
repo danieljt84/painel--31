@@ -1,24 +1,15 @@
 import { formatDate } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { format, subDays, subMonths } from 'date-fns';
-import { finalize, lastValueFrom, Subject, takeUntil, takeWhile } from 'rxjs';
-import { Chain } from 'src/app/model/chain';
+import { format, subMonths } from 'date-fns';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { Config } from 'src/app/model/config';
-import { FilterDatatableDTO } from 'src/app/model/detail/filter-datatable.dto';
-import { Product } from 'src/app/model/detail/Product';
 import { Filter } from 'src/app/model/filter';
 import { MultiSelectData } from 'src/app/model/multiselect/multiselectdata';
-import { Project } from 'src/app/model/project';
-import { Promoter } from 'src/app/model/promoter';
-import { Shop } from 'src/app/model/shop';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { ConfigService } from 'src/app/services/config.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
-import { firstValueFrom } from 'rxjs';
-import { Brand } from 'src/app/model/brand';
-
 interface ValuesToFilter {
   brands: any[];
   shop: any[];
@@ -63,11 +54,13 @@ export class FormFilterComponent implements OnInit, OnDestroy {
 
   //Carrega todos os dados possiveis de filtragem
   loadValuesToFilter() {
+    this.isLoadingValues = true;
     this.onEditFilter();
+    console.log(format(new Date(2020,1,1), 'yyyy-MM-dd'));
     this.apiService
       .getFilterToDataTable(
-        format(new Date(this.initialDate.value), 'yyyy-MM-dd'),
-        format(new Date(this.finalDate.value), 'yyyy-MM-dd'),
+        format(new Date(2020,1,1), 'yyyy-MM-dd'),
+        format(new Date(2029,1,1), 'yyyy-MM-dd'),
         this.userService.obterBrands.map((element) => element.id)
       )
       .pipe(

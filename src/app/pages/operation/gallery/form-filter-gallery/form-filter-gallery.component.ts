@@ -54,8 +54,8 @@ export class FormFilterGalleryComponent implements OnInit {
     this.onEditFilter();
     this.apiService
       .getFilterToGallery(
-        format(new Date(this.initialDate.value), 'yyyy-MM-dd'),
-        format(new Date(this.finalDate.value), 'yyyy-MM-dd'),
+        format(new Date(2020,1,1), 'yyyy-MM-dd'),
+        format(new Date(2029,1,1), 'yyyy-MM-dd'),
         this.userService.obterBrands.map((element) => element.id)
       )
       .pipe(

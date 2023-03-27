@@ -74,7 +74,7 @@ export class AtivacaoCardComponent implements OnInit {
   }
 
   loadDatas() {
-    console.log(this.itensSelecteds)
+    this.isLoadingValues = true;
     this.filter = {
       shops: this.itensSelecteds.has('shop')
         ? this.itensSelecteds.get('shop').map((element) => element.item_id)

@@ -1,11 +1,14 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { format, subDays } from 'date-fns';
 import { finalize } from 'rxjs';
+import { Config } from 'src/app/model/config';
 import { Download } from 'src/app/model/download';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
+import { ConfigService } from 'src/app/services/config.service';
 import { EventEmiterService } from 'src/app/services/event-emiter.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -29,22 +32,30 @@ export class AlertaValidadeComponent implements OnInit {
   sortedData: any[];
   isLoading = true;
   download: Download;
+  config: Config;
 
-  constructor(private apiPainelService:ApiPainelService, private userService:UserService) { }
+  constructor(private apiPainelService:ApiPainelService, private configService:ConfigService) { }
 
   ngOnInit(): void {
     this.finalDate = format(new Date(),'yyyy-MM-dd');
-    this.initialDate = format(subDays(new Date(),30),'yyyy-MM-dd');
-    this.loadDatas();
+    this.initialDate = format(subDays(new Date(),7),'yyyy-MM-dd');
+this.getConfig();
     this.eventListenerChangeDate();
   }
 
   loadDatas(){
     this.isLoading = true;
-     this.apiPainelService.getValidityBetweenDateByBrand(this.initialDate,this.finalDate,this.userService.obterBrands.map(element=> element.id),this.userService.obterProjects)
-     .pipe(finalize(() => this.isLoading = false )).subscribe(data =>{
-       this.dataSource.data = data;
-     });
+     this.apiPainelService.getValidityBetweenDateByBrand(formatDate(this.initialDate, 'yyyy-MM-dd','en'),
+     formatDate(this.finalDate, 'yyyy-MM-dd','en'),this.config.brands.map(element => element.id),this.config.projects?this.config.projects.map(ele => ele.id) : null)
+     .pipe(finalize(() => this.isLoading = false)).subscribe(data => this.dataSource.data = data );
+  }
+
+
+  getConfig() {
+    this.configService.getConfig().subscribe(config =>{
+      this.config = config;
+      this.loadDatas();
+    })
   }
 
   ngAfterViewInit(): void {
@@ -78,7 +89,8 @@ export class AlertaValidadeComponent implements OnInit {
     if(event == 'exportar'){
       this.download = {
         filename :"alerta-validade",
-        observable: this.apiPainelService.getValidadeToDownload(this.initialDate,this.finalDate,this.userService.obterBrands.map(element => element.id),this.userService.obterProjects),
+        observable: this.apiPainelService.getValidadeToDownload(formatDate(this.initialDate, 'yyyy-MM-dd','en'),
+        formatDate(this.finalDate, 'yyyy-MM-dd','en'),this.config.brands.map(element => element.id),this.config.projects?this.config.projects.map(ele => ele.id) : null),
         type:"xlsx"
       }
     }

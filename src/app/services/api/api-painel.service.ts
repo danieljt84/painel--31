@@ -145,16 +145,28 @@ export class ApiPainelService {
   getValidityBetweenDateByBrand(
     initialDate: string,
     finalDate: string,
-    idBrands: number[],
-    projects:Project[]
+    idsBrand: number[],
+    idsProject:number[]
   ): Observable<any> {
-    let params = new HttpParams({
-      fromObject: {
-        initialdate: initialDate,
-        finaldate: finalDate,
-        idsbrand: idBrands,
-      },
-    });
+    let params;
+    if(idsProject){
+       params = new HttpParams({
+        fromObject: {
+          initialDate: initialDate,
+          finalDate: finalDate,
+          idsBrand: idsBrand,
+          idsProject: idsProject,
+        },
+      });
+    }else{
+       params = new HttpParams({
+        fromObject: {
+          initialDate: initialDate,
+          finalDate: finalDate,
+          idsBrand: idsBrand,
+        },
+      });
+    }
     return this.http.get(environment.apiUrlServer + '/detail/validity', {
       params,
     });
@@ -231,23 +243,33 @@ export class ApiPainelService {
   getValidadeToDownload(
     initialDate: string,
     finalDate: string,
-    idBrands: number[],
-    project:Project[]
+    idsBrand: number[],
+    idsProject:number[]
   ): Observable<any> {
     const headers = { 'content-type': 'application/json' };
-    let params = new HttpParams({
-      fromObject: {
-        initialDate: initialDate,
-        finalDate: finalDate,
-        idBrands: idBrands,
-      },
-    });
-    return this.http.post(environment.apiUrlServer + '/report/validade', '', {
+    let params;
+    if(idsProject){
+      params = new HttpParams({
+       fromObject: {
+         initialDate: initialDate,
+         finalDate: finalDate,
+         idsBrand: idsBrand,
+         idsProject: idsProject,
+       },
+     });
+   }else{
+      params = new HttpParams({
+       fromObject: {
+         initialDate: initialDate,
+         finalDate: finalDate,
+         idsBrand: idsBrand,
+       },
+     });
+    }
+    return this.http.post(environment.apiUrlServer + '/report/validity', '', {
       responseType: 'blob',
       params,
       headers,
     });
   }
-
- 
 }

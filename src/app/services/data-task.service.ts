@@ -28,24 +28,14 @@ export class DataTaskService {
        return this.httpClient.get<number>(environment.apiUrlOperation+"/datatask/countactivitymissingbybrand",{params});
     }
     getCountActivityCompleteBetweenDateByBrand(brand: string, initialDate: string,finalDate: string):Observable<number>{
-      const headers = { 'content-type': 'application/json'}
       let params = new HttpParams()
       .set('brand', brand)
       .set('initialDate', initialDate)
       .set('finalDate', finalDate);
 
-      return this.httpClient.get<number>(environment.apiUrlOperation+"/datatask/countactivitycompletebetweendatebybrand",{params,headers});
+      return this.httpClient.get<number>(environment.apiUrlOperation+"/datatask/countactivitycompletebetweendatebybrand",{params});
     }
-    getCountActivityCompleteBetweenDateByBrandUsingFilter(filter:Filter):Observable<number>{
-        const headers = { 'content-type': 'application/json'}
-        let params = new HttpParams()
-        .set('brand', filter.idBrand)
-        .set('initialDate', filter.initialDate)
-        .set('finalDate', filter.finalDate);
-        const str = this.transformMapInStringArray(filter.filter);
-
-        return this.httpClient.post<number>(environment.apiUrlOperation+"/datatask/countactivitycompletebetweendatebybrand",str,{params,headers});
-    }
+  
     getCountActivityMissingBetweenDateByBrand(brand: string, initialDate: string,finalDate: string):Observable<number>{
         let params = new HttpParams()
         .set('brand', brand)
@@ -53,16 +43,7 @@ export class DataTaskService {
         .set('finalDate', finalDate);
         return this.httpClient.get<number>(environment.apiUrlOperation+"/datatask/countactivitymissingbetweendatebybrand",{params});
     }
-    getCountActivityMissingBetweenDateByBrandUsingFilter(filter:Filter):Observable<number>{
-        const headers = { 'content-type': 'application/json'}
-
-        let params = new HttpParams()
-        .set('brand', filter.idBrand)
-        .set('initialDate', filter.initialDate)
-        .set('finalDate', filter.finalDate);
-        const str = this.transformMapInStringArray(filter.filter);
-        return this.httpClient.post<number>(environment.apiUrlOperation+"/datatask/countactivitymissingbetweendatebybrand",str,{params,headers});
-    }
+  
     getCountActivityCompleteWithDateBetweenDateByBrand(brand: string, initialDate:string, finalDate:string):Observable<any>{
         let params = new HttpParams()
         .set('brand', brand)
@@ -70,17 +51,6 @@ export class DataTaskService {
         .set('finalDate', finalDate);
         return this.httpClient.get<number>(environment.apiUrlOperation+"/datatask/countactivitycompletewithdatebetweendatebybrand",{params});
     }
-    getCountActivityCompleteWithDateBetweenDateByBrandWithFilter(filter:Filter):Observable<any>{
-      const headers = { 'content-type': 'application/json'}
-
-      let params = new HttpParams()
-      .set('brand', filter.idBrand)
-      .set('initialDate', filter.initialDate)
-      .set('finalDate', filter.finalDate);
-      const str = this.transformMapInStringArray(filter.filter);
-      return this.httpClient.post<number>(environment.apiUrlOperation+"/datatask/countactivitycompletewithdatebetweendatebybrand",str,{params,headers});
-  }
-
   transformMapInStringArray(map:Map<string,string[]>){
     let index = 1;
     let string ='{"filter":{';

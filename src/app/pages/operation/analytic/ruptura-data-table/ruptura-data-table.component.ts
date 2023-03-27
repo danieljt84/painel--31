@@ -41,7 +41,7 @@ export class RupturaDataTableComponent implements OnInit,AfterViewInit {
 
   ngOnInit(): void {
     this.finalDate = format(new Date(),'yyyy-MM-dd');
-    this.initialDate = format(subDays(new Date(),30),'yyyy-MM-dd');
+    this.initialDate = format(subDays(new Date(),7),'yyyy-MM-dd');
 this.getConfig();
     this.eventListenerChangeDate();
   }
