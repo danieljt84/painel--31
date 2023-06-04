@@ -38,7 +38,7 @@ export class ApiPainelService {
   }
   getDataPhotos(  initialDate: string,
     finalDate: string,
-    idBrands: number[], filter:Filter) {
+    idBrands: number[], filter:Filter,limit:number,offset:number) {
     const headers = { 'content-type': 'application/json' };
 
     let params = new HttpParams({
@@ -46,10 +46,12 @@ export class ApiPainelService {
         initialdate: initialDate,
         finaldate: finalDate,
         idsbrand: idBrands,
+        limit: limit,
+        offset:offset
       },
     });
 
-    return this.http.post<DataFilePhoto[]>(
+    return this.http.post<any>(
       environment.apiUrlServer + '/datafile/photos',filter,
       { headers: headers, params: params }
     );

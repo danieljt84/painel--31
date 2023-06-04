@@ -104,9 +104,14 @@ export class MultiSelectComponent implements OnInit, OnChanges {
   }
 
   getItemsSelectedsByIdInLocalStorage(){
-    let itemsStorage = (JSON.parse(localStorage.getItem('itemSelecteds')) as ItemSelectedsStorage);
-    let element = itemsStorage.items.filter(it => it.type == this.type && it.id == this.id).map(it => it.items);
-    if(element)     this.selectedItems.push(...element[0]);
+
+    try {
+      let itemsStorage = (JSON.parse(localStorage.getItem('itemSelecteds')) as ItemSelectedsStorage);
+      let element = itemsStorage.items.filter(it => it.type == this.type && it.id == this.id).map(it => it.items);
+      if(element)     this.selectedItems.push(...element[0]);
+    } catch (error) {
+      
+    }
 
   }
 }

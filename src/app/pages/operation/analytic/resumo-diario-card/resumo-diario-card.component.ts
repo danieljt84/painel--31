@@ -25,17 +25,16 @@ export class ResumoDiarioCardComponent implements OnInit {
   constructor(private apiOperationService: ApiOperationService,private configService:ConfigService) { }
 
   ngOnInit(): void {
-    this.getConfig();
     this.today = format(new Date(),'yyyy-MM-dd');
-    this.loadDatas()
+    this.getConfig();
   }
 
   loadDatas(){
     this.isLoading = true;
     forkJoin({
-      complete : this.apiOperationService.getCountActivityCompleteByBrand(this.brands.map(brand => brand.id),this.projects,this.today),
-      doing : this.apiOperationService.getCountActivityDoingByBrand(this.brands.map(brand => brand.id),this.projects,this.today),
-      missing : this.apiOperationService.getCountActivityMissingByBrand(this.brands.map(brand => brand.id),this.projects,this.today)
+      complete : this.apiOperationService.getCountActivityCompleteByBrand(this.brands.map(brand => brand.id), this.projects? this.projects.map(element => element.id) : []      ,this.today),
+      doing : this.apiOperationService.getCountActivityDoingByBrand(this.brands.map(brand => brand.id),this.projects? this.projects.map(element => element.id) : [],this.today),
+      missing : this.apiOperationService.getCountActivityMissingByBrand(this.brands.map(brand => brand.id),this.projects? this.projects.map(element => element.id) : [],this.today)
     })
     .pipe(finalize(() => this.isLoading = false))
     .subscribe(data =>{
@@ -49,6 +48,7 @@ export class ResumoDiarioCardComponent implements OnInit {
     this.configService.getConfig().subscribe(config => {
       this.brands = config.brands;
       this.projects = config.projects;
+      this.loadDatas()
     })
   }
 

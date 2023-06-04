@@ -71,6 +71,7 @@ export class FormFilterGalleryComponent implements OnInit {
           shop: this.generateInterfaceToFilter(data.shop),
           status: this.generateInterfaceToFilter(data.section),
         };
+        console.log(this.valuesToFilter);
       });
   }
 

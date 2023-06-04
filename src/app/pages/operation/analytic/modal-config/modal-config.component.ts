@@ -27,7 +27,7 @@ export class ModalConfigComponent implements OnInit {
   finalDate = new FormControl();
   valueToFilter: ValuesToFilter;
   brands: Brand[];
-  projects: Project[];
+  projects: any[];
   private itensSelecteds = new Map<string, any[]>();
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -47,6 +47,7 @@ export class ModalConfigComponent implements OnInit {
       );
       this.finalDate.setValue(formatDate(config.finalDate, 'yyyy-MM-dd', 'en'));
       this.brands = this.configService.obterBrands;
+      console.log(this.configService.obterProjects);
       this.projects = this.configService.obterProjects;
       this.valueToFilter = {
         brand: this.generateInterfaceToFilter(this.brands),
@@ -61,11 +62,7 @@ export class ModalConfigComponent implements OnInit {
       brands: this.itensSelecteds.has('brand')
         ? this.brands.filter(brand => this.itensSelecteds.get('brand').map(item => item.item_id).includes(brand.id))
         : this.brands,
-      projects: this.itensSelecteds.has('project')
-        ? (this.itensSelecteds.get('project') as Project[])
-        : this.projects
-        ? this.projects
-        : null,
+      projects: this.itensSelecteds.has('project') ? this.projects.filter(project => this.itensSelecteds.get('project').map(item => item.item_id).includes(project.id)): this.projects,
       initialDate: this.initialDate.value,
       finalDate: this.finalDate.value,
     };
@@ -102,17 +99,13 @@ export class ModalConfigComponent implements OnInit {
     this.destroy$.unsubscribe();
   }
 
-  generateInterfaceToFilter(datas: any[]): any[] {
-    if (datas) {
-      return datas.map((data) => {
-        return <MultiSelectData>{
-          id: data.id,
-          item: data.name,
-        };
-      });
-    } else {
-      return [];
-    }
+  generateInterfaceToFilter(datas: any[]) {
+    return datas.map((data) => {
+      return {
+        id: data.id,
+        item: data.name,
+      };
+    });
   }
 
   saveItemsSelected(selecteds:any[],id:string){
@@ -132,6 +125,12 @@ export class ModalConfigComponent implements OnInit {
       }
       localStorage.setItem('itemSelecteds',JSON.stringify(itemselectedstorage))
     }
-
   }
+
+  generateInterfaceToModel = (datas: any[]) => datas.map((data) => {
+    return {
+      id: data.item_id,
+      name: data.item_text,
+    };
+  });
 }

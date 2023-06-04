@@ -67,7 +67,7 @@ export class UserService {
 
   get obterProjects(): Project[] {
     return localStorage.getItem('user')
-      ? (JSON.parse(localStorage.getItem('projects')) as Project[])
+      ? (JSON.parse(localStorage.getItem('user')) as User).projects
       : null;
   }
 }

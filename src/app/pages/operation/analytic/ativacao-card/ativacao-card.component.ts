@@ -84,7 +84,7 @@ export class AtivacaoCardComponent implements OnInit {
         : null,
       projects: this.itensSelecteds.has('project')
         ? this.itensSelecteds.get('project').map((element) => element.item_id)
-        : this.projects? this.projects.map((element) => element.id) : null,
+        : (this.projects && this.projects.length != 0 )? this.projects.map((element) => element.id) : null,
     };
 
     forkJoin({
@@ -102,11 +102,12 @@ export class AtivacaoCardComponent implements OnInit {
           formatDate(this.finalDate, 'yyyy-MM-dd','en'),
           this.filter
         ),
-      valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
-        format(new Date(this.initialDate), 'yyyy-MM-dd'),
-        format(new Date(this.finalDate), 'yyyy-MM-dd'),
-        this.brands.map((brand) => brand.id)
-      ),
+        valuesToFilter: this.apiOperationService.getFilterToActivitionCard(
+          formatDate(this.initialDate, 'yyyy-MM-dd','en'),
+          formatDate(this.finalDate, 'yyyy-MM-dd','en'),
+          this.brands.map(brand => brand.id),
+          this.projects? this.projects.map(element => element.id) : []
+          ),
     })
       .pipe(
         finalize(() => {

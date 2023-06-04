@@ -14,19 +14,17 @@ export class ApiOperationService {
   constructor(private http: HttpClient) {}
 
   getCountActivityCompleteByBrand(
-    idBrands: number[],
-    projects: Project[],
+    idsBrand: number[],
+    idsProject: number[],
     date: string
   ): Observable<number> {
-    let params = new HttpParams().append('date', date);
 
-    if (projects)
-      projects
-        .map((project) => project.toString())
-        .forEach((project) => (params = params.append('projects', project)));
-
-    idBrands.forEach((id) => (params = params.append('idsBrand', id)));
-
+    let params = new HttpParams({
+      fromObject: {
+        date: date,
+        idsBrand: idsBrand,
+        idsProject: idsProject,
+      }});
     return this.http.get<number>(
       environment.apiUrlOperation + '/datatask/countactivitycompletebybrand',
       {
@@ -36,15 +34,15 @@ export class ApiOperationService {
   }
   getCountActivityDoingByBrand(
     idsBrand: number[],
-    projects: Project[],
+    idsProject: number[],
     date: string
   ) {
-    let params = new HttpParams().append('date', date);
-    if (projects)
-      projects
-        .map((project) => project.toString())
-        .forEach((project) => params.append('projects', project));
-    idsBrand.forEach((id) => (params = params.append('idsBrand', id)));
+    let params = new HttpParams({
+      fromObject: {
+        date: date,
+        idsBrand: idsBrand,
+        idsProject: idsProject,
+      }});
 
     return this.http.get<number>(
       environment.apiUrlOperation + '/datatask/countactivitydoingbybrand',
@@ -55,16 +53,15 @@ export class ApiOperationService {
   }
   getCountActivityMissingByBrand(
     idsBrand: number[],
-    projects: Project[],
+    idsProject: number[],
     date: string
   ) {
-    let params = new HttpParams().append('date', date);
-    if (projects)
-      projects
-        .map((project) => project.toString())
-        .forEach((project) => params.append('projects', project));
-    idsBrand.forEach((id) => (params = params.append('idsBrand', id)));
-
+    let params = new HttpParams({
+      fromObject: {
+        date: date,
+        idsBrand: idsBrand,
+        idsProject: idsProject,
+      }});
     return this.http.get<number>(
       environment.apiUrlOperation + '/datatask/countactivitymissingbybrand',
       {
@@ -179,13 +176,15 @@ export class ApiOperationService {
   getFilterToActivitionCard(
     initialDate: string,
     finalDate: string,
-    idsBrand: number[]
+    idsBrand: number[],
+    idsProject:number[]
   ) {
     let params = new HttpParams({
       fromObject: {
         initialDate: initialDate,
         finalDate: finalDate,
         idsBrand: idsBrand,
+        idsProject: idsProject
       },
     });
     return this.http.get<FilterActivationDTO>(

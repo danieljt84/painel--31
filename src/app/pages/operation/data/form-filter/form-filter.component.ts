@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { format, subMonths } from 'date-fns';
 import { finalize, Subject, takeUntil } from 'rxjs';

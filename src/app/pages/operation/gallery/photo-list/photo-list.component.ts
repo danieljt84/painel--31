@@ -5,6 +5,7 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
+  HostListener,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { finalize, Subject, Subscription, takeUntil } from 'rxjs';
@@ -29,6 +30,7 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
   opened: boolean = false;
   rows: any[] = [];
   isLoadingDatas = '';
+  data:any;
   isAlive = true;
   destroy$: Subject<boolean> = new Subject<boolean>();
   filter: Filter | any;
@@ -36,6 +38,9 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
   initialDate: string;
   finalDate: string;
   idBrands: number[];
+  total:number;
+  limit  = 5;
+  offset = 0;
 
   constructor(
     private apiService: ApiPainelService,
@@ -47,6 +52,7 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
     EventEmiterService.get('on-filter-gallery')
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
+        this.data = data;
         this.initialDate = data.initialDate;
         this.finalDate = data.finalDate;
         this.idBrands = data.idBrands;
@@ -54,7 +60,7 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
         this.loadDatas( data.initialDate,
           data.finalDate,
           data.filter.brands,
-          data.filter);
+          data.filter,this.limit,this.offset,true);
       });
   }
 
@@ -68,11 +74,14 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
     initialDate: string,
     finalDate: string,
     idBrands: number[],
-    filter: Filter
+    filter: Filter,
+    limit:number
+    ,offset:number,loading:boolean
   ) {
-    this.isLoadingDatas = 'ATIVO';
+    
+    if(loading) this.isLoadingDatas = 'ATIVO';
     this.apiService
-      .getDataPhotos(initialDate, finalDate, idBrands, filter)
+      .getDataPhotos(initialDate, finalDate, idBrands, filter,limit,offset)
       .pipe(
         finalize(() => {
           this.isLoadingDatas = 'INATIVO';
@@ -81,7 +90,10 @@ export class PhotoListComponent implements OnInit, OnDestroy, OnChanges {
         }),
         takeUntil(this.destroy$)
       )
-      .subscribe((data) => (this.datas = data));
+      .subscribe((data) => {
+        this.datas.push(...data.list);
+        this.total = data.count;
+      });
   }
 
   //Transforma os dados e um modelo possivel para a exibição nas linhas
@@ -128,6 +140,16 @@ emitObservableToDownload(){
     }
     const modal = this.modalService.open(ModalDownloadComponent);
     modal.componentInstance.download = this.download;
+  }
+
+  @HostListener('window:scroll', ['$event']) onScroll(event: any) {
+    if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+      this.offset += this.limit;
+      this.loadDatas(this.initialDate,
+        this.finalDate,
+       this.filter.brands,
+        this.filter,this.limit,this.offset,false)
+    }
   }
   
 }

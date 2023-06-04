@@ -55,6 +55,7 @@ export class LoginComponent implements OnInit {
         password: this.form.get('password').value,
         id: '',
         brands: [],
+        projects:[],
         img:''
       };
 

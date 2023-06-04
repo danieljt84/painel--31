@@ -12,7 +12,7 @@
       Aberto
     </button>
   </div>
-  <button type="button"  [disabled]="!filter" (click)="emitObservableToDownload()" style="background: #ff6047;" class="btn btn-secondary">Exportar</button>
+  <button type="button"  [disabled]="true" (click)="emitObservableToDownload()" style="background: #ff6047;" class="btn btn-secondary">Exportar</button>
 </div>
 
 <ng-container *ngIf="isLoadingDatas == 'INATIVO'">
