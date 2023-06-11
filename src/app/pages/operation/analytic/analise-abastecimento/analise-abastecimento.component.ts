@@ -26,12 +26,12 @@ export class AnaliseAbastecimentoComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<any>();
   config: Config;
-  datas: SupplyDataTable[];
+  datas: SupplyDataTable[] = [];
   constructor(
     private apiPainelService: ApiPainelService,
     private configService: ConfigService
   ) {
-    this.dataSource.data =  ;
+    //this.dataSource.data =  ;
   }
 
   ngOnInit(): void {
@@ -54,29 +54,33 @@ export class AnaliseAbastecimentoComponent implements OnInit {
         this.config.projects ? this.config.projects.map((ele) => ele.id) : null
       )
       .subscribe((data) => {
-       let shops =  data.supplyList.map(element => element.shop);
-       let products =  data.supplyList.map(element => element.product);
-       let projects =  data.supplyList.map(element => element.project);
+       console.log(new Date());
+       let shops = Array.from(new Set(data.supplyList.map(element => element.shop)));
+       let products =  Array.from(new Set(data.supplyList.map(element => element.product)));
+       let projects =  Array.from(new Set(data.supplyList.map(element => element.project)));
        
 
        shops.forEach(shop =>{
         projects.forEach(project => {
           products.forEach(product =>{
              let filter = data.supplyList.filter(supply => supply.project== project && supply.product == product && supply.shop == shop);
-             if(filter){ 
+             if(filter.length!=0){ 
               let supply: SupplyDataTable ={
                 shop:shop,product:product,averageSupply:null,totalSupply:null,values:[]
               }
 
               filter = filter.sort((a,b) => a.seq - b.seq);
               filter.forEach(element => supply.values.push(element.stock));
-              
+              let sum =+ supply.values.reduce((x,y) => x +y);
+              supply.totalSupply = sum;
+              supply.averageSupply = sum/supply.values.length;
+              this.datas.push({...supply})
              }
           })
         })
        })
-
-      
+       console.log(this.datas);
+       console.log(new Date());
       });
   }
 }
