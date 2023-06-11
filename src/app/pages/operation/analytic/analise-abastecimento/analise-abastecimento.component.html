@@ -1,0 +1,93 @@
+<div class="card">
+  <div class="row">
+    <div class="col-12 ms-3">
+      <h4 class="tilte-card">Análise Abastecimento</h4>
+    </div>
+    <div class="row">
+      <div class="col-12 m-3 mt-2">
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          style="width: 100%"
+          class="mat-elevation-z8"
+        >
+          <ng-container matColumnDef="Loja">
+            <th mat-header-cell *matHeaderCellDef>Loja</th>
+            <td mat-cell *matCellDef="let element">{{ element.loja }}</td>
+            <td 
+            mat-footer-cell 
+            *matFooterCellDef>
+            Total
+          </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="Produto">
+            <th mat-header-cell *matHeaderCellDef>Produto</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.produto }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="1">
+            <th mat-header-cell *matHeaderCellDef>1º</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.primeiro}}
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          
+          <ng-container matColumnDef="2">
+            <th mat-header-cell *matHeaderCellDef>2º</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.segundo}}
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="3">
+            <th mat-header-cell *matHeaderCellDef>3º</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.terceiro}}
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="4">
+            <th mat-header-cell *matHeaderCellDef>4º</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.quarto}}
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="mediaAbastecimento">
+            <th mat-header-cell *matHeaderCellDef>Media Abast.</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.mediaAbastecimento}}
+            </td>
+            <td 
+            mat-footer-cell 
+            *matFooterCellDef>
+            100
+          </td>
+          </ng-container>
+          <ng-container matColumnDef="totalAbastecimento">
+            <th mat-header-cell *matHeaderCellDef>Total Abast.</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.totalAbastecimento}}
+            </td>
+            <td 
+            mat-footer-cell 
+            *matFooterCellDef>
+            100
+          </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

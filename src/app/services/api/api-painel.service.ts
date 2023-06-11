@@ -9,6 +9,7 @@ import { FilterDatatableDTO } from '../../model/detail/filter-datatable.dto';
 import { Filter } from '../../model/filter';
 import { DataFilePhoto } from '../../model/gallery/datafile-photo';
 import { FilterGalleryDTO } from '../../model/gallery/filter-gallery.dto';
+import { SupplyListDTO } from 'src/app/model/analytic/supply-list.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,6 @@ export class ApiPainelService {
     idBrands: number[],
     filter: Filter
   ) {
-
     return this.http.post<DataFileDetails[]>(
       environment.apiUrlServer + '/datafile/details',
       filter,
@@ -36,9 +36,14 @@ export class ApiPainelService {
       }
     );
   }
-  getDataPhotos(  initialDate: string,
+  getDataPhotos(
+    initialDate: string,
     finalDate: string,
-    idBrands: number[], filter:Filter,limit:number,offset:number) {
+    idBrands: number[],
+    filter: Filter,
+    limit: number,
+    offset: number
+  ) {
     const headers = { 'content-type': 'application/json' };
 
     let params = new HttpParams({
@@ -47,12 +52,13 @@ export class ApiPainelService {
         finaldate: finalDate,
         idsbrand: idBrands,
         limit: limit,
-        offset:offset
+        offset: offset,
       },
     });
 
     return this.http.post<any>(
-      environment.apiUrlServer + '/datafile/photos',filter,
+      environment.apiUrlServer + '/datafile/photos',
+      filter,
       { headers: headers, params: params }
     );
   }
@@ -115,11 +121,11 @@ export class ApiPainelService {
     initialDate: string,
     finalDate: string,
     idsBrand: number[],
-    idsProject:number[]
+    idsProject: number[]
   ): Observable<any> {
     let params;
-    if(idsProject){
-       params = new HttpParams({
+    if (idsProject) {
+      params = new HttpParams({
         fromObject: {
           initialDate: initialDate,
           finalDate: finalDate,
@@ -127,8 +133,8 @@ export class ApiPainelService {
           idsProject: idsProject,
         },
       });
-    }else{
-       params = new HttpParams({
+    } else {
+      params = new HttpParams({
         fromObject: {
           initialDate: initialDate,
           finalDate: finalDate,
@@ -136,8 +142,6 @@ export class ApiPainelService {
         },
       });
     }
-    
-
 
     return this.http.get(environment.apiUrlServer + '/detail/ruptura', {
       params,
@@ -148,11 +152,11 @@ export class ApiPainelService {
     initialDate: string,
     finalDate: string,
     idsBrand: number[],
-    idsProject:number[]
+    idsProject: number[]
   ): Observable<any> {
     let params;
-    if(idsProject){
-       params = new HttpParams({
+    if (idsProject) {
+      params = new HttpParams({
         fromObject: {
           initialDate: initialDate,
           finalDate: finalDate,
@@ -160,8 +164,8 @@ export class ApiPainelService {
           idsProject: idsProject,
         },
       });
-    }else{
-       params = new HttpParams({
+    } else {
+      params = new HttpParams({
         fromObject: {
           initialDate: initialDate,
           finalDate: finalDate,
@@ -174,26 +178,12 @@ export class ApiPainelService {
     });
   }
 
-  getDetailsToDownload(initialDate:string,finalDate:string,idBrands:number[], filter: Filter) {
-    const headers = { 'content-type': 'application/json' };
-    let params = new HttpParams({
-      fromObject: {
-        initialDate: initialDate,
-        finalDate: finalDate,
-        idsBrand: idBrands,
-      },
-    });
-    return this.http.post(environment.apiUrlServer + '/report/details', filter, {
-      responseType: 'blob',
-      params,
-      headers,
-    });
-  }
-
-  generateBookPhotos(initialDate: string,
+  getDetailsToDownload(
+    initialDate: string,
     finalDate: string,
     idBrands: number[],
-    filter:Filter) {
+    filter: Filter
+  ) {
     const headers = { 'content-type': 'application/json' };
     let params = new HttpParams({
       fromObject: {
@@ -202,7 +192,32 @@ export class ApiPainelService {
         idsBrand: idBrands,
       },
     });
-    return this.http.post(environment.apiUrlServer + '/book',filter, {
+    return this.http.post(
+      environment.apiUrlServer + '/report/details',
+      filter,
+      {
+        responseType: 'blob',
+        params,
+        headers,
+      }
+    );
+  }
+
+  generateBookPhotos(
+    initialDate: string,
+    finalDate: string,
+    idBrands: number[],
+    filter: Filter
+  ) {
+    const headers = { 'content-type': 'application/json' };
+    let params = new HttpParams({
+      fromObject: {
+        initialDate: initialDate,
+        finalDate: finalDate,
+        idsBrand: idBrands,
+      },
+    });
+    return this.http.post(environment.apiUrlServer + '/book', filter, {
       responseType: 'blob',
       params,
       headers,
@@ -213,28 +228,28 @@ export class ApiPainelService {
     initialDate: string,
     finalDate: string,
     idsBrand: number[],
-    idsProject:number[]
+    idsProject: number[]
   ): Observable<any> {
     const headers = { 'content-type': 'application/json' };
     let params;
-    if(idsProject){
+    if (idsProject) {
       params = new HttpParams({
-       fromObject: {
-         initialDate: initialDate,
-         finalDate: finalDate,
-         idsBrand: idsBrand,
-         idsProject: idsProject,
-       },
-     });
-   }else{
+        fromObject: {
+          initialDate: initialDate,
+          finalDate: finalDate,
+          idsBrand: idsBrand,
+          idsProject: idsProject,
+        },
+      });
+    } else {
       params = new HttpParams({
-       fromObject: {
-         initialDate: initialDate,
-         finalDate: finalDate,
-         idsBrand: idsBrand,
-       },
-     });
-   }
+        fromObject: {
+          initialDate: initialDate,
+          finalDate: finalDate,
+          idsBrand: idsBrand,
+        },
+      });
+    }
     return this.http.post(environment.apiUrlServer + '/report/ruptura', '', {
       responseType: 'blob',
       params,
@@ -246,31 +261,48 @@ export class ApiPainelService {
     initialDate: string,
     finalDate: string,
     idsBrand: number[],
-    idsProject:number[]
+    idsProject: number[]
   ): Observable<any> {
     const headers = { 'content-type': 'application/json' };
     let params;
-    if(idsProject){
+    if (idsProject) {
       params = new HttpParams({
-       fromObject: {
-         initialDate: initialDate,
-         finalDate: finalDate,
-         idsBrand: idsBrand,
-         idsProject: idsProject,
-       },
-     });
-   }else{
+        fromObject: {
+          initialDate: initialDate,
+          finalDate: finalDate,
+          idsBrand: idsBrand,
+          idsProject: idsProject,
+        },
+      });
+    } else {
       params = new HttpParams({
-       fromObject: {
-         initialDate: initialDate,
-         finalDate: finalDate,
-         idsBrand: idsBrand,
-       },
-     });
+        fromObject: {
+          initialDate: initialDate,
+          finalDate: finalDate,
+          idsBrand: idsBrand,
+        },
+      });
     }
     return this.http.post(environment.apiUrlServer + '/report/validity', '', {
       responseType: 'blob',
       params,
+      headers,
+    });
+  }
+
+  getAverageSupply(
+    initialDate: string,
+    finalDate: string,
+    idsBrand: number[],
+    idsProject: number[]
+  ) :Observable<SupplyListDTO>{
+    const headers = { 'content-type': 'application/json' };
+    return this.http.post<SupplyListDTO>(environment.apiUrlServer + '/datafile/supply', null, {
+      params: {
+        initialdate: initialDate,
+        finaldate: finalDate,
+        idsbrand: idsBrand,
+      },
       headers,
     });
   }

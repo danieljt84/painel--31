@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiUrlOperation:"https://painel4p.com:8081",
-  apiUrlServer:"https://painel4p.com:8082",
+  apiUrlServer:"http://localhost:8080",
 };
 
 /*

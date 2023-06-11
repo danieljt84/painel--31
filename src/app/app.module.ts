@@ -10,11 +10,13 @@ import { TokenInterceptor } from './core/interceptors/token.inteceptor';
 import { NavModule } from './pages/shared/nav/nav.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { AbastecimentoComponent } from './pages/operation/abastecimento/abastecimento.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    
     ],
   imports: [
     CommonModule,

@@ -22,6 +22,7 @@ import { MultiSelectModule } from '../../shared/multi-select/multi-select.module
 import { NavModule } from '../../shared/nav/nav.module';
 import { IconDropdownModule } from '../../shared/icon-dropdown/icon-dropdown.module';
 import { ModalDownloadModule } from '../../shared/modal-download/modal-download.module';
+import { AnaliseAbastecimentoComponent } from './analise-abastecimento/analise-abastecimento.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ModalDownloadModule } from '../../shared/modal-download/modal-download.
     AlertaValidadeComponent,
     IconConfigComponent,
     ModalConfigComponent,
+    AnaliseAbastecimentoComponent,
   ],
   imports: [
     CommonModule,
