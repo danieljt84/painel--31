@@ -1,62 +1,13 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { SupplyDataTable } from 'src/app/model/analytic/supply-datatable';
 import { Config } from 'src/app/model/config';
 import { ApiPainelService } from 'src/app/services/api/api-painel.service';
 import { ConfigService } from 'src/app/services/config.service';
 
-interface DataTable {
-  loja: string;
-  produto: string;
-  primeiro: number;
-  segundo: number;
-  terceiro: number;
-  quarto: number;
-  mediaAbastecimento: number;
-  totalAbastecimento: number;
-}
-const datas = [
-  {
-    loja: 'LOJA1',
-    produto: 'PRODUTO1',
-    primeiro: 100,
-    segundo: 100,
-    terceiro: 100,
-    quarto: 100,
-    mediaAbastecimento: 100,
-    totalAbastecimento: 100,
-  },
-  {
-    loja: 'LOJA1',
-    produto: 'PRODUTO1',
-    primeiro: 100,
-    segundo: 100,
-    terceiro: 100,
-    quarto: 100,
-    mediaAbastecimento: 100,
-    totalAbastecimento: 100,
-  },
-  {
-    loja: 'LOJA1',
-    produto: 'PRODUTO1',
-    primeiro: 100,
-    segundo: 100,
-    terceiro: 100,
-    quarto: 100,
-    mediaAbastecimento: 100,
-    totalAbastecimento: 100,
-  },
-  {
-    loja: 'LOJA1',
-    produto: 'PRODUTO1',
-    primeiro: 100,
-    segundo: 100,
-    terceiro: 100,
-    quarto: 100,
-    mediaAbastecimento: 100,
-    totalAbastecimento: 100,
-  },
-];
+
+
 @Component({
   selector: 'app-analise-abastecimento',
   templateUrl: './analise-abastecimento.component.html',
@@ -75,12 +26,12 @@ export class AnaliseAbastecimentoComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<any>();
   config: Config;
-  datas: DataTable[];
+  datas: SupplyDataTable[];
   constructor(
     private apiPainelService: ApiPainelService,
     private configService: ConfigService
   ) {
-    this.dataSource.data = datas;
+    this.dataSource.data =  ;
   }
 
   ngOnInit(): void {
@@ -103,7 +54,29 @@ export class AnaliseAbastecimentoComponent implements OnInit {
         this.config.projects ? this.config.projects.map((ele) => ele.id) : null
       )
       .subscribe((data) => {
-       console.log(data.supplyList)
+       let shops =  data.supplyList.map(element => element.shop);
+       let products =  data.supplyList.map(element => element.product);
+       let projects =  data.supplyList.map(element => element.project);
+       
+
+       shops.forEach(shop =>{
+        projects.forEach(project => {
+          products.forEach(product =>{
+             let filter = data.supplyList.filter(supply => supply.project== project && supply.product == product && supply.shop == shop);
+             if(filter){ 
+              let supply: SupplyDataTable ={
+                shop:shop,product:product,averageSupply:null,totalSupply:null,values:[]
+              }
+
+              filter = filter.sort((a,b) => a.seq - b.seq);
+              filter.forEach(element => supply.values.push(element.stock));
+              
+             }
+          })
+        })
+       })
+
+      
       });
   }
 }
